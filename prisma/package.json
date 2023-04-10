@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/package.json",
+  "name": "@acme/prisma",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "db:generate": "cargo prisma generate",
+    "db:push": "cargo prisma db:push",
+    "db:studio": "cargo prisma studio"
+  },
+  "devDependencies": {
+    "prisma": "^4.8.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.8.0"
+  }
+}
