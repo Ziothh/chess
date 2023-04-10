@@ -1,5 +1,7 @@
-pub mod board;
+pub mod game;
 pub mod piece;
+pub mod position;
+pub mod moves;
 // #[cfg(test)]
 // mod tests {
 //   use super::*;

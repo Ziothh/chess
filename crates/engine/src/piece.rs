@@ -1,7 +1,17 @@
 #[derive(Debug, PartialEq)]
-enum ChessPieceColor {
+pub enum ChessPieceColor {
     Black,
     White,
+}
+
+impl From<char> for ChessPieceColor {
+    fn from(value: char) -> Self {
+        if value.is_uppercase() {
+            Self::White
+        } else {
+            Self::Black
+        }
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -12,6 +22,25 @@ enum ChessPieceVariant {
     Rook,
     Queen,
     King,
+}
+
+impl TryFrom<char> for ChessPieceVariant {
+    type Error = String;
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        use self::ChessPieceVariant::*;
+
+        Ok(match value.to_ascii_uppercase() {
+            'P' => Pawn,
+            'B' => Bishop,
+            'N' => Knight,
+            'R' => Rook,
+            'Q' => Queen,
+            'K' => King,
+            // TODO: convert this into an error
+            _ => unreachable!("\"{value}\" is not a valid chess piece representation"),
+        })
+    }
 }
 
 impl ToString for ChessPieceVariant {
@@ -29,9 +58,24 @@ impl ToString for ChessPieceVariant {
     }
 }
 
-struct ChessPiece {
+#[derive(Debug, PartialEq)]
+pub struct ChessPiece {
     color: ChessPieceColor,
     variant: ChessPieceVariant,
+}
+
+impl ChessPiece {
+  pub fn is_sliding(&self) -> bool {
+    use self::ChessPieceVariant::*;
+
+    match self.variant {
+      Bishop => true,
+      Rook => true,
+      Queen => true,
+      _ => false,
+    }
+  }
+    
 }
 
 impl ToString for ChessPiece {
@@ -43,5 +87,16 @@ impl ToString for ChessPiece {
         }
 
         return char;
+    }
+}
+
+impl TryFrom<char> for ChessPiece {
+    type Error = String;
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        Ok(Self {
+          color: ChessPieceColor::from(value),
+          variant: ChessPieceVariant::try_from(value)?
+        })
     }
 }
