@@ -69,7 +69,7 @@ pub fn parse_instruction(chess_game: &Chess, san_move: &str) -> anyhow::Result<I
                 if i < 2 {
                     destination += num;
                 } else {
-                    origin = Some(origin.unwrap_or(0) + num)
+                    origin = Some(origin.unwrap_or(0) + num);
                 }
             }
 
@@ -77,12 +77,12 @@ pub fn parse_instruction(chess_game: &Chess, san_move: &str) -> anyhow::Result<I
               todo!()
             });
 
-            Ok(Instruction::Move(Move {
+            return Ok(Instruction::Move(Move {
                 origin,
                 destination,
                 takes,
                 piece,
-            }))
+            }));
         }
     };
 }
