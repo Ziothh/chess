@@ -1,6 +1,7 @@
 pub mod game;
+pub mod board;
 pub mod piece;
-pub mod moves;
+pub mod instructions;
 pub mod team;
 
 pub mod utils;

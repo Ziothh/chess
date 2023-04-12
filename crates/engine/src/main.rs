@@ -1,5 +1,3 @@
-use engine::{game::Chess, moves::DirectionOffset};
-
 
 
 fn main() -> () {
@@ -7,9 +5,9 @@ fn main() -> () {
 
   // println!("{:?}", DirectionOffset::N as isize)
   
-  "abcdefg".chars().for_each(|c| {
-    println!("{}: {}", &c, c as u32 - A_AS_U32);
-  })
+  // "abcdefg".chars().for_each(|c| {
+  //   println!("{}: {}", &c, c as u32 - A_AS_U32);
+  // })
 
   // let mut games = include_str!("../data/games.txt").split("\n");
   //

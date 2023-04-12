@@ -1,18 +1,4 @@
-#[derive(Debug, PartialEq)]
-pub enum ChessPieceColor {
-    Black,
-    White,
-}
-
-impl From<char> for ChessPieceColor {
-    fn from(value: char) -> Self {
-        if value.is_uppercase() {
-            Self::White
-        } else {
-            Self::Black
-        }
-    }
-}
+use super::team::Team;
 
 #[derive(Debug, PartialEq)]
 pub enum ChessPieceVariant {
@@ -30,22 +16,22 @@ impl TryFrom<char> for ChessPieceVariant {
     fn try_from(value: char) -> Result<Self, Self::Error> {
         use self::ChessPieceVariant::*;
 
-        Ok(match value.to_ascii_uppercase() {
-            'P' => Pawn,
-            'B' => Bishop,
-            'N' => Knight,
-            'R' => Rook,
-            'Q' => Queen,
-            'K' => King,
-            // TODO: convert this into an error
-            _ => unreachable!("\"{value}\" is not a valid chess piece representation"),
-        })
+        match value.to_ascii_uppercase() {
+            'P' => Ok(Pawn),
+            'B' => Ok(Bishop),
+            'N' => Ok(Knight),
+            'R' => Ok(Rook),
+            'Q' => Ok(Queen),
+            'K' => Ok(King),
+            _ => Err("\"{value}\" is not a valid chess piece representation".to_owned())
+        }
     }
 }
 
 impl ToString for ChessPieceVariant {
     fn to_string(&self) -> String {
         use ChessPieceVariant::*;
+
         match self {
             Pawn => 'P',
             Bishop => 'B',
@@ -60,7 +46,7 @@ impl ToString for ChessPieceVariant {
 
 #[derive(Debug, PartialEq)]
 pub struct ChessPiece {
-    color: ChessPieceColor,
+    team: Team,
     variant: ChessPieceVariant,
 }
 
@@ -75,14 +61,13 @@ impl ChessPiece {
       _ => false,
     }
   }
-    
 }
 
 impl ToString for ChessPiece {
     fn to_string(&self) -> String {
         let mut char = self.variant.to_string();
 
-        if self.color == ChessPieceColor::Black {
+        if self.team == Team::Black {
             char = char.to_lowercase();
         }
 
@@ -95,7 +80,7 @@ impl TryFrom<char> for ChessPiece {
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
         Ok(Self {
-          color: ChessPieceColor::from(value),
+          team: Team::from(value),
           variant: ChessPieceVariant::try_from(value)?
         })
     }
