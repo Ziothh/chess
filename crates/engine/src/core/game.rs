@@ -1,11 +1,16 @@
 use std::{fmt::Display, hint::unreachable_unchecked};
 
-use crate::piece::{ChessPiece, ChessPieceColor};
+use crate::{
+    moves::Move,
+    piece::{ChessPiece, ChessPieceColor, ChessPieceVariant},
+};
 
 pub const CHESSBOARD_WIDTH: usize = 8;
 pub const CHESSBOARD_SIZE: usize = CHESSBOARD_WIDTH * CHESSBOARD_WIDTH;
 const EMPTY_CELL: ChessBoardCell = None;
 const STARTING_FEN: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+/// The amount needed to substract from a letter where 'a' = 1, 'b' = 2, ...
+const LOWERCASE_UTF8_OFFSET: u32 = 'a' as u32 - 1;
 
 type ChessBoardCell = Option<ChessPiece>;
 type ChessBoard = [ChessBoardCell; CHESSBOARD_SIZE];
@@ -65,8 +70,73 @@ impl Chess {
         }
     }
 
-    pub fn generate_legal_moves(&self) -> () {
+    pub fn generate_legal_moves(&self) -> Vec<Move> {
+        self.board.iter().enumerate().map(|(i, piece)| {});
+
         todo!()
+    }
+
+    /// Parses a Standard Algebraic Notation (SAN) move.
+    /// @see https://www.chessprogramming.org/Algebraic_Chess_Notation#SAN
+    pub fn parse_move(&self, san_move: &str) -> anyhow::Result<Move> {
+        // Generate all legal moves
+        let moves = self.generate_legal_moves();
+
+        // Parse the move
+
+        return match san_move {
+            "1-0" => {
+                // White wins
+            }
+            "0-1" => {
+                // Black wins
+            }
+            "O-O" => {
+                // Kingside castling
+            }
+            "O-O-O" => {
+                // Queenside castling
+            }
+            str => {
+                let length = str.len();
+
+                let mut takes = false;
+                let mut destination: u32 = 0;
+                let mut origin: Option<u32> = None;
+                let mut variant = ChessPieceVariant::Pawn;
+
+                let mut num = 0;
+                // Example: Nxe7 but reversed
+                for (i, x) in str.chars().rev().enumerate() {
+                    if x.is_numeric() {
+                        // Rank indication
+                        num = char::to_digit(x, 10).unwrap();
+                    } else {
+                        if x == 'x' {
+                            // It takes
+                            takes = true;
+                            continue;
+                        }
+
+                        if x.is_lowercase() {
+                            // It is a file indication
+                            num = x as u32 - LOWERCASE_UTF8_OFFSET;
+                        } else {
+                            // It is a piecetype
+                            variant = ChessPieceVariant::try_from(x).unwrap();
+                        }
+                    }
+
+                    if i < 2 {
+                        destination += num;
+                    } else {
+                        origin = Some(origin.unwrap_or(0) + num)
+                    }
+                }
+
+                Move
+            }
+        };
     }
 
     /**
@@ -74,16 +144,10 @@ impl Chess {
       Example: e4
       https://en.wikipedia.org/wiki/Portable_Game_Notation
     */
-    pub fn make_move(&mut self, pgn_move: &str) -> &mut Self {
-        let moves = self.generate_legal_moves();
+    pub fn make_move(&mut self, san_move: &str) -> anyhow::Result<&mut Self> {
+        let generated_move = self.parse_move(san_move)?;
 
-        if pgn_move == "O-O" {
-            // Kingside castle
-            return self;
-        } else if pgn_move == "O-O-O" {
-            // Queenside castle
-            return self;
-        }
+        // Apply the move
 
         todo!()
     }

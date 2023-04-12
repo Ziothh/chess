@@ -1,9 +1,15 @@
 use engine::{game::Chess, moves::DirectionOffset};
 
+
+
 fn main() -> () {
   // let games = std::io::BufReader::new(std::fs::File::open("./data/games.txt").unwrap());
 
-  println!("{:?}", DirectionOffset::N as isize)
+  // println!("{:?}", DirectionOffset::N as isize)
+  
+  "abcdefg".chars().for_each(|c| {
+    println!("{}: {}", &c, c as u32 - A_AS_U32);
+  })
 
   // let mut games = include_str!("../data/games.txt").split("\n");
   //

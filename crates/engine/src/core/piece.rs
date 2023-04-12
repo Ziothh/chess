@@ -15,7 +15,7 @@ impl From<char> for ChessPieceColor {
 }
 
 #[derive(Debug, PartialEq)]
-enum ChessPieceVariant {
+pub enum ChessPieceVariant {
     Pawn,
     Bishop,
     Knight,
