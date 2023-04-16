@@ -5,12 +5,20 @@ use engine::core::{
 };
 
 fn main() -> () {
-    let knight_square = Square::E5;
+    let origin = Square::E5;
 
-    let x = KnightType::pseudo_legal_moves(knight_square, Team::Black);
+    // let x = KnightType::pseudo_legal_moves(knight_square, Team::Black);
     let mut board = ChessBoard::empty();
 
-    board.set_piece(knight_square.to_index(), ChessPiece::try_from('N').unwrap());
+    let piece = ChessPiece::try_from('r').unwrap();
+
+    board.set_piece(origin.to_index(), piece);
+
+    let x = board
+        .get(origin.to_index())
+        .as_ref()
+        .unwrap()
+        .pseudo_legal_moves(origin);
 
     x.iter().for_each(|m| {
         board.set_piece(m.destination.to_index(), ChessPiece::try_from('n').unwrap());

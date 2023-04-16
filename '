@@ -155,25 +155,22 @@ pub trait PieceType {
     //     }
 }
 
-pub trait SlidingPiece {
-    const TRANSLATIONS: &'static [fn(origin: Square) -> Option<Square>];
+trait SlidingPiece {
+  const TRANSLATIONS: &'static [fn (origin: Square) -> Option<Square>];
 
-    fn generate_sliding_destionations(origin: Square) -> Vec<Square> {
-        let mut squares = Vec::new();
-        for translation in Self::TRANSLATIONS {
-            let mut latest = origin;
+  pub fn generate_sliding_destionations(origin: Square) -> Vec<Square> {
+    let squares = Vec::new();
+    for translation in Self::TRANSLATIONS {
+      let mut latest = origin;
 
-            for _ in 0..NUM_FILES {
-                if let Some(dest) = translation(latest) {
-                    squares.push(dest);
+      for i in 0..NUM_FILES {
+        if let Some(dest) = translation(latest)
 
-                    latest = dest;
-                } else {
-                  break;
-                }
-            }
-        }
 
-        return squares;
+      }
+
     }
+
+    return squares;
+  }
 }

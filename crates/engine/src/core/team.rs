@@ -26,7 +26,7 @@ impl Team {
         Rank::from_index(
             (match *self {
                 Self::White => nth,
-                Self::Black => NUM_TEAMS - nth,
+                Self::Black => (NUM_TEAMS - 1) - nth,
             } - 1),
         )
     }
