@@ -1,4 +1,9 @@
-use crate::core::{moves::Move, piece::ChessPiece, team::Team};
+use crate::core::{
+    board::Square,
+    moves::Move,
+    piece::{self, ChessPiece},
+    team::Team,
+};
 
 use super::{NUM_FILES, NUM_RANKS};
 
@@ -33,10 +38,12 @@ impl ChessBoard {
     //         .expect("index to be in range 0..64")
     //         .take()
     // }
-
     pub fn set(&mut self, index: CellIndex, value: ChessBoardCellValue) -> &mut Self {
         self.0[index] = value;
         return self;
+    }
+    pub fn set_piece(&mut self, index: CellIndex, piece: ChessPiece) -> &mut Self {
+        return self.set(index, Some(piece));
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &ChessBoardCellValue> {
@@ -78,6 +85,27 @@ impl ChessBoard {
             })
             .flatten()
             .collect()
+    }
+
+    /// TODO: flip the ranks (1 at bottom)
+    pub fn print_ascii(&self) -> &Self {
+        self.0.iter().enumerate().for_each(|(i, cell)| {
+            let index_str = if let Some(piece) = cell {
+                piece.clone().to_string()
+            } else {
+                ".".to_string()
+            };
+
+            let spacer = if Square::new(i as u8).get_file().to_index() == 7 {
+                "\n"
+            } else {
+                " "
+            };
+
+            print!("{index_str}{spacer}");
+        });
+
+        return self;
     }
 }
 

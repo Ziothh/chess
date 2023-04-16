@@ -1,9 +1,8 @@
-use std::fmt::{self, format};
 use std::str::FromStr;
 
 use crate::core::team::Team;
 
-use super::{File, Rank};
+use super::{File, Rank, NUM_FILES, NUM_RANKS};
 
 /// Represent a square on the chess board
 #[derive(PartialEq, Ord, Eq, PartialOrd, Copy, Clone, Debug, Hash)]
@@ -66,6 +65,23 @@ impl Square {
     #[inline]
     pub fn make_square(file: File, rank: Rank) -> Square {
         Square((rank.to_index() as u8) << 3 ^ (file.to_index() as u8))
+    }
+
+    pub fn translate(&self, delta_file: isize, delta_rank: isize) -> Option<Square> {
+        let file_index: isize = self.get_file().to_index() as isize + delta_file;
+        if file_index < 0 || file_index > (NUM_FILES - 1) as isize {
+            return None;
+        }
+
+        let rank_index: isize = self.get_rank().to_index() as isize - delta_rank;
+        if rank_index < 0 || rank_index > (NUM_RANKS - 1) as isize {
+            return None;
+        }
+
+        return Some(Square::make_square(
+            File::from_index(file_index as usize),
+            Rank::from_index(rank_index as usize),
+        ));
     }
 
     /// Return the rank given this square.
@@ -945,8 +961,8 @@ impl Square {
     pub const H8: Square = Square(63);
 }
 
-impl fmt::Display for Square {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl std::fmt::Display for Square {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
             "{}{}",
