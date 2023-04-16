@@ -27,14 +27,21 @@ impl Chess {
         todo!()
     }
 
-    pub fn generate_legal_moves(&self) -> Vec<Move> {
-        self.board.into_iter().enumerate().map(|(i, piece)| {});
-
-        todo!()
+    /// Returns the side to move, based on `self.halfmove_clock`
+    pub fn team_to_move(&self) -> Team {
+        if self.halfmove_clock % 2 == 0 {
+            Team::White
+        } else {
+            Team::Black
+        }
     }
 
-    pub fn follow_instruction(instruction: Instruction) {
+    pub fn generate_legal_moves(&self) -> Vec<Move> {
+        self.board.generate_legal_moves(self.team_to_move())
+    }
 
+    pub fn follow_instruction(&self, instruction: Instruction) -> Self {
+      self
     }
 }
 

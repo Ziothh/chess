@@ -1,5 +1,7 @@
 use crate::core::{piece::ChessPieceVariant, team::Team};
 
+use super::{board::Square, moves::Move};
+
 #[derive(Debug, PartialEq)]
 pub enum DirectionOffset {
     N = 8isize,
@@ -13,7 +15,7 @@ pub enum DirectionOffset {
 }
 
 #[derive(Debug, PartialEq)]
-pub enum CaslingMove {
+pub enum CastlingMove {
     QueenSide,
     KingSide,
 }
@@ -25,18 +27,15 @@ pub enum EndOfGameState {
 }
 
 #[derive(Debug, PartialEq)]
-pub enum Instruction {
-    Castling(CaslingMove),
-    EndOfGame(EndOfGameState),
-    Move(Move),
+pub enum CheckKind {
+    Check,
+    Mate,
 }
 
+
 #[derive(Debug, PartialEq)]
-pub struct Move {
-    /// The original board square index
-    origin: u32,
-    /// The destination board square index
-    destination: u32,
-    takes: bool,
-    piece: ChessPieceVariant,
+pub enum Instruction {
+    Castling(CastlingMove),
+    EndOfGame(EndOfGameState),
+    Move(Move),
 }

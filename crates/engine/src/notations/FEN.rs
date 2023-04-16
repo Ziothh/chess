@@ -1,4 +1,4 @@
-/// The starting FEN string.
+/// The starting FEN string. 
 pub const START: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 use crate::core::{board::ChessBoard, game::Chess, piece::ChessPiece, team::Team};
