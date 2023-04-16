@@ -1,6 +1,6 @@
-use crate::core::{piece::ChessPieceVariant, team::Team};
+use crate::core::team::Team;
 
-use super::{board::Square, moves::Move};
+use super::moves::Move;
 
 #[derive(Debug, PartialEq)]
 pub enum DirectionOffset {
@@ -31,7 +31,6 @@ pub enum CheckKind {
     Check,
     Mate,
 }
-
 
 #[derive(Debug, PartialEq)]
 pub enum Instruction {

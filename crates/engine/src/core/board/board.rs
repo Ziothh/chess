@@ -1,9 +1,4 @@
-use crate::core::{
-    board::Square,
-    moves::Move,
-    piece::{self, ChessPiece},
-    team::Team,
-};
+use crate::core::{board::Square, moves::Move, piece::ChessPiece, team::Team};
 
 use super::{NUM_FILES, NUM_RANKS};
 
@@ -32,12 +27,6 @@ impl ChessBoard {
         self.0.get(index).expect("index to be in range 0..64")
     }
 
-    // fn take(&mut self, index: CellIndex) -> ChessBoardCellValue {
-    //     self.0
-    //         .get(index)
-    //         .expect("index to be in range 0..64")
-    //         .take()
-    // }
     pub fn set(&mut self, index: CellIndex, value: ChessBoardCellValue) -> &mut Self {
         self.0[index] = value;
         return self;
