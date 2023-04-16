@@ -112,7 +112,7 @@ impl Square {
         if self.get_rank() == Rank::Eighth {
             None
         } else {
-            Some(Square::make_square(self.get_rank().up(), self.get_file()))
+            Some(Square::make_square(self.get_file(), self.get_rank().up()))
         }
     }
 
@@ -132,7 +132,7 @@ impl Square {
         if self.get_rank() == Rank::First {
             None
         } else {
-            Some(Square::make_square(self.get_rank().down(), self.get_file()))
+            Some(Square::make_square(self.get_file(), self.get_rank().down()))
         }
     }
 
@@ -152,7 +152,7 @@ impl Square {
         if self.get_file() == File::A {
             None
         } else {
-            Some(Square::make_square(self.get_rank(), self.get_file().left()))
+            Some(Square::make_square(self.get_file().left(), self.get_rank()))
         }
     }
 
@@ -173,8 +173,8 @@ impl Square {
             None
         } else {
             Some(Square::make_square(
-                self.get_rank(),
                 self.get_file().right(),
+                self.get_rank(),
             ))
         }
     }
@@ -238,7 +238,7 @@ impl Square {
     /// ```
     #[inline]
     pub fn uup(&self) -> Square {
-        Square::make_square(self.get_rank().up(), self.get_file())
+        Square::make_square(self.get_file(), self.get_rank().up())
     }
 
     /// If there is a square below me, return that.  If not, wrap around to the other side.
@@ -254,7 +254,7 @@ impl Square {
     /// ```
     #[inline]
     pub fn udown(&self) -> Square {
-        Square::make_square(self.get_rank().down(), self.get_file())
+        Square::make_square(self.get_file(), self.get_rank().down())
     }
 
     /// If there is a square to the left of me, return that. If not, wrap around to the other side.
@@ -270,7 +270,7 @@ impl Square {
     /// ```
     #[inline]
     pub fn uleft(&self) -> Square {
-        Square::make_square(self.get_rank(), self.get_file().left())
+        Square::make_square(self.get_file().left(), self.get_rank())
     }
 
     /// If there is a square to the right of me, return that.  If not, wrap around to the other
@@ -287,7 +287,7 @@ impl Square {
     /// ```
     #[inline]
     pub fn uright(&self) -> Square {
-        Square::make_square(self.get_rank(), self.get_file().right())
+        Square::make_square(self.get_file().right(), self.get_rank())
     }
 
     /// If there is a square "forward", given my team, return that.  If not, wrap around to the
@@ -961,7 +961,7 @@ impl FromStr for Square {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s.len() != 2 {
-            return Err(format("Invalid length for square string \"{s}\""));
+            return Err(format!("Invalid length for square string \"{s}\""));
         }
 
         let ch: Vec<_> = s.chars().collect();
@@ -981,7 +981,7 @@ impl FromStr for Square {
 
         Ok(Square::make_square(
             File::try_from(ch[0])?,
-            Rank::try_from(ch[1])?
+            Rank::try_from(ch[1])?,
         ))
 
         // Ok(Square::make_square(

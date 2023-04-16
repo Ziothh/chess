@@ -65,9 +65,9 @@ impl Rank {
     }
 }
 
-impl TryFrom<&char> for Rank {
+impl TryFrom<char> for Rank {
     type Error = String;
-    fn try_from(value: &char) -> Result<Self, Self::Error> {
+    fn try_from(value: char) -> Result<Self, Self::Error> {
         //     Rank::from_index((ch[1] as usize) - ('1' as usize)),
 
         let index = (value as usize) - ('1' as usize);

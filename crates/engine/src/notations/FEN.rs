@@ -33,7 +33,7 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
                 continue;
             }
 
-            board.set_cell(current_index, Some(ChessPiece::try_from(char).unwrap()));
+            board.set(current_index, Some(ChessPiece::try_from(char).unwrap()));
 
             current_index += 1;
         }

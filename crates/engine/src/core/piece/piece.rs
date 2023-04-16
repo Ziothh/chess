@@ -1,11 +1,11 @@
 use crate::core::{
     board::Square,
-    instructions::Move,
+    moves::Move,
     piece::{BishopType, KingType, KnightType, PawnType, QueenType, RookType},
     team::Team,
 };
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ChessPieceVariant {
     Pawn,
     Bishop,
@@ -15,10 +15,10 @@ pub enum ChessPieceVariant {
     King,
 }
 
-impl TryFrom<&char> for ChessPieceVariant {
+impl TryFrom<char> for ChessPieceVariant {
     type Error = String;
 
-    fn try_from(value: &char) -> Result<Self, Self::Error> {
+    fn try_from(value: char) -> Result<Self, Self::Error> {
         use self::ChessPieceVariant::*;
 
         match value.to_ascii_uppercase() {
@@ -56,20 +56,16 @@ pub struct ChessPiece {
 }
 
 impl ChessPiece {
-    pub fn to_piece_type(&self) -> impl PieceType {
-        use ChessPieceVariant::*;
-
-        match *self {
-            Pawn => PawnType,
-            Knight => KnightType,
-            Bishop => BishopType,
-            Rook => RookType,
-            Queen => QueenType,
-            King => KingType,
-        }
-    }
     pub fn pseudo_legal_moves(&self, position: Square) -> Vec<Move> {
-        self.to_piece_type().pseudo_legal_moves(position, self.team)
+        use ChessPieceVariant::*;
+        match self.variant {
+            Pawn => PawnType::pseudo_legal_moves(position, self.team),
+            Knight => KnightType::pseudo_legal_moves(position, self.team),
+            Bishop => BishopType::pseudo_legal_moves(position, self.team),
+            Rook => RookType::pseudo_legal_moves(position, self.team),
+            Queen => QueenType::pseudo_legal_moves(position, self.team),
+            King => KingType::pseudo_legal_moves(position, self.team),
+        }
     }
 
     // pub fn is_sliding(&self) -> bool {
@@ -115,7 +111,7 @@ pub trait PieceType {
     //     fn pseudo_legals(src: Square, color: Color, combined: BitBoard, mask: BitBoard) -> BitBoard;
 
     /// TODO: find a way to remove &self. This does not need to be an instance
-    fn pseudo_legal_moves(&self, position: Square, team: Team) -> Vec<Move>;
+    fn pseudo_legal_moves(position: Square, team: Team) -> Vec<Move>;
 
     //     #[inline(always)]
     //     fn legals<T>(movelist: &mut MoveList, board: &Board, mask: BitBoard)

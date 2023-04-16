@@ -1,13 +1,11 @@
-use crate::core::{board::Square, moves::Move};
-
-use super::{ChessPieceVariant, PieceType};
+use crate::core::{board::Square, team::Team, moves::Move, piece::{PieceType, ChessPieceVariant}};
 
 pub struct PawnType;
 
 impl PieceType for PawnType {
     const PIECE_VARIANT: ChessPieceVariant = ChessPieceVariant::Pawn;
 
-    fn pseudo_legal_moves(&self, position: Square, team: crate::core::team::Team) -> Vec<Move> {
+    fn pseudo_legal_moves(position: Square, team: Team) -> Vec<Move> {
         // ! Promotitions are not handled atm
         let mut moves = vec![];
 
@@ -17,10 +15,11 @@ impl PieceType for PawnType {
 
         moves.push(Move::new(Self::PIECE_VARIANT, position, destination));
 
-
-        if let Ok(destination) = destination.forward(team) {
-        moves.push(Move::new(Self::PIECE_VARIANT, position, destination));
-
+        // The starting 2 step jump allowing for en passant
+        if position.get_rank() == team.get_nth_rank(2) {
+            if let Some(destination) = destination.forward(team) {
+                moves.push(Move::new(Self::PIECE_VARIANT, position, destination));
+            }
         }
 
         return moves;

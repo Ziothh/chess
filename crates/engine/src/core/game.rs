@@ -2,11 +2,7 @@ use std::fmt::Display;
 
 use crate::notations::FEN;
 
-use super::{
-    board::ChessBoard,
-    instructions::{Instruction, Move},
-    team::Team,
-};
+use super::{board::ChessBoard, instructions::Instruction, moves::Move, team::Team};
 
 #[derive(Debug)]
 pub struct Chess {
@@ -40,8 +36,8 @@ impl Chess {
         self.board.generate_legal_moves(self.team_to_move())
     }
 
-    pub fn follow_instruction(&self, instruction: Instruction) -> Self {
-      self
+    pub fn follow_instruction(&self, instruction: Instruction) -> &Self {
+        self
     }
 }
 
@@ -57,7 +53,7 @@ impl Display for Chess {
             f,
             "{}",
             self.board
-                .into_iter()
+                .iter()
                 .enumerate()
                 .map(|(i, cell)| {
                     let mut string_repr = if let Some(piece) = cell {

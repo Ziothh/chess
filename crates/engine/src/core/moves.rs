@@ -19,7 +19,7 @@ pub struct Move {
 
 impl Move {
     pub fn new(piece: ChessPieceVariant, origin: Square, destination: Square) -> Self {
-      Self::new_with_promotion(piece, origin, destination, false)
+      Self::new_with_promotion(piece, origin, destination, None)
     }
     pub fn new_with_promotion(piece: ChessPieceVariant, origin: Square, destination: Square, promotion: Option<ChessPieceVariant>) -> Self {
         Self {
@@ -27,7 +27,7 @@ impl Move {
             origin,
             destination,
             promotion,
-            checks: false,
+            checks: None,
             takes: false,
         }
     }

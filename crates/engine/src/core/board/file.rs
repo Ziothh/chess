@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 /// Describe a file (column) on a chess board
 #[repr(u8)]
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Debug, Hash)]
@@ -66,10 +64,10 @@ impl File {
     }
 }
 
-impl TryFrom<&char> for File {
+impl TryFrom<char> for File {
     type Error = String;
 
-    fn try_from(value: &char) -> Result<Self, Self::Error> {
+    fn try_from(value: char) -> Result<Self, Self::Error> {
         let index = (value as usize) - ('a' as usize);
 
         // Prevent wrapping. E.g.: value > 'hfile'

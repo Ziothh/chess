@@ -1,9 +1,9 @@
 use crate::{
     core::{
-        game::Chess,
-        instructions::{CastlingMove, CheckKind, EndOfGameState, Instruction, Move},
+        board::{File, Rank, Square},
+        instructions::{CastlingMove, CheckKind, EndOfGameState, Instruction},
+        moves::Move,
         piece::ChessPieceVariant,
-        position,
         team::Team,
     },
     utils::enums::StrEnum,
@@ -36,30 +36,24 @@ pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Re
             Ok(Instruction::Castling(CastlingMove::QueenSide))
         }
         str => {
-            let mut string = str.to_string();
-
-            let bytes = string.as_bytes();
-
-            // ! This should be implemented
-            bytes.iter().enumerate().for_each(|(i, char_byte)| {
+            let mut chars: Vec<char> = str
+                .chars()
+                // ! This should be implemented
                 // Currently not supporing annotations like blunders
-                if char_byte == b'?' || char_byte == b'!' {
-                    string.remove(i);
-                }
-            });
-
+                .filter(|char| *char == '?' || *char == '!')
+                .collect();
 
             // Example full move: c7xd8a=Q+
             // Pawn moves from c7 and takes on d8, then promotes to a Queen, checking the King
             // The origin (c7) is left (fully/partially: rank or file) out if the there are no other pieces that could go to the destination square
 
             let piece = {
-                let first_char = bytes.first().unwrap();
+                let first_char = chars.first().unwrap().clone();
 
                 if first_char.is_ascii_uppercase() {
                     // Starts with piece type
-                    string.remove(0);
-                    ChessPieceVariant::from(first_char)
+                    chars.remove(0);
+                    ChessPieceVariant::try_from(first_char).unwrap()
                 } else {
                     // Starts with a positional description
                     ChessPieceVariant::Pawn
@@ -67,82 +61,85 @@ pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Re
             };
 
             let checks = {
-                let check_variant = match bytes.last().unwrap() {
-                    b'+' => Some(CheckKind::Check),
-                    b'#' => Some(CheckKind::Mate),
+                let check_variant = match *chars.last().unwrap() {
+                    // Todo impl StrEnum for CheckKind
+                    '+' => Some(CheckKind::Check),
+                    '#' => Some(CheckKind::Mate),
+                    _ => None,
                 };
 
                 if check_variant.is_some() {
-                    string.pop();
+                    chars.pop();
                 }
 
                 check_variant
             };
 
-
             // String should have a minimal length of 2 right now
 
-            let promotion = {
-              if bytes.get(bytes.len() - 1) != b'=' { None }
+            let promotion: Option<ChessPieceVariant> = {
+                if (*chars.get(chars.len() - 1).unwrap()) != '=' {
+                    None
+                } else {
+                    let promoting_piece =
+                        Some(ChessPieceVariant::try_from(chars.pop().unwrap()).unwrap());
 
+                    chars.pop();
 
-              let promoting_piece = Some(ChessPieceVariant::from_str(string.pop().unwrap()).unwrap());
-
-              string.pop();
-
-              promoting_piece
+                    promoting_piece
+                }
             };
 
             let takes = {
-                let res = bytes.binary_search(&b'x');
+                let res = chars.binary_search(&'x');
 
                 if let Ok(index) = res {
-                    string.remove(index);
-
+                    chars.remove(index);
                     true
+                } else {
+                    false
                 }
-                false
             };
 
             // E.g. ..e7
             let destination = {
                 // NOTE: .pop() order is important here
-                let rank = string.pop().unwrap().to_digit(10).unwrap();
-                let file = string.pop().unwrap();
+                let rank = chars.pop().unwrap();
+                let file = chars.pop().unwrap();
 
-                position::coords_to_index(file, rank)
+                Square::make_square(File::try_from(file).unwrap(), Rank::try_from(rank).unwrap())
             };
 
-            let origin = {
-              let resting_amount = string.len();
+            let origin: Square = {
+                let resting_amount = chars.len();
 
-              // Full origin description
-              if resting_amount == 2 {
-                let rank = string.pop().unwrap();
-                let file = string.pop().unwrap();
+                // Full origin description
+                if resting_amount == 2 {
+                    let rank = chars.pop().unwrap();
+                    let file = chars.pop().unwrap();
 
-                position::coords_to_index(
-                  position::file_char_to_number(&file), 
-                  position::rank_char_to_number(&rank).unwrap()
-                )
-              }
-
-              // Partial description: file or rank
-              let identifier_char = string.pop();
-
-              if let Some(identifier) = identifier_char {
-                // Found one identifier
-                if identifier.is_numeric {
-                  // Rank
-                  0
+                    Square::make_square(
+                        File::try_from(file).unwrap(),
+                        Rank::try_from(rank).unwrap(),
+                    )
                 } else {
-                  // File
-                  0
+                    // Partial description: file or rank
+                    let identifier_char = chars.pop();
+
+                    if let Some(identifier) = identifier_char {
+                        // Found one identifier
+                        if identifier.is_numeric() {
+                            // Rank
+                            todo!()
+                        } else {
+                            // File
+                            todo!()
+                        }
+                    } else {
+                        // No identiefier
+                        todo!()
+                    }
                 }
-              } else {
-                // No identiefier
-                0
-              }
             };
 
             return Ok(Instruction::Move(Move {
@@ -159,6 +156,7 @@ pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Re
 
 // Implementing str enums
 impl StrEnum for ChessPieceVariant {
+    type Error = String;
     fn to_str(&self) -> &str {
         use ChessPieceVariant::*;
         match self {
@@ -170,7 +168,7 @@ impl StrEnum for ChessPieceVariant {
             Rook => "R",
         }
     }
-    fn from_str(value: &str) -> anyhow::Result<Self> {
+    fn from_str(value: &str) -> Result<Self, Self::Error> {
         use ChessPieceVariant::*;
         match value {
             "" => Ok(Pawn),
@@ -185,17 +183,18 @@ impl StrEnum for ChessPieceVariant {
 }
 
 impl StrEnum for CastlingMove {
+    type Error = String;
     fn to_str(&self) -> &str {
         match self {
-            CastlingMove::Kingside => "O-O",
-            CastlingMove::Queenside => "O-O-O",
+            CastlingMove::KingSide => "O-O",
+            CastlingMove::QueenSide => "O-O-O",
         }
     }
 
-    fn from_str(value: &str) -> anyhow::Result<CastlingMove> {
+    fn from_str(value: &str) -> Result<Self, Self::Error> {
         match value {
-            "O-O" => Ok(CastlingMove::Kingside),
-            "O-O-O" => Ok(CastlingMove::Queenside),
+            "O-O" => Ok(CastlingMove::KingSide),
+            "O-O-O" => Ok(CastlingMove::QueenSide),
             _ => Err(format!("invalid castling move: {}", value)),
         }
     }

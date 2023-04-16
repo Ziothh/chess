@@ -3,7 +3,6 @@ pub mod board;
 pub mod piece;
 pub mod instructions;
 pub mod team;
-pub mod position;
 pub mod moves;
 
 pub mod utils;
