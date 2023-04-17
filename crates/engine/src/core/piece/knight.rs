@@ -8,16 +8,6 @@ use crate::core::{
 // const DIRECTIONS_LONG: [isize; 2] = [2, -2];
 // const DIRECTIONS_SHORT: [isize; 2] = [1, -1];
 
-const DIRECTIONS: [(isize, isize); 8] = [
-    (2, 1),
-    (2, -1),
-    (-2, 1),
-    (-2, -1),
-    (1, 2),
-    (-1, 2),
-    (1, -2),
-    (-1, -2),
-];
 
 pub struct KnightType;
 

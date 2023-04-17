@@ -1,7 +1,6 @@
 use crate::core::{
-    board::{Square, NUM_FILES},
-    moves::Move,
-    piece::{BishopType, KingType, KnightType, PawnType, QueenType, RookType},
+    board::{ChessBoard, Square, NUM_FILES, NUM_RANKS},
+    moves::{Move, generate::generate_move_data},
     team::Team,
 };
 
@@ -13,6 +12,18 @@ pub enum ChessPieceVariant {
     Rook,
     Queen,
     King,
+}
+
+impl ChessPieceVariant {
+  pub fn is_sliding(&self) -> bool {
+    use super::ChessPieceVariant::*;
+
+    match *self {
+      Bishop | Queen | Rook => true,
+      _ => false,
+    }
+  }
+    
 }
 
 impl TryFrom<char> for ChessPieceVariant {
@@ -56,16 +67,8 @@ pub struct ChessPiece {
 }
 
 impl ChessPiece {
-    pub fn pseudo_legal_moves(&self, position: Square) -> Vec<Move> {
-        use ChessPieceVariant::*;
-        match self.variant {
-            Pawn => PawnType::pseudo_legal_moves(position, self.team),
-            Knight => KnightType::pseudo_legal_moves(position, self.team),
-            Bishop => BishopType::pseudo_legal_moves(position, self.team),
-            Rook => RookType::pseudo_legal_moves(position, self.team),
-            Queen => QueenType::pseudo_legal_moves(position, self.team),
-            King => KingType::pseudo_legal_moves(position, self.team),
-        }
+    pub fn pseudo_legal_moves(&self, position: Square, board: &ChessBoard) -> (Vec<Vec<Square>>, Vec<Move>) {
+        generate_move_data(self, position, board)
     }
 
     // pub fn is_sliding(&self) -> bool {
@@ -103,15 +106,15 @@ impl TryFrom<char> for ChessPiece {
     }
 }
 
-pub trait PieceType {
-    const PIECE_VARIANT: ChessPieceVariant;
-    //     fn is(piece: Piece) -> bool;
-    //     fn into_piece() -> Piece;
-    //     #[inline(always)]
-    //     fn pseudo_legals(src: Square, color: Color, combined: BitBoard, mask: BitBoard) -> BitBoard;
-
-    /// TODO: find a way to remove &self. This does not need to be an instance
-    fn pseudo_legal_moves(position: Square, team: Team) -> Vec<Move>;
+// pub trait PieceType {
+//     const PIECE_VARIANT: ChessPieceVariant;
+//     //     fn is(piece: Piece) -> bool;
+//     //     fn into_piece() -> Piece;
+//     //     #[inline(always)]
+//     //     fn pseudo_legals(src: Square, color: Color, combined: BitBoard, mask: BitBoard) -> BitBoard;
+//
+//     /// TODO: find a way to remove &self. This does not need to be an instance
+//     fn pseudo_legal_moves(position: Square, team: Team) -> Vec<Move>;
 
     //     #[inline(always)]
     //     fn legals<T>(movelist: &mut MoveList, board: &Board, mask: BitBoard)
@@ -153,27 +156,60 @@ pub trait PieceType {
     //             }
     //         }
     //     }
-}
+// }
 
-pub trait SlidingPiece {
-    const TRANSLATIONS: &'static [fn(origin: Square) -> Option<Square>];
-
-    fn generate_sliding_destionations(origin: Square) -> Vec<Square> {
-        let mut squares = Vec::new();
-        for translation in Self::TRANSLATIONS {
-            let mut latest = origin;
-
-            for _ in 0..NUM_FILES {
-                if let Some(dest) = translation(latest) {
-                    squares.push(dest);
-
-                    latest = dest;
-                } else {
-                  break;
-                }
-            }
-        }
-
-        return squares;
-    }
-}
+// pub type SquareTranslation = fn(origin: Square) -> Option<Square>;
+// pub trait PieceMovement {
+//     const TRANSLATIONS: &'static [SquareTranslation] = [
+//         // Horizontal + vertical
+//         Self::N,
+//         Self::W,
+//         Self::S,
+//         Self::E,
+//
+//         // Diagonal
+//         Self::NE,
+//         Self::NW,
+//         Self::SE,
+//         Self::SW,
+//     ];
+//
+//     const IS_SLIDING: bool = true;
+//     const MAX_DIRECTION_OFFSET: u8 = if Self::IS_SLIDING {
+//         0
+//     } else {
+//         std::cmp::max(NUM_FILES, NUM_RANKS)
+//     };
+//
+//
+//     /// Generates rays for every PieceMovement::TRANSLATIONS direction
+//     /// IS ALREADY IMPLEMENTED
+//     fn generate_rays(origin: Square, team: Team) -> Vec<Vec<Square>> {
+//         Self::TRANSLATIONS
+//             .iter()
+//             .map(|translate_square| {
+//                 (0..Self::MAX_DIRECTION_OFFSET)
+//                     .scan(origin, |current_dest, direction_offset| {
+//                         // Check if the the square is inside of the board, breaks if not
+//                         translate_square(current_dest)
+//                     })
+//                     .collect()
+//             })
+//             .collect()
+//     }
+//
+//     // /// 
+//     // /// IS ALREADY IMPLEMENTED
+//     // fn generate_destination_squares(origin: Square, team: Team, board: &ChessBoard) -> Vec<Square> {
+//     //     Self::generate_rays(origin, team)
+//     //         .iter()
+//     //         .map(|direction| {
+//     //             direction
+//     //                 .iter()
+//     //                 .filter(|square| !board.get(square).is_some_and(|piece| piece.team == team))
+//     //                 .collect()
+//     //         })
+//     //         .flatten()
+//     //         .collect()
+//     // }
+// }

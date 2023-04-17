@@ -1,9 +1,11 @@
 use crate::core::{
     board::Square,
     moves::Move,
-    piece::{ChessPieceVariant, PieceType, SlidingPiece},
+    piece::{ChessPieceVariant, PieceType},
     team::Team,
 };
+
+use super::{PieceMovement, SquareTranslation};
 
 pub struct BishopType;
 
@@ -18,11 +20,15 @@ impl PieceType for BishopType {
     }
 }
 
-impl SlidingPiece for BishopType {
-    const TRANSLATIONS: &'static [fn(origin: Square) -> Option<Square>] = &[
-        |x| x.right()?.up(),
-        |x| x.right()?.down(),
-        |x| x.left()?.up(),
-        |x| x.left()?.down(),
+impl PieceMovement for BishopType {
+    const IS_SLIDING: bool = true;
+    const TRANSLATIONS: &'static [SquareTranslation] = &[
+        // Diagonal
+        Self::NE,
+        Self::NW,
+        Self::SE,
+        Self::SW,
     ];
+
+
 }

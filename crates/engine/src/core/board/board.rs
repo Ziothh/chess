@@ -65,17 +65,13 @@ impl ChessBoard {
     pub fn generate_legal_moves(&self, team_to_move: Team) -> Vec<Move> {
         self.iter_team(team_to_move)
             .map(|(square, piece)| {
-                let moves: Vec<Move> = piece
-                    .pseudo_legal_moves(square)
-                    .into_iter()
-                    .filter(|m| {
-                        if let Some(dest_piece) = self.get(m.destination) {
-                            dest_piece.team != team_to_move
-                        } else {
-                            true
-                        }
-                    })
-                    .collect();
+                let (rays, mut moves) = piece.pseudo_legal_moves(square, self);
+
+                moves.iter_mut().for_each(|m| {
+                  if self.get(m.destination).is_some() {
+                    m.takes = true;
+                  }
+                });
 
                 moves
             })

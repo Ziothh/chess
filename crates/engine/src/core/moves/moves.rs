@@ -1,4 +1,5 @@
-use super::{board::Square, instructions::CheckKind, piece::ChessPieceVariant};
+use crate::core::{board::Square, instructions::CheckKind, piece::ChessPieceVariant};
+
 
 /// Data structure representing a single move.
 #[derive(Debug, PartialEq)]
