@@ -72,47 +72,6 @@ impl ChessBoard {
             .flatten()
             .collect()
     }
-
-    pub fn print_ascii(&self) -> &Self {
-        let mut ranks: [String; NUM_RANKS + 1] = Default::default();
-
-        self.0.iter().enumerate().for_each(|(i, cell)| {
-            let (file, rank) = Square::new(i as u8).to_coords();
-
-            let file_index = file.to_index();
-            let rank_index = rank.to_index();
-
-            // Add file legend
-            if rank_index == 0 {
-                let rank_str = ranks.get_mut(0).unwrap();
-                if file_index == 0 {
-                    rank_str.push_str("  ")
-                }
-                rank_str.push_str(&format!("{} ", file.to_char()))
-            }
-
-            let rank_str = ranks.get_mut(rank_index + 1).unwrap();
-
-            // Add rank legend
-            if file_index == 0 {
-                rank_str.push_str(&format!("{} ", rank_index + 1))
-            }
-
-            let index_str = if let Some(piece) = cell {
-                piece.clone().to_string()
-            } else {
-                ".".to_string()
-            };
-
-            rank_str.push_str(&format!("{index_str} "));
-        });
-
-        ranks.reverse();
-
-        println!("{}", ranks.join("\n"));
-
-        return self;
-    }
 }
 
 // impl IntoIterator for ChessBoard {

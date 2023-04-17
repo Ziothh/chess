@@ -1,7 +1,12 @@
-/// The starting FEN string. 
+/// The starting FEN string.
 pub const START: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-use crate::core::{board::ChessBoard, game::Chess, piece::ChessPiece, team::Team};
+use crate::core::{
+    board::{ChessBoard, File, Rank, Square, NUM_RANKS},
+    game::Chess,
+    piece::ChessPiece,
+    team::Team,
+};
 
 /// TODO: Add better validaton
 /// https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -9,9 +14,9 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
     let parts = Vec::from_iter(fen_string.split(" "));
 
     // Piece placement data: Each rank is described, starting with rank 8 and ending with rank 1, with a "/" between each one; within each rank, the contents of the squares are described in order from the a-file to the h-file. Each piece is identified by a single letter taken from the standard English names in algebraic notation (pawn = "P", knight = "N", bishop = "B", rook = "R", queen = "Q" and king = "K"). White pieces are designated using uppercase letters ("PNBRQK"), while black pieces use lowercase letters ("pnbrqk"). A set of one or more consecutive empty squares within a rank is denoted by a digit from "1" to "8", corresponding to the number of squares.
-    let pieces = parts[0];
+    let board_str = parts[0];
     //  "w" means that White is to move; "b" means that Black is to move.
-    let current_team = match parts[1] {
+    let team_to_move = match parts[1] {
         "w" => Team::White,
         "b" => Team::Black,
         _ => unreachable!(),
@@ -25,23 +30,29 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
 
     let mut board = ChessBoard::empty();
 
-    let mut current_index: usize = 0;
-    for row in pieces.split("/") {
-        for char in row.chars() {
+    let mut offset;
+    for (rank, row) in board_str.split("/").enumerate() {
+        offset = 0;
+        for (file, char) in row.chars().enumerate() {
             if char.is_numeric() {
-                current_index += char.to_digit(10).unwrap() as usize;
+                offset += char.to_digit(10).unwrap() as usize - 1;
                 continue;
             }
 
-            board.set(current_index, Some(ChessPiece::try_from(char).unwrap()));
-
-            current_index += 1;
+            board.set(
+                Square::make_square(
+                    File::from_index(file + offset),
+                    Rank::from_index(NUM_RANKS - 1 - rank),
+                )
+                .to_index(),
+                Some(ChessPiece::try_from(char).unwrap()),
+            );
         }
     }
 
     Ok(Chess {
         board,
-        current_team,
+        team_to_move,
         halfmove_clock: parts[4].parse()?,
         fullmove_clock: parts[5].parse()?,
     })

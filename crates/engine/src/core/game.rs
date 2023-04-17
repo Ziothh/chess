@@ -10,7 +10,7 @@ pub struct Chess {
     pub board: ChessBoard,
 
     /// The team to move
-    pub current_team: Team,
+    pub team_to_move: Team,
     ///
     /// Halfmove clock: The number of halfmoves since the last capture or pawn advance, used for the fifty-move rule.
     pub halfmove_clock: usize,
@@ -23,17 +23,17 @@ impl Chess {
         todo!()
     }
 
-    /// Returns the side to move, based on `self.halfmove_clock`
-    pub fn team_to_move(&self) -> Team {
-        if self.halfmove_clock % 2 == 0 {
-            Team::White
-        } else {
-            Team::Black
-        }
-    }
+    // /// Returns the side to move, based on `self.halfmove_clock`
+    // pub fn team_to_move(&self) -> Team {
+    //     if self.halfmove_clock % 2 == 0 {
+    //         Team::White
+    //     } else {
+    //         Team::Black
+    //     }
+    // }
 
     pub fn generate_legal_moves(&self) -> Vec<Move> {
-        self.board.generate_legal_moves(self.team_to_move())
+        self.board.generate_legal_moves(self.team_to_move)
     }
 
     pub fn follow_instruction(&self, instruction: Instruction) -> &Self {
