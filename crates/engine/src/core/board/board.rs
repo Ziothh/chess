@@ -1,4 +1,4 @@
-use crate::core::{board::{Square, File}, moves::Move, piece::ChessPiece, team::Team};
+use crate::core::{board::Square, moves::Move, piece::ChessPiece, team::Team};
 
 use super::{NUM_FILES, NUM_RANKS};
 
@@ -46,11 +46,8 @@ impl ChessBoard {
       TODO: TEST THIS
     */
     pub fn swap(&mut self, a: CellIndex, b: CellIndex) -> &mut Self {
-        let (left, right) = self.0.split_at_mut(b);
-
-        std::mem::swap(&mut left[a], &mut right[0]);
-
-        self
+        self.0.swap(a, b);
+        return self;
     }
 
     pub fn group_by_team(&self, team: Team) -> impl Iterator<Item = &ChessPiece> {
@@ -87,20 +84,18 @@ impl ChessBoard {
 
             // Add file legend
             if rank_index == 0 {
-              let rank_str = ranks.get_mut(0).unwrap();
-              if file_index ==0 {
-                rank_str.push_str("  ")
-              }
-              rank_str.push_str(&format!("{} ", file.to_char()))
+                let rank_str = ranks.get_mut(0).unwrap();
+                if file_index == 0 {
+                    rank_str.push_str("  ")
+                }
+                rank_str.push_str(&format!("{} ", file.to_char()))
             }
 
-            let rank_str = ranks
-                .get_mut(rank_index + 1)
-                .unwrap();
+            let rank_str = ranks.get_mut(rank_index + 1).unwrap();
 
             // Add rank legend
             if file_index == 0 {
-              rank_str.push_str(&format!("{} ", rank_index + 1))
+                rank_str.push_str(&format!("{} ", rank_index + 1))
             }
 
             let index_str = if let Some(piece) = cell {

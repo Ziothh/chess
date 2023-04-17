@@ -1,3 +1,5 @@
+use crate::core::board::NUM_RANKS;
+
 use super::board::Rank;
 
 #[derive(PartialOrd, PartialEq, Eq, Copy, Clone, Debug, Hash)]
@@ -18,17 +20,15 @@ impl Team {
         *self as usize
     }
 
-    /// Gets the nth rank, relative to the team starting position. 
+    /// Gets the nth rank, relative to the team starting position.
     ///
     /// NOTE: `nth` = 1..=8 // ! The rank wraps around if nth > 8
     #[inline]
     pub fn get_nth_rank(&self, nth: usize) -> Rank {
-        Rank::from_index(
-            (match *self {
-                Self::White => nth,
-                Self::Black => (NUM_TEAMS - 1) - nth,
-            } - 1),
-        )
+        Rank::from_index(match *self {
+            Self::White => nth - 1,
+            Self::Black => (NUM_RANKS) - nth,
+        })
     }
 }
 
