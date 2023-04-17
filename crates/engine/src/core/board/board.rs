@@ -23,49 +23,59 @@ impl ChessBoard {
     }
 
     // Instance methods ---------------
-    pub fn get(&self, index: CellIndex) -> &ChessBoardCellValue {
-        self.0.get(index).expect("index to be in range 0..64")
+    pub fn get(&self, square: Square) -> &ChessBoardCellValue {
+        self.0
+            .get(square.to_index())
+            .expect("index to be in range 0..64")
     }
-
-    pub fn set(&mut self, index: CellIndex, value: ChessBoardCellValue) -> &mut Self {
-        self.0[index] = value;
+    pub fn set(&mut self, square: Square, piece: ChessPiece) -> &mut Self {
+        self.0[square.to_index()] = Some(piece);
         return self;
     }
-    pub fn set_piece(&mut self, index: CellIndex, piece: ChessPiece) -> &mut Self {
-        return self.set(index, Some(piece));
+    pub fn remove(&mut self, square: Square) -> &mut Self {
+        self.0[square.to_index()] = None;
+        return self;
     }
-
-    pub fn iter(&self) -> impl Iterator<Item = &ChessBoardCellValue> {
-        self.0.iter()
-    }
-
     /**
        Swaps the values of cell indices `a` and `b`.
       `a <-> b`
 
       TODO: TEST THIS
     */
-    pub fn swap(&mut self, a: CellIndex, b: CellIndex) -> &mut Self {
-        self.0.swap(a, b);
+    pub fn swap(&mut self, a: Square, b: Square) -> &mut Self {
+        self.0.swap(a.to_index(), b.to_index());
         return self;
     }
 
-    pub fn group_by_team(&self, team: Team) -> impl Iterator<Item = &ChessPiece> {
-        self.iter().filter_map(move |cell| {
+    pub fn iter(&self) -> impl Iterator<Item = &ChessBoardCellValue> {
+        self.0.iter()
+    }
+    pub fn iter_team(&self, team: Team) -> impl Iterator<Item = (Square, &ChessPiece)> {
+        self.iter().enumerate().filter_map(move |(i, cell)| {
             let Some(piece) = cell else { return None; };
 
             if piece.team != team {
                 return None;
             }
 
-            Some(piece)
+            Some((Square::new(i as u8), piece))
         })
     }
 
     pub fn generate_legal_moves(&self, team_to_move: Team) -> Vec<Move> {
-        self.group_by_team(team_to_move)
-            .map(|piece| {
-                let moves: Vec<Move> = Vec::new();
+        self.iter_team(team_to_move)
+            .map(|(square, piece)| {
+                let moves: Vec<Move> = piece
+                    .pseudo_legal_moves(square)
+                    .into_iter()
+                    .filter(|m| {
+                        if let Some(dest_piece) = self.get(m.destination) {
+                            dest_piece.team != team_to_move
+                        } else {
+                            true
+                        }
+                    })
+                    .collect();
 
                 moves
             })
@@ -73,12 +83,3 @@ impl ChessBoard {
             .collect()
     }
 }
-
-// impl IntoIterator for ChessBoard {
-//     type Item = ChessBoardCellValue;
-//     type IntoIter = std::array::IntoIter<ChessBoardCellValue, { ChessBoard::SIZE }>;
-//
-//     fn into_iter(self) -> Self::IntoIter {
-//         self.0.into_iter()
-//     }
-// }

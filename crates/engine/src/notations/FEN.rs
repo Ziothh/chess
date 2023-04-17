@@ -43,9 +43,8 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
                 Square::make_square(
                     File::from_index(file + offset),
                     Rank::from_index(NUM_RANKS - 1 - rank),
-                )
-                .to_index(),
-                Some(ChessPiece::try_from(char).unwrap()),
+                ),
+                ChessPiece::try_from(char).unwrap(),
             );
         }
     }

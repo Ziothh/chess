@@ -6,9 +6,9 @@ impl PieceType for KingType {
     const PIECE_VARIANT: ChessPieceVariant = ChessPieceVariant::Bishop;
 
     fn pseudo_legal_moves(position: Square, team: Team) -> Vec<Move> {
-        // let moves: Vec<_> = Vec::new();
+        let moves: Vec<_> = Vec::new();
 
-        // return moves;
-        todo!()
+        return moves;
+        // todo!()
     }
 }
