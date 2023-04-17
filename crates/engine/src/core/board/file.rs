@@ -62,6 +62,10 @@ impl File {
     pub fn to_index(&self) -> usize {
         *self as usize
     }
+
+    pub fn to_char(&self) -> char {
+      char::from_u32((self.to_index() + (b'a' as usize)) as u32).unwrap()
+    }
 }
 
 impl TryFrom<char> for File {

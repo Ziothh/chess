@@ -84,6 +84,13 @@ impl Square {
         ));
     }
 
+    pub fn to_coords(&self) -> (File, Rank) {
+      (self.get_file(), self.get_rank())
+    }
+    pub fn to_coord_indices(&self) -> (usize, usize) {
+      (self.get_file().to_index(), self.get_rank().to_index())
+    }
+
     /// Return the rank given this square.
     ///
     /// ```
