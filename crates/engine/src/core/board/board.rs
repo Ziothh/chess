@@ -65,13 +65,15 @@ impl ChessBoard {
     pub fn generate_legal_moves(&self, team_to_move: Team) -> Vec<Move> {
         self.iter_team(team_to_move)
             .map(|(square, piece)| {
-                let (rays, mut moves) = piece.pseudo_legal_moves(square, self);
+                let (_rays, mut moves) = piece.pseudo_legal_moves(square, self);
 
                 moves.iter_mut().for_each(|m| {
                   if self.get(m.destination).is_some() {
                     m.takes = true;
                   }
                 });
+
+                // TODO: remove moves of pieces that block a check
 
                 moves
             })

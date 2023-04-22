@@ -7,19 +7,23 @@ use engine::core::{
 };
 
 fn main() -> () {
-    let game = Chess::default();
+    let mut game = Chess::default();
+    let mut ascii = ASCIIBoard::new();
 
-    let game =
+    let mut game =
         FEN::gamestate_from_fen("rnbqkb1r/ppp1pppp/5n2/3p4/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3")
             .unwrap();
 
+    game.make_move(Square::B2, Square::B3);
+
+    ascii.print(&game.board);
+
     // let origin = Square::E6;
 
-    let mut ascii = ASCIIBoard::new();
 
     game.generate_legal_moves()
         .iter()
-        .filter(|m| m.origin == Square::E4)
+        .filter(|m| m.origin == Square::D8)
         .for_each(|m| {
             println!("{:#?}", &m);
             ascii.mark(m.destination);

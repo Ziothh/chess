@@ -80,6 +80,8 @@ pub fn generate_move_data(
         .map(|ray| {
             ray.iter()
                 .scan(false, |should_break, destination| {
+                    let mut takes = false;
+
                     if *should_break {
                         return None;
                     }
@@ -87,10 +89,22 @@ pub fn generate_move_data(
                     if let Some(p) = chessboard.get(*destination) {
                         if p.team == piece.team {
                             return None;
+                        } else {
+                            // Take and stop generating moves
+                            takes = true;
+                            *should_break = !*should_break;
                         }
                     }
 
-                    return Some(Move::new(piece.variant, square, *destination));
+                    return Some(Move {
+                        piece: piece.variant,
+                        origin: square,
+                        destination: *destination,
+                        // TODO
+                        checks: None,
+                        promotion: None,
+                        takes,
+                    });
                 })
                 .collect::<Vec<_>>()
         })

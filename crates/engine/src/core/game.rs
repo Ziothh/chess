@@ -2,7 +2,12 @@ use std::fmt::Display;
 
 use crate::notations::FEN;
 
-use super::{board::ChessBoard, instructions::Instruction, moves::Move, team::Team};
+use super::{
+    board::{ChessBoard, Square},
+    instructions::Instruction,
+    moves::Move,
+    team::Team,
+};
 
 #[derive(Debug)]
 pub struct Chess {
@@ -31,12 +36,32 @@ impl Chess {
     //         Team::Black
     //     }
     // }
+    pub fn make_move(&mut self, origin: Square, destination: Square) -> Result<&Self, String> {
+        if self
+            .generate_legal_moves()
+            .iter()
+            .find(|m| m.origin == origin && m.destination == destination)
+            .is_none()
+        {
+            return Err(format!("Move {origin} => {destination} could not be found"));
+        }
+
+        self.board.swap(origin, destination).remove(origin);
+
+        self.team_to_move = match self.team_to_move {
+            Team::Black => Team::White,
+            Team::White => Team::Black,
+        };
+
+        return Ok(self);
+    }
 
     pub fn generate_legal_moves(&self) -> Vec<Move> {
         self.board.generate_legal_moves(self.team_to_move)
     }
 
     pub fn follow_instruction(&self, instruction: Instruction) -> &Self {
+        todo!();
         self
     }
 }
