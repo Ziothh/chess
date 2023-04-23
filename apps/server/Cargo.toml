@@ -1,0 +1,18 @@
+[package]
+name = "server"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+anyhow.workspace = true
+tokio = { workspace = true, features = ["full"] }
+axum = "0.6.16"
+engine = { path = "../../crates/engine"  }
+rspc = { workspace = true, features = ["axum"] }
+# httpz = { workspace = true, features = ["axum"] }
+# tokio = { workspace = true, features = ["sync", "rt-multi-thread", "signal"] }
+# tracing = "0.1.36"
+# ctrlc = "3.2.3"
+# http = "0.2.8"
+# hyper = "0.14.23"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

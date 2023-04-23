@@ -2,6 +2,7 @@ packages:
   - apps/desktop
   - apps/expo
   - apps/nextjs
+  - apps/server
   - packages/*
   - packages/config/*
   - prisma
