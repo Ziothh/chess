@@ -10,6 +10,7 @@ use super::{
 };
 
 #[derive(Debug)]
+#[derive(rspc::Type, serde::Serialize)]
 pub struct Chess {
     /// The array of chessboard cells.
     pub board: ChessBoard,
@@ -18,9 +19,9 @@ pub struct Chess {
     pub team_to_move: Team,
     ///
     /// Halfmove clock: The number of halfmoves since the last capture or pawn advance, used for the fifty-move rule.
-    pub halfmove_clock: usize,
+    pub halfmove_clock: u8,
     // Fullmove number: The number of the full moves. It starts at 1 and is incremented after Black's move.
-    pub fullmove_clock: usize,
+    pub fullmove_clock: u8,
 }
 
 impl Chess {

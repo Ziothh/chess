@@ -5,6 +5,7 @@ use crate::core::{
 };
 
 #[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(rspc::Type, serde::Serialize)]
 pub enum ChessPieceVariant {
     Pawn,
     Bishop,
@@ -61,6 +62,7 @@ impl ToString for ChessPieceVariant {
 }
 
 #[derive(Debug, PartialEq)]
+#[derive(rspc::Type, serde::Serialize)]
 pub struct ChessPiece {
     pub team: Team,
     pub variant: ChessPieceVariant,

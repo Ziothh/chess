@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 anyhow.workspace = true
+serde.workspace = true
 tokio = { workspace = true, features = ["full"] }
 axum = "0.6.16"
 engine = { path = "../../crates/engine"  }

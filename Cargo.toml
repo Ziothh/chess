@@ -27,6 +27,7 @@ prisma-client-rust-cli = { git = "https://github.com/Brendonovich/prisma-client-
   "migrations",
   "sqlite",
 ], default-features = false }
+serde = { version = "1.0.160", features = ["std", "derive"] }
 prisma-client-rust-sdk = { git = "https://github.com/Brendonovich/prisma-client-rust", branch = "spacedrive", features = [
   "sqlite",
 ], default-features = false }

@@ -2,12 +2,14 @@ use crate::core::{board::Square, moves::Move, piece::ChessPiece, team::Team};
 
 use super::{NUM_FILES, NUM_RANKS};
 
+use serde_big_array::BigArray;
+
 pub type ChessBoardCellValue = Option<ChessPiece>;
 pub type ChessBoardCells = [ChessBoardCellValue; ChessBoard::SIZE];
 pub type CellIndex = usize;
 
-#[derive(Debug)]
-pub struct ChessBoard(ChessBoardCells);
+#[derive(Debug, rspc::Type, serde::Serialize)]
+pub struct ChessBoard(#[serde(with = "BigArray")] [Option<ChessPiece>; ChessBoard::SIZE]);
 
 impl ChessBoard {
     pub const SIZE: usize = NUM_FILES * NUM_RANKS;
@@ -68,9 +70,9 @@ impl ChessBoard {
                 let (_rays, mut moves) = piece.pseudo_legal_moves(square, self);
 
                 moves.iter_mut().for_each(|m| {
-                  if self.get(m.destination).is_some() {
-                    m.takes = true;
-                  }
+                    if self.get(m.destination).is_some() {
+                        m.takes = true;
+                    }
                 });
 
                 // TODO: remove moves of pieces that block a check

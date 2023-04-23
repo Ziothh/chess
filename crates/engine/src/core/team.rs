@@ -3,6 +3,7 @@ use crate::core::board::NUM_RANKS;
 use super::board::Rank;
 
 #[derive(PartialOrd, PartialEq, Eq, Copy, Clone, Debug, Hash)]
+#[derive(rspc::Type, serde::Serialize)]
 pub enum Team {
     Black,
     White,
