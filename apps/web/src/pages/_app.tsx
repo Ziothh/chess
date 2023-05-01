@@ -1,19 +1,20 @@
 import "../styles/globals.css";
 import type { AppType } from "next/app";
 import type { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-
-import { api } from "~/utils/api";
+// import { SessionProvider } from "next-auth/react";
+import { RSPCProvider } from '@acme/server'
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
+    // <SessionProvider session={session}>
+    <RSPCProvider>
       <Component {...pageProps} />
-    </SessionProvider>
+    </RSPCProvider>
+    // </SessionProvider>
   );
 };
 
-export default api.withTRPC(MyApp);
+export default MyApp;

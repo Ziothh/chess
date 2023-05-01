@@ -75,41 +75,71 @@ pub fn generate_move_data(
     };
     // .map(|direction| !chessboard.get(sq).is_some_and(|p| p.team == piece.team))
 
-    let moves: Vec<Move> = rays
-        .iter()
-        .map(|ray| {
-            ray.iter()
-                .scan(false, |should_break, destination| {
-                    let mut takes = false;
-
-                    if *should_break {
-                        return None;
-                    }
-
-                    if let Some(p) = chessboard.get(*destination) {
-                        if p.team == piece.team {
-                            return None;
-                        } else {
-                            // Take and stop generating moves
-                            takes = true;
-                            *should_break = !*should_break;
+    let moves: Vec<Move> = match piece.variant {
+        ChessPieceVariant::Pawn => rays
+            .iter()
+            .map(|ray| {
+                ray.iter()
+                    .filter_map(|destination| {
+                        let mut takes = false;
+                        if let Some(p) = chessboard.get(*destination) {
+                            if p.team == piece.team || destination.get_file() == square.get_file() {
+                                return None;
+                            } else {
+                                takes = true;
+                            }
                         }
-                    }
 
-                    return Some(Move {
-                        piece: piece.variant,
-                        origin: square,
-                        destination: *destination,
-                        // TODO
-                        checks: None,
-                        promotion: None,
-                        takes,
-                    });
-                })
-                .collect::<Vec<_>>()
-        })
-        .flatten()
-        .collect();
+                        return Some(Move {
+                            origin: square,
+                            destination: *destination,
+                            piece: piece.variant,
+                            takes,
+                            checks: None,
+                            // TODO
+                            promotion: None,
+                        });
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .flatten()
+            .collect(),
+        _ => rays
+            .iter()
+            .map(|ray| {
+                ray.iter()
+                    .scan(false, |should_break, destination| {
+                        let mut takes = false;
+
+                        if *should_break {
+                            return None;
+                        }
+
+                        if let Some(p) = chessboard.get(*destination) {
+                            if p.team == piece.team {
+                                return None;
+                            } else {
+                                // Take and stop generating moves
+                                takes = true;
+                                *should_break = !*should_break;
+                            }
+                        }
+
+                        return Some(Move {
+                            piece: piece.variant,
+                            origin: square,
+                            destination: *destination,
+                            // TODO
+                            checks: None,
+                            promotion: None,
+                            takes,
+                        });
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .flatten()
+            .collect(),
+    };
 
     return (rays, moves);
 }

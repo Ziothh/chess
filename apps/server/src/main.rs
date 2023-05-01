@@ -1,6 +1,7 @@
 use std::net::SocketAddr;
 
 use axum::routing::{get, post};
+use tower_http::cors::{Any, CorsLayer};
 
 mod rspc_router;
 use crate::rspc_router::{router, MyCtx};
@@ -10,9 +11,17 @@ const PORT: u16 = 8080;
 #[tokio::main]
 async fn main() -> () {
     let app = axum::Router::new()
-        .route("/", get(|| async { "Spacedrive Server!" }))
+        .layer(CorsLayer::permissive())
+        .route("/", get(|| async { "Chess Server!" }))
         .route("/health", get(|| async { "OK" }))
-        .nest("/rspc", router().endpoint(|| MyCtx {}).axum())
+        .nest(
+            "/rspc",
+            router()
+                //
+                .endpoint(|| MyCtx {})
+                .axum()
+                .layer(CorsLayer::permissive()),
+        )
         // .route(
         //     "/rspc/:id",
         //

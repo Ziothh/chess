@@ -1,5 +1,13 @@
-use engine::core::{board::ChessBoard, game::Chess, moves::Move, team::Team};
-use rspc::{Config, Router, Type, RouterBuilder};
+use std::str::FromStr;
+
+use engine::core::{
+    board::{ChessBoard, Square},
+    game::Chess,
+    moves::Move,
+    piece::ChessPieceVariant,
+    team::Team,
+};
+use rspc::{Config, Router, RouterBuilder, Type};
 use serde::Serialize; // This requires the 'derive' feature to be enabled.
 
 pub struct MyCtx {}
@@ -23,17 +31,61 @@ pub fn router() -> std::sync::Arc<Router<MyCtx>> {
 
 fn chess_router() -> RouterBuilder<MyCtx> {
     Router::<MyCtx>::new()
-        .query("start", |t| t(|_ctx, _args: ()| Chess::default()))
+        .query("start", |t| {
+            t(|_ctx, _args: ()| ChessJSON::from(Chess::default()))
+        })
+        .mutation("move", |t| {
+            t(|_ctx, args: (MoveJSON, ChessJSON)| {
+                let (move_data, chess_data) = args;
+
+                let mut chess = Chess::default();
+                chess.board = chess_data.board;
+                chess.team_to_move = chess_data.team_to_move;
+
+                chess
+                    .make_move(
+                        Square::from_str(&move_data.origin).unwrap(),
+                        Square::from_str(&move_data.destination).unwrap(),
+                    )
+                    .unwrap();
+
+                return ChessJSON::from(chess);
+            })
+        })
+        .merge("fen.", Router::<MyCtx>::new())
 }
-// struct ChessJSON {
-//   team_to_move: Team,
-//   moves: Vec<Move>,
-//   board: ChessBoard,
-//   test: bool
-// }
-//
-// impl From<Chess> for ChessJSON {
-//   fn from(value: Chess) -> Self {
-//
-//   }
-// }
+
+#[derive(Debug, rspc::Type, serde::Serialize, serde::Deserialize)]
+struct MoveJSON {
+    origin: String,
+    destination: String,
+    takes: bool,
+    piece: ChessPieceVariant,
+}
+
+#[derive(Debug, rspc::Type, serde::Serialize, serde::Deserialize)]
+struct ChessJSON {
+    #[serde(rename = "teamToMove")]
+    team_to_move: Team,
+    moves: Vec<MoveJSON>,
+    board: ChessBoard,
+}
+
+impl From<Chess> for ChessJSON {
+    fn from(value: Chess) -> Self {
+        Self {
+            team_to_move: value.team_to_move,
+            moves: value
+                .generate_legal_moves()
+                .iter()
+                .map(|m| MoveJSON {
+                    piece: m.piece,
+                    origin: m.origin.to_string(),
+                    destination: m.destination.to_string(),
+                    takes: m.takes,
+                })
+                .collect(),
+            board: value.board,
+        }
+    }
+}

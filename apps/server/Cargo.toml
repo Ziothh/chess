@@ -10,6 +10,7 @@ tokio = { workspace = true, features = ["full"] }
 axum = "0.6.16"
 engine = { path = "../../crates/engine"  }
 rspc = { workspace = true, features = ["axum"] }
+tower-http = { version = "0.4.0", features = ["cors"] }
 # httpz = { workspace = true, features = ["axum"] }
 # tokio = { workspace = true, features = ["sync", "rt-multi-thread", "signal"] }
 # tracing = "0.1.36"

@@ -1,7 +1,7 @@
 packages:
   - apps/desktop
   - apps/expo
-  - apps/nextjs
+  - apps/web
   - apps/server
   - packages/*
   - packages/config/*

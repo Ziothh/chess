@@ -3,18 +3,21 @@
 
 export type Procedures = {
     queries: 
-        { key: "chess.start", input: never, result: Chess } | 
+        { key: "chess.start", input: never, result: ChessJSON } | 
         { key: "echo", input: string, result: string },
-    mutations: never,
+    mutations: 
+        { key: "chess.move", input: [MoveJSON, ChessJSON], result: ChessJSON },
     subscriptions: never
 };
 
-export type Chess = { board: ChessBoard; team_to_move: Team; halfmove_clock: number; fullmove_clock: number }
+export type MoveJSON = { origin: string; destination: string; takes: boolean; piece: ChessPieceVariant }
 
 export type Team = "Black" | "White"
 
-export type ChessBoard = ChessPiece | null[]
+export type ChessBoard = (ChessPiece | null)[]
 
 export type ChessPieceVariant = "Pawn" | "Bishop" | "Knight" | "Rook" | "Queen" | "King"
 
 export type ChessPiece = { team: Team; variant: ChessPieceVariant }
+
+export type ChessJSON = { teamToMove: Team; moves: MoveJSON[]; board: ChessBoard }
