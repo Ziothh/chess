@@ -1,8 +1,8 @@
 "use client";
 
-import { FC } from "react";
+import type { FC } from "react";
 import { rspc } from "@acme/server";
-import { ChessJSON, ChessPieceVariant } from "@acme/server/ts/bindings";
+import type { ChessJSON, ChessPieceVariant } from "@acme/server/ts/bindings";
 import { chessBoard } from ".";
 import Square from "./Square";
 

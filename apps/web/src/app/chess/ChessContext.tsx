@@ -31,7 +31,7 @@ export const [useChess, ChessCtxProvider] = contextFactory(
       moves,
       teamToMove,
       board,
-    };
+    } as const;
   },
   ({ children }) => {
     return (
