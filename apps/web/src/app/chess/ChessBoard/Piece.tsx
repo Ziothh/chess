@@ -1,13 +1,12 @@
 import { chessBoard } from ".";
 import { useChess } from "../ChessContext";
-import { squares } from "./config";
 
-export const usePiece = (square: chessBoard.SquareId | null) => {
+export const usePiece = (square: chessBoard.Square.Id | null) => {
   const { board, moves } = useChess()
 
-  const piece = square === null 
-  ? board.squares[squares.findIndex((sq) => sq === square)]
-  : null;
+  if (square === null) return null;
+
+  const piece = chessBoard.getById(board.squares, square);
 
   if (!piece) return null;
 

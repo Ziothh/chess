@@ -3,21 +3,22 @@ import { chessBoard } from ".";
 import { useChess } from "../ChessContext";
 import { useDraggingPiece } from "../DraggingPieceContext";
 import clsx from "clsx";
-import { squares } from "./config";
 
 
 const Square: FC<{
-  id: chessBoard.SquareId,
   file: chessBoard.File,
   rank: chessBoard.Rank,
-  index: number,
   className?: string,
-}> = ({ id, index, className, file, rank }) => {
+}> = ({ className, file, rank }) => {
+  const id = chessBoard.Square.coords.toId(file, rank);
+  const index = chessBoard.Square.getIndexById(id);
+
   const chess = useChess();
-  const piece = chess.board.squares.at(index)
   const draggingPiece = useDraggingPiece()
 
-  const moveToThisSquare = draggingPiece.value?.moves.find(m => m.destination === chessBoard.squares[index]) ?? null;
+  const piece = chessBoard.getByIndex(chess.board.squares, index)
+
+  const moveToThisSquare = draggingPiece.moves?.find(m => m.destination === id) ?? null;
 
   return (
     <div
@@ -30,33 +31,32 @@ const Square: FC<{
       )}
       onClick={() => {
         // If NO dragging piece
-        if (draggingPiece.value === null || draggingPiece.index === null) {
+        if (draggingPiece.isSet === false) {
           /// Drag the clicked piece
-          if (piece?.team === chess.teamToMove) return draggingPiece.setIndex(index)
+          if (piece?.team === chess.teamToMove) return draggingPiece.setByIndex(index)
           /// Clicking void
           else return;
         }
 
         // If dragging piece
         /// Toggle dragging
-        if (draggingPiece.index === index) return draggingPiece.remove();
+        if (draggingPiece.index === index) return draggingPiece.unset();
 
+        const move = draggingPiece.moves.find(m => m.destination === chessBoard.SQUARES[index]);
 
-        const move = draggingPiece.value?.moves.find(m => m.destination === squares[index]);
-
-        if (!move && !piece) return draggingPiece.remove();
+        if (!move && !piece) return draggingPiece.unset();
 
         if (piece) {
           // Can't take own team
-          if (piece.team === draggingPiece.value.team) return draggingPiece.setIndex(index);
+          if (piece.team === draggingPiece.team) return draggingPiece.setByIndex(index);
 
           // Take this square
-          if (move?.takes) return chess.board.take(draggingPiece.square!, id, draggingPiece.value.variant);
+          if (move?.takes) return chess.board.take(draggingPiece.squareId, id, draggingPiece.variant);
         } else {
-          if (!move) return draggingPiece.remove();
+          if (!move) return draggingPiece.unset();
 
 
-          return chess.board.move(draggingPiece.square!, id, draggingPiece.value.variant);
+          return chess.board.move(draggingPiece.squareId!, id, draggingPiece.variant);
         }
       }}
     >
@@ -69,6 +69,7 @@ const Square: FC<{
           src={`/${piece.team.at(0)?.toLowerCase()}${piece.variant === "Knight" ? "n" : piece.variant.at(0)?.toLowerCase()}.png`}
         />
       )}
+
       {file === 'a' && (
         <span className="absolute left-0 top-0 leading-none block p-2 font-bold opacity-50 pointer-events-none">{rank}</span>
       )}
@@ -77,7 +78,7 @@ const Square: FC<{
       )}
 
       {moveToThisSquare && (
-        <div className={clsx("absolute inset-0 z-10",
+        <div className={clsx("absolute inset-0 z-10 pointer-events-none",
           moveToThisSquare.takes
             ? 'p-2'
             : 'p-10'

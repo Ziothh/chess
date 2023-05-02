@@ -6,25 +6,17 @@ import { ChessJSON, ChessPieceVariant } from "@acme/server/ts/bindings";
 import { chessBoard } from ".";
 import Square from "./Square";
 
-
-const getSquareId = <F extends chessBoard.File, R extends chessBoard.Rank>(file: F, rank: R) => `${file}${rank}` as `${typeof file}${typeof rank}`
-
 const ChessBoard: FC = ({ }) => {
   return (
     <div className="grid grid-cols-8 w-full max-w-4xl">
-      {[...chessBoard.ranks].reverse().map((rank, ri) => chessBoard.files.map((file, fi) => {
-        const id = getSquareId(file, rank);
-
-        return (
-          <Square
-            key={id}
-            id={id}
-            file={file}
-            rank={rank}
-            index={(7 - ri) * 8 + fi}
-          />
-        )
-      }))}
+      {[...chessBoard.RANKS].reverse().map((rank) => chessBoard.FILES.map((file) => (
+        <Square
+          key={file + rank}
+          file={file}
+          rank={rank}
+        />
+      )
+      ))}
     </div>
 
   )
@@ -40,11 +32,11 @@ export const useChessboard = (gameData: ChessJSON) => {
     onSuccess(data, _variables, _context) {
       rspcCtx.queryClient.setQueryData(['chess.start'], data);
     },
-  })
+  });
 
   return {
     squares: gameData.board,
-    move: (origin: chessBoard.SquareId, destination: chessBoard.SquareId, piece: ChessPieceVariant) => moveMutation.mutateAsync([
+    move: (origin: chessBoard.Square.Id, destination: chessBoard.Square.Id, piece: ChessPieceVariant) => moveMutation.mutateAsync([
       {
         origin,
         destination,
@@ -53,7 +45,7 @@ export const useChessboard = (gameData: ChessJSON) => {
       },
       gameData
     ]),
-    take: (origin: chessBoard.SquareId, destination: chessBoard.SquareId, piece: ChessPieceVariant) => moveMutation.mutateAsync([
+    take: (origin: chessBoard.Square.Id, destination: chessBoard.Square.Id, piece: ChessPieceVariant) => moveMutation.mutateAsync([
       {
         origin,
         destination,
@@ -62,5 +54,7 @@ export const useChessboard = (gameData: ChessJSON) => {
       },
       gameData
     ]),
-  }
+  } as const;
 }
+
+
