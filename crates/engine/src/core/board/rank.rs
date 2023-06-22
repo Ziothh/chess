@@ -68,28 +68,28 @@ impl Rank {
 impl TryFrom<char> for Rank {
     type Error = String;
     fn try_from(value: char) -> Result<Self, Self::Error> {
-        //     Rank::from_index((ch[1] as usize) - ('1' as usize)),
-
-        let index = (value as usize) - ('1' as usize);
-
-        // Prevent wrapping. E.g.: value > '8'
-        if index > NUM_RANKS {
-            return Err(format!("Invalid rank \"{value}\""));
-        };
-
-        Ok(Self::from_index(index))
-
-        // match value {
-        //     '1' => Ok(Rank::First),
-        //     '2' => Ok(Rank::Second),
-        //     '3' => Ok(Rank::Third),
-        //     '4' => Ok(Rank::Fourth),
-        //     '5' => Ok(Rank::Fifth),
-        //     '6' => Ok(Rank::Sixth),
-        //     '7' => Ok(Rank::Seventh),
-        //     '8' => Ok(Rank::Eighth),
-        //     _ => Err(format!("Invalid rank \"{value}\"")),
-        // }
+        // //     Rank::from_index((ch[1] as usize) - ('1' as usize)),
+        //
+        // let index = (value as usize) - ('1' as usize);
+        //
+        // // Prevent wrapping. E.g.: value > '8'
+        // if index > NUM_RANKS {
+        //     return Err(format!("Invalid rank \"{value}\""));
+        // };
+        //
+        // Ok(Self::from_index(index))
+        //
+        match value {
+            '1' => Ok(Rank::First),
+            '2' => Ok(Rank::Second),
+            '3' => Ok(Rank::Third),
+            '4' => Ok(Rank::Fourth),
+            '5' => Ok(Rank::Fifth),
+            '6' => Ok(Rank::Sixth),
+            '7' => Ok(Rank::Seventh),
+            '8' => Ok(Rank::Eighth),
+            _ => Err(format!("Invalid rank \"{value}\"")),
+        }
     }
 }
 

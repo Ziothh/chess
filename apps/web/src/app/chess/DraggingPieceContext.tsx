@@ -2,6 +2,7 @@ import { useStateObject } from "~/hooks";
 import { contextFactory } from "~/utils/components";
 import { usePiece } from "./ChessBoard/Piece";
 import { chessBoard } from "./ChessBoard";
+import { z } from "zod";
 
 export const [useDraggingPiece, DraggingPieceProvider] = contextFactory(() => {
   const draggingPieceIndex = useStateObject<chessBoard.Square.Index | null>(null);

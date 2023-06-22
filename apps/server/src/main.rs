@@ -1,7 +1,7 @@
 use std::net::SocketAddr;
 
 use axum::routing::{get, post};
-use tower_http::cors::{Any, CorsLayer};
+use tower_http::cors::CorsLayer;
 
 mod rspc_router;
 use crate::rspc_router::{router, MyCtx};
@@ -17,25 +17,17 @@ async fn main() -> () {
         .nest(
             "/rspc",
             router()
-                //
                 .endpoint(|| MyCtx {})
                 .axum()
                 .layer(CorsLayer::permissive()),
         )
-        // .route(
-        //     "/rspc/:id",
-        //
-        //     router()
-        //         .endpoint(move || MyCtx { })
-        //         .axum(),
-        // )
         .fallback(|| async { "404 Not Found: We're past the event horizon..." });
 
-    let mut addr = "[::]:8080".parse::<SocketAddr>().unwrap(); // This listens on IPv6 and IPv4
+    let mut addr = format!("[::]:{}", &PORT).parse::<SocketAddr>().unwrap(); // This listens on IPv6 and IPv4
 
     addr.set_port(PORT);
 
-    println!("Listening on http://localhost:{}", PORT);
+    println!("Listening on socket address \"{}\"", &addr);
     let (_tx, rx) = tokio::sync::oneshot::channel::<()>();
 
     axum::Server::bind(&addr)
@@ -44,5 +36,5 @@ async fn main() -> () {
             rx.await.ok();
         })
         .await
-        .expect("Error with HTTP server!");
+        .expect("Error whilst shutting down HTTP server!");
 }

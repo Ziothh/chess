@@ -14,12 +14,13 @@ export const [useChess, ChessCtxProvider] = contextFactory(
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      initialData: {
+      placeholderData: {
+        moves: [],
         board: new Array(64).fill(null),
-        team_to_move: 'White',
+        teamToMove: 'White',
         fullmove_clock: 0,
         halfmove_clock: 0,
-      }
+      },
     })
 
     if (data === undefined) { throw new Error("The chess.start data can not be undefined") }

@@ -41,6 +41,7 @@ const Square: FC<{
         // If dragging piece
         /// Toggle dragging
         if (draggingPiece.index === index) return draggingPiece.unset();
+        draggingPiece.squareId
 
         const move = draggingPiece.moves.find(m => m.destination === chessBoard.SQUARES[index]);
 

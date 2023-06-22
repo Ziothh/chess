@@ -1,25 +1,43 @@
 #[allow(unused_imports)]
 use engine::{core::game::Chess, notations::FEN};
 
-use engine::core::{
-    board::{ASCIIBoard, ChessBoard, File, Square},
-    team::Team,
+#[allow(unused_imports)]
+use engine::{
+    bitboard::BitBoard,
+    core::{
+        board::{ASCIIBoard, ChessBoard, File, Square},
+        team::Team,
+    },
 };
 
 fn main() -> () {
-    let mut game = Chess::default();
+    let mut bb = BitBoard::from(Square::E1);
+    println!("{bb}\n");
+
+    bb.set_square(&Square::A1);
+    println!("{bb}\n");
+
+    bb.unset_square(&Square::A1);
+    println!("{bb}\n");
+
+    bb.unset_square(&Square::A1);
+    println!("{bb}\n");
+}
+
+#[allow(dead_code)]
+fn sim_game() -> () {
+    // let mut game = Chess::default();
     let mut ascii = ASCIIBoard::new();
 
     let mut game =
         FEN::gamestate_from_fen("rnbqkb1r/ppp1pppp/5n2/3p4/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3")
             .unwrap();
 
-    game.make_move(Square::B2, Square::B3);
+    game.make_move(Square::B2, Square::B3).unwrap();
 
     ascii.print(&game.board);
 
     // let origin = Square::E6;
-
 
     game.generate_legal_moves()
         .iter()

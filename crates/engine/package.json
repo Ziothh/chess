@@ -1,0 +1,13 @@
+{
+  "name": "@acme/engine",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "cargo build -p engine",
+    "build": "cargo build -p engine",
+    "test:debug": "cargo test -p engine --lib -- --color always --nocapture"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
