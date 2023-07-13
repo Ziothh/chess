@@ -34,6 +34,7 @@ const KNIGHT_TRANSLATIONS: [SquareTranslation; 8] = [
     |origin: Square| origin.translate(-1, -2),
 ];
 
+/** Generates an attack bitboard with the diagonal pawn attacks for a given team and square */
 fn mask_pawn_attack(square: Square, team: Team) -> BitBoard {
     let mut attacks = BitBoard::EMPTY;
 
@@ -49,38 +50,39 @@ fn mask_pawn_attack(square: Square, team: Team) -> BitBoard {
     return attacks;
 }
 
+/** */
 fn mask_knight_attack(square: Square) -> BitBoard {
     let mut attacks = BitBoard::EMPTY;
 
     return attacks;
 }
 
-fn generate_attack_map(translations: &[SquareTranslation], repeat_translations: bool) -> AttackMap {
-    let mut attack_map: AttackMap = [BitBoard::EMPTY; NUM_SQUARES];
-
-    attack_map
-        .iter_mut()
-        .enumerate()
-        .for_each(|(square_index, bitboard)| {
-            let square = Square::new(square_index as u8);
-
-            // *bitboard = bitboard_generator();
-            translations.iter().for_each(|tr| loop {
-                let current_squre = square;
-                // todo improve this with a while loop
-
-                if let Some(new_square) = tr(square) {
-                    bitboard.set_square(new_square);
-
-                    if repeat_translations == false {
-                        break;
-                    }
-                }
-            })
-        });
-
-    return attack_map;
-}
+// fn generate_attack_map(translations: &[SquareTranslation], repeat_translations: bool) -> AttackMap {
+//     let mut attack_map: AttackMap = [BitBoard::EMPTY; NUM_SQUARES];
+//
+//     attack_map
+//         .iter_mut()
+//         .enumerate()
+//         .for_each(|(square_index, bitboard)| {
+//             let square = Square::new(square_index as u8);
+//
+//             // *bitboard = bitboard_generator();
+//             translations.iter().for_each(|tr| loop {
+//                 let current_squre = square;
+//                 // todo improve this with a while loop
+//
+//                 if let Some(new_square) = tr(square) {
+//                     bitboard.set_square(new_square);
+//
+//                     if repeat_translations == false {
+//                         break;
+//                     }
+//                 }
+//             })
+//         });
+//
+//     return attack_map;
+// }
 
 fn generate_attack_map(bitboard_generator: fn(square: Square) -> BitBoard) -> AttackMap {
     let mut attack_map: AttackMap = [BitBoard::EMPTY; NUM_SQUARES];
@@ -97,11 +99,11 @@ fn generate_attack_map(bitboard_generator: fn(square: Square) -> BitBoard) -> At
 
 fn _test() {
     let _pawn_attacks = [
-        generate_attack_map(|square| mask_pawn_attack(square, Team::White), false),
-        generate_attack_map(|square| mask_pawn_attack(square, Team::Black), false),
+        generate_attack_map(|square| mask_pawn_attack(square, Team::White)),
+        generate_attack_map(|square| mask_pawn_attack(square, Team::Black)),
     ];
 
-    let _knight_attacks = generate_attack_map(mask_knight_attack, false);
+    let _knight_attacks = generate_attack_map(mask_knight_attack);
 }
 
 #[cfg(test)]

@@ -39,6 +39,9 @@ yarn-error.log*
 .env
 .env*.local
 
+# Direnv state files
+.direnv
+
 # vercel
 .vercel
 

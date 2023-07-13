@@ -291,7 +291,7 @@ impl std::fmt::Display for BitBoard {
                 for fi in 0..NUM_FILES {
                     let file = File::from_index(fi);
                     r_str.push_str(
-                        if self.has_square(&Square::make_square(file, Rank::from_index(ri))) {
+                        if self.has_square(Square::make_square(file, Rank::from_index(ri))) {
                             "x "
                         } else {
                             ". "
