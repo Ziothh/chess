@@ -10,6 +10,47 @@ pub struct BitBoard(u64);
 impl BitBoard {
     pub const EMPTY: BitBoard = BitBoard(0);
 
+    #[inline]
+    /// Creates a bitboard with the given `squares` bites set to 1
+    pub fn new<const COUNT: usize>(squares: [Square; COUNT]) -> Self {
+        let mut bb = BitBoard::EMPTY;
+
+        for sq in squares {
+            bb.set_square(sq);
+        }
+
+        return bb;
+    }
+
+    #[inline]
+    /// Returns the count of the amount of bits are set to 1.
+    /// Value: `[0..64]`
+    ///
+    /// ```
+    /// use engine::{bitboard::BitBoard, core::Square};
+    ///
+    /// assert_eq!(BitBoard::EMPTY.count_bits(), 0); 
+    /// assert_eq!(BitBoard::new([Square::A1, Square::A2]).count_bits(), 2); 
+    /// assert_eq!(BitBoard::new([Square::A1, Square::A2, Square::A3]).count_bits(), 3); 
+    /// assert_eq!(BitBoard::new([Square::A1, Square::A2, Square::A3, Square::A4, Square::A5]).count_bits(), 5); 
+    /// ```
+    pub fn count_bits(&self) -> u8 {
+        let mut amount = 0;
+        let mut bits = self.0;
+
+        while bits != 0 {
+            bits &= bits - 1;
+            amount += 1;
+        }
+
+        return amount;
+    }
+
+    #[inline]
+    pub fn to_int(&self) -> u64 {
+        return self.0;
+    }
+
     /// If the square is not set on this bitboard, it returns `BitBoard(0)`
     #[inline]
     pub fn get_square_bitboard(&self, square: Square) -> BitBoard {
@@ -45,18 +86,6 @@ impl BitBoard {
         }
 
         return self;
-    }
-
-    #[inline]
-    /// Creates a bitboard with the given `squares` bites set to 1
-    pub fn new<const COUNT: usize>(squares: [Square; COUNT]) -> Self {
-        let mut bb = BitBoard::EMPTY;
-
-        for sq in squares {
-            bb.set_square(sq);
-        }
-
-        return bb;
     }
 }
 
