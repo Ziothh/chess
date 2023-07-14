@@ -1,8 +1,14 @@
 pub mod game;
+
 pub mod board;
+pub use board::*;
+
 pub mod piece;
 pub mod instructions;
+
 pub mod team;
+pub use team::*;
+
 pub mod moves;
 
 pub mod utils;

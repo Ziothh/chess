@@ -11,16 +11,30 @@ use engine::{
 };
 
 fn main() -> () {
+    println!(
+        "{}",
+        BitBoard::new([
+            // Squares with pieces
+            Square::D7,
+            Square::D2,
+            Square::B4,
+            Square::G4,
+        ])
+        .to_string()
+    );
+
+    return;
+
     let mut bb = BitBoard::from(Square::E1);
     println!("{bb}\n");
 
-    bb.set_square(&Square::A1);
+    bb.set_square(Square::A1);
     println!("{bb}\n");
 
-    bb.unset_square(&Square::A1);
+    bb.unset_square(Square::A1);
     println!("{bb}\n");
 
-    bb.unset_square(&Square::A1);
+    bb.unset_square(Square::A1);
     println!("{bb}\n");
 }
 

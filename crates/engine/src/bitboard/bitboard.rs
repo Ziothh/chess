@@ -4,7 +4,7 @@ use crate::core::board::{File, Rank, NUM_FILES};
 
 use crate::core::board::{Square, NUM_RANKS};
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub struct BitBoard(u64);
 
 impl BitBoard {
@@ -45,6 +45,18 @@ impl BitBoard {
         }
 
         return self;
+    }
+
+    #[inline]
+    /// Creates a bitboard with the given `squares` bites set to 1
+    pub fn new<const COUNT: usize>(squares: [Square; COUNT]) -> Self {
+        let mut bb = BitBoard::EMPTY;
+
+        for sq in squares {
+            bb.set_square(sq);
+        }
+
+        return bb;
     }
 }
 
@@ -287,19 +299,23 @@ impl std::fmt::Display for BitBoard {
         let mut s = [EMPTY_STRING; NUM_RANKS]
             .iter_mut()
             .enumerate()
-            .map(|(ri, r_str)| {
+            .map(|(ri, row_str)| {
                 for fi in 0..NUM_FILES {
                     let file = File::from_index(fi);
-                    r_str.push_str(
+                    row_str.push_str(
                         if self.has_square(Square::make_square(file, Rank::from_index(ri))) {
-                            "x "
+                            "x"
                         } else {
-                            ". "
+                            "."
                         },
                     );
+
+                    if fi != NUM_FILES - 1 {
+                        row_str.push_str(" ");
+                    }
                 }
 
-                return r_str.to_owned();
+                return row_str.to_owned();
             })
             .collect::<Vec<_>>();
 

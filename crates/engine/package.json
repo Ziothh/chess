@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "start": "cargo build -p engine",
+    "start": "cargo run -p engine",
     "build": "cargo build -p engine",
+    "test": "cargo test",
     "test:debug": "cargo test -p engine --lib -- --color always --nocapture"
   },
   "keywords": [],
