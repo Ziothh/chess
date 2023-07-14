@@ -11,16 +11,25 @@ use engine::{
 };
 
 fn main() -> () {
+    let bb = BitBoard::from_int(578712835584952320u64);
+
+    let ls1b = bb.ls1b_square().unwrap();
+
+
+
     println!(
         "{}",
-        BitBoard::new([
-            // Squares with pieces
-            Square::D7,
-            Square::D2,
-            Square::B4,
-            Square::G4,
-        ])
-        .to_string()
+        BitBoard::new([ls1b])
+        // BitBoard::from_int(bb.to_int())
+        // (bb.clone() & !bb.clone()).to_string()
+        // BitBoard::new([
+        //     // Squares with pieces
+        //     Square::D7,
+        //     Square::D2,
+        //     Square::B4,
+        //     Square::G4,
+        // ])
+        // .to_string()
     );
 
     return;
