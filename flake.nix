@@ -31,6 +31,7 @@
           libsoup
           webkitgtk
           librsvg
+          nodejs_20
         ];
       in
       {
