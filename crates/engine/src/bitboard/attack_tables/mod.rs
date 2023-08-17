@@ -1,6 +1,6 @@
 mod prelude;
 
-mod bishop;
+pub mod bishop;
 mod king;
 mod knight;
 mod pawn;

@@ -1,11 +1,10 @@
 use crate::core::{
     board::{ChessBoard, Square},
-    moves::{Move, generate::generate_move_data},
+    moves::{generate::generate_move_data, Move},
     team::Team,
 };
 
-#[derive(Debug, PartialEq, Clone, Copy)]
-#[derive(rspc::Type, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, PartialEq, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
 pub enum ChessPieceVariant {
     Pawn,
     Bishop,
@@ -16,15 +15,14 @@ pub enum ChessPieceVariant {
 }
 
 impl ChessPieceVariant {
-  pub fn is_sliding(&self) -> bool {
-    use super::ChessPieceVariant::*;
+    pub fn is_sliding(&self) -> bool {
+        use super::ChessPieceVariant::*;
 
-    match *self {
-      Bishop | Queen | Rook => true,
-      _ => false,
+        match *self {
+            Bishop | Queen | Rook => true,
+            _ => false,
+        }
     }
-  }
-    
 }
 
 impl TryFrom<char> for ChessPieceVariant {
@@ -61,15 +59,18 @@ impl ToString for ChessPieceVariant {
     }
 }
 
-#[derive(Debug, PartialEq)]
-#[derive(rspc::Type, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, PartialEq, rspc::Type, serde::Serialize, serde::Deserialize)]
 pub struct ChessPiece {
     pub team: Team,
     pub variant: ChessPieceVariant,
 }
 
 impl ChessPiece {
-    pub fn pseudo_legal_moves(&self, position: Square, board: &ChessBoard) -> (Vec<Vec<Square>>, Vec<Move>) {
+    pub fn pseudo_legal_moves(
+        &self,
+        position: Square,
+        board: &ChessBoard,
+    ) -> (Vec<Vec<Square>>, Vec<Move>) {
         generate_move_data(self, position, board)
     }
 
@@ -118,46 +119,46 @@ impl TryFrom<char> for ChessPiece {
 //     /// TODO: find a way to remove &self. This does not need to be an instance
 //     fn pseudo_legal_moves(position: Square, team: Team) -> Vec<Move>;
 
-    //     #[inline(always)]
-    //     fn legals<T>(movelist: &mut MoveList, board: &Board, mask: BitBoard)
-    //     where
-    //         T: CheckType,
-    //     {
-    //         let combined = board.combined();
-    //         let color = board.side_to_move();
-    //         let my_pieces = board.color_combined(color);
-    //         let ksq = board.king_square(color);
-    //
-    //         let pieces = board.pieces(Self::into_piece()) & my_pieces;
-    //         let pinned = board.pinned();
-    //         let checkers = board.checkers();
-    //
-    //         let check_mask = if T::IN_CHECK {
-    //             between(checkers.to_square(), ksq) ^ checkers
-    //         } else {
-    //             !EMPTY
-    //         };
-    //
-    //         for src in pieces & !pinned {
-    //             let moves = Self::pseudo_legals(src, color, *combined, mask) & check_mask;
-    //             if moves != EMPTY {
-    //                 unsafe {
-    //                     movelist.push_unchecked(SquareAndBitBoard::new(src, moves, false));
-    //                 }
-    //             }
-    //         }
-    //
-    //         if !T::IN_CHECK {
-    //             for src in pieces & pinned {
-    //                 let moves = Self::pseudo_legals(src, color, *combined, mask) & line(src, ksq);
-    //                 if moves != EMPTY {
-    //                     unsafe {
-    //                         movelist.push_unchecked(SquareAndBitBoard::new(src, moves, false));
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
+//     #[inline(always)]
+//     fn legals<T>(movelist: &mut MoveList, board: &Board, mask: BitBoard)
+//     where
+//         T: CheckType,
+//     {
+//         let combined = board.combined();
+//         let color = board.side_to_move();
+//         let my_pieces = board.color_combined(color);
+//         let ksq = board.king_square(color);
+//
+//         let pieces = board.pieces(Self::into_piece()) & my_pieces;
+//         let pinned = board.pinned();
+//         let checkers = board.checkers();
+//
+//         let check_mask = if T::IN_CHECK {
+//             between(checkers.to_square(), ksq) ^ checkers
+//         } else {
+//             !EMPTY
+//         };
+//
+//         for src in pieces & !pinned {
+//             let moves = Self::pseudo_legals(src, color, *combined, mask) & check_mask;
+//             if moves != EMPTY {
+//                 unsafe {
+//                     movelist.push_unchecked(SquareAndBitBoard::new(src, moves, false));
+//                 }
+//             }
+//         }
+//
+//         if !T::IN_CHECK {
+//             for src in pieces & pinned {
+//                 let moves = Self::pseudo_legals(src, color, *combined, mask) & line(src, ksq);
+//                 if moves != EMPTY {
+//                     unsafe {
+//                         movelist.push_unchecked(SquareAndBitBoard::new(src, moves, false));
+//                     }
+//                 }
+//             }
+//         }
+//     }
 // }
 
 // pub type SquareTranslation = fn(origin: Square) -> Option<Square>;
@@ -200,7 +201,7 @@ impl TryFrom<char> for ChessPiece {
 //             .collect()
 //     }
 //
-//     // /// 
+//     // ///
 //     // /// IS ALREADY IMPLEMENTED
 //     // fn generate_destination_squares(origin: Square, team: Team, board: &ChessBoard) -> Vec<Square> {
 //     //     Self::generate_rays(origin, team)
