@@ -17,7 +17,7 @@ impl File {
     /// The amount of `File` enum values
     pub const SIZE: usize = 8;
      
-    /// An array of al the `Files` in order
+    /// A sorted array of al the `Files` in order
     pub const ALL: [File; File::SIZE] = [
         File::A,
         File::B,

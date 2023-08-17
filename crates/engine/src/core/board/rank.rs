@@ -16,8 +16,8 @@ impl Rank {
     /// The amount of `Rank` enum values
     pub const SIZE: usize = 8;
 
-    /// Enumerate all ranks
-    pub const ALL_RANKS: [Rank; Rank::SIZE] = [
+    /// A sorted array of all of the `Ranks`
+    pub const ALL: [Rank; Rank::SIZE] = [
         Rank::First,
         Rank::Second,
         Rank::Third,
