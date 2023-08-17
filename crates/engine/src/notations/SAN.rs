@@ -9,7 +9,13 @@ use crate::{
     utils::enums::StrEnum,
 };
 
-/// Parses a Standard Algebraic Notation (SAN) move.
+/// Parses a Standard Algebraic Notation (SAN) string into a `Move`.
+///
+/// SAN is used to represent chess moves with as litle characters as needed. 
+/// It relies heavilly on the context of the game state.
+/// 
+/// @TODO: take the legal moves into a count.
+///
 /// @see https://www.chessprogramming.org/Algebraic_Chess_Notation#SAN
 /// @see https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
 pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Result<Instruction> {
