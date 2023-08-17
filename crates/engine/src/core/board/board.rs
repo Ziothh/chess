@@ -1,6 +1,6 @@
 use crate::core::{board::Square, moves::Move, piece::ChessPiece, team::Team};
 
-use super::{NUM_FILES, NUM_RANKS};
+use super::{File, Rank};
 
 use serde_big_array::BigArray;
 
@@ -12,7 +12,7 @@ pub type CellIndex = usize;
 pub struct ChessBoard(#[serde(with = "BigArray")] [Option<ChessPiece>; ChessBoard::SIZE]);
 
 impl ChessBoard {
-    pub const SIZE: usize = NUM_FILES * NUM_RANKS;
+    pub const SIZE: usize = File::SIZE * Rank::SIZE;
     pub const EMPTY_CELL: ChessBoardCellValue = None;
 
     pub fn new(cells: ChessBoardCells) -> Self {

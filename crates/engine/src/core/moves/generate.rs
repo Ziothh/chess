@@ -1,10 +1,7 @@
-use std::{collections::HashMap, usize};
-
 use crate::core::{
-    board::{ChessBoard, Square, NUM_FILES},
+    board::{ChessBoard, Square},
     moves::Move,
-    piece::{ChessPiece, ChessPieceVariant},
-    team::Team,
+    piece::{ChessPiece, ChessPieceVariant}, File,
 };
 
 pub type SquareTranslation = fn(origin: Square) -> Option<Square>;
@@ -156,7 +153,7 @@ fn generate_default_rays(piece: &ChessPiece, origin: Square) -> Vec<Vec<Square>>
     .iter()
     .map(|translation| {
         (0..if piece.variant.is_sliding() {
-            NUM_FILES
+            File::SIZE
         } else {
             1
         })

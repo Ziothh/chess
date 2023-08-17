@@ -1,5 +1,3 @@
-use crate::core::board::NUM_RANKS;
-
 use super::board::Rank;
 
 #[derive(PartialOrd, PartialEq, Eq, Copy, Clone, Debug, Hash)]
@@ -28,7 +26,7 @@ impl Team {
     pub fn get_nth_rank(&self, nth: usize) -> Rank {
         Rank::from_index(match *self {
             Self::White => nth - 1,
-            Self::Black => (NUM_RANKS) - nth,
+            Self::Black => (Rank::SIZE) - nth,
         })
     }
 }

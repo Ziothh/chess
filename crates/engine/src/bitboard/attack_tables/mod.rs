@@ -4,18 +4,15 @@ mod bishop;
 mod king;
 mod knight;
 mod pawn;
-mod rook;
+pub mod rook;
 
-use crate::core::{
-    board::{Square, NUM_SQUARES},
-    team::Team,
-};
+use crate::core::{board::Square, team::Team, ChessBoard};
 
 use crate::bitboard::BitBoard;
 
-type AttackMap = [BitBoard; NUM_SQUARES];
+type AttackMap = [BitBoard; ChessBoard::SIZE];
 pub fn generate_attack_map(bitboard_generator: fn(square: Square) -> BitBoard) -> AttackMap {
-    let mut attack_map: AttackMap = [BitBoard::EMPTY; NUM_SQUARES];
+    let mut attack_map: AttackMap = [BitBoard::EMPTY; ChessBoard::SIZE];
 
     attack_map
         .iter_mut()
@@ -61,11 +58,9 @@ mod test {
 
         let x = super::bishop::mask_attacks_on_the_fly(Square::D4, blockers.clone());
 
-        println!("{}\n", blockers.clone() | x.clone());
+        // println!("{}\n", blockers.clone() | x.clone());
 
-
-        println!("{blockers}\n");
-        println!("{x}");
-
+        // println!("{blockers}\n");
+        // println!("{x}");
     }
 }

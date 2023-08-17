@@ -1,5 +1,5 @@
 use crate::core::{
-    board::{ChessBoard, Square, NUM_FILES, NUM_RANKS},
+    board::{ChessBoard, Square},
     moves::{Move, generate::generate_move_data},
     team::Team,
 };

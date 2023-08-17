@@ -12,22 +12,23 @@ pub enum File {
     H = 7,
 }
 
-/// How many files are there?
-pub const NUM_FILES: usize = 8;
-
-/// Enumerate all files
-pub const ALL_FILES: [File; NUM_FILES] = [
-    File::A,
-    File::B,
-    File::C,
-    File::D,
-    File::E,
-    File::F,
-    File::G,
-    File::H,
-];
 
 impl File {
+    /// The amount of `File` enum values
+    pub const SIZE: usize = 8;
+     
+    /// An array of al the `Files` in order
+    pub const ALL: [File; File::SIZE] = [
+        File::A,
+        File::B,
+        File::C,
+        File::D,
+        File::E,
+        File::F,
+        File::G,
+        File::H,
+    ];
+
     /// Convert a `usize` into a `File` (the inverse of to_index).  If i > 7, wrap around.
     #[inline]
     pub fn from_index(i: usize) -> File {
@@ -64,7 +65,7 @@ impl File {
     }
 
     pub fn to_char(&self) -> char {
-      char::from_u32((self.to_index() + (b'a' as usize)) as u32).unwrap()
+        char::from_u32((self.to_index() + (b'a' as usize)) as u32).unwrap()
     }
 }
 
@@ -75,7 +76,7 @@ impl TryFrom<char> for File {
         let index = (value as usize) - ('a' as usize);
 
         // Prevent wrapping. E.g.: value > 'hfile'
-        if index > NUM_FILES {
+        if index > File::SIZE {
             return Err(format!("Invalid file \"{value}\""));
         };
 

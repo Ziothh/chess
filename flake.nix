@@ -9,6 +9,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
+        # Libraries that are mostly needed for tauri to work
         libraries = with pkgs;[
           webkitgtk
           gtk3

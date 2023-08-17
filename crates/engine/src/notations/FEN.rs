@@ -3,7 +3,7 @@ pub const START: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 
 
 
 use crate::core::{
-    board::{ChessBoard, File, Rank, Square, NUM_RANKS},
+    board::{ChessBoard, File, Rank, Square},
     game::Chess,
     piece::ChessPiece,
     team::Team,
@@ -41,7 +41,9 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
 
     let mut offset;
     for (rank, row) in board_str.split("/").enumerate() {
+        // Keeps track of the amount of empty squares of the current, indicated by a number in the FEN string
         offset = 0;
+
         for (file, char) in row.chars().enumerate() {
             if char.is_numeric() {
                 offset += char.to_digit(10).unwrap() as usize - 1;
@@ -51,7 +53,7 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
             board.set(
                 Square::make_square(
                     File::from_index(file + offset),
-                    Rank::from_index(NUM_RANKS - 1 - rank),
+                    Rank::from_index(Rank::SIZE - 1 - rank),
                 ),
                 ChessPiece::try_from(char).unwrap(),
             );

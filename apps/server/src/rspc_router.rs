@@ -3,12 +3,12 @@ use std::str::FromStr;
 use engine::core::{
     board::{ChessBoard, Square},
     game::Chess,
-    moves::Move,
+    // moves::Move,
     piece::ChessPieceVariant,
     team::Team,
 };
-use rspc::{Config, Router, RouterBuilder, Type};
-use serde::Serialize; // This requires the 'derive' feature to be enabled.
+use rspc::{Config, Router, RouterBuilder};
+// use serde::Serialize; // This requires the 'derive' feature to be enabled.
 
 pub struct MyCtx {}
 
@@ -52,6 +52,8 @@ fn chess_router() -> RouterBuilder<MyCtx> {
                 return ChessJSON::from(chess);
             })
         })
+
+        // TODO: fen router
         .merge("fen.", Router::<MyCtx>::new())
 }
 

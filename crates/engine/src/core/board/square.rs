@@ -2,14 +2,11 @@ use std::str::FromStr;
 
 use crate::core::team::Team;
 
-use super::{File, Rank, NUM_FILES, NUM_RANKS};
+use super::{File, Rank};
 
 /// Represent a square on the chess board
 #[derive(PartialEq, Ord, Eq, PartialOrd, Copy, Clone, Debug, Hash)]
 pub struct Square(u8);
-
-/// How many squares are there?
-pub const NUM_SQUARES: usize = 64;
 
 impl Default for Square {
     /// Create a square on A1.
@@ -71,12 +68,12 @@ impl Square {
 
     pub fn translate(&self, delta_file: isize, delta_rank: isize) -> Option<Square> {
         let file_index: isize = self.get_file().to_index() as isize + delta_file;
-        if file_index < 0 || file_index > (NUM_FILES - 1) as isize {
+        if file_index < 0 || file_index > (File::SIZE - 1) as isize {
             return None;
         }
 
         let rank_index: isize = self.get_rank().to_index() as isize - delta_rank;
-        if rank_index < 0 || rank_index > (NUM_RANKS - 1) as isize {
+        if rank_index < 0 || rank_index > (Rank::SIZE - 1) as isize {
             return None;
         }
 

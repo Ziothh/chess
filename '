@@ -1,4 +1,4 @@
-use crate::core::{Square, Rank};
+use crate::core::{board::Square, Rank};
 
 use super::ChessBoard;
 

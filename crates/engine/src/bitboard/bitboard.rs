@@ -1,8 +1,6 @@
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not};
 
-use crate::core::board::{File, Rank, NUM_FILES};
-
-use crate::core::board::{Square, NUM_RANKS};
+use crate::core::board::{File, Rank, Square};
 
 #[derive(Debug, Eq, PartialEq, Clone)]
 /// A wrapper around a `u64` to represent a bitboard.
@@ -66,7 +64,7 @@ impl BitBoard {
 
     /// Gets the index of the least significant first bit (LS1B)
     ///
-    /// Returns `None` if the bitboard is empty
+    /// Returns `None` if the `BitBoard` is empty
     ///
     /// NOTE: this implementation has low byte values for low ranks (e.g. Rank 1) instead of high
     /// ranks like most chess engines.
@@ -128,30 +126,43 @@ impl BitBoard {
         self.get_square_bitboard(square) != BitBoard::EMPTY
     }
 
-    /// Used to set square bits to `1` on the bitboard
+    /// Used to set square bit to `1` on the bitboard
     #[inline]
     pub fn set_square(&mut self, square: Square) -> &mut Self {
         self.bitor_assign(BitBoard::from(square));
         return self;
     }
 
-    /// Used to set square bits to `1` on the bitboard
+    /// Used to set square bit to `1` on the bitboard
+    ///
+    /// If the given `square` is equal to `Option::None`, then it leaves the `BitBoard` unchanged.
     #[inline]
-    pub fn set_maybe_square(&mut self, square: &Option<Square>) -> &mut Self {
+    pub fn set_maybe_square(&mut self, square: Option<Square>) -> &mut Self {
         if let Some(sq) = square {
-            self.bitor_assign(BitBoard::from(sq));
+            self.set_square(sq);
         }
 
         return self;
     }
 
-    /// Used to set square bits to `0` on the bitboard
+    /// Used to set square bit to `0` on the bitboard
     #[inline]
     pub fn unset_square(&mut self, square: Square) -> &mut Self {
         if self.has_square(square) {
             self.bitxor_assign(BitBoard::from(square));
         }
 
+        return self;
+    }
+
+    /// Used to set square bit to `0` on the bitboard
+    ///
+    /// If the given `square` is equal to `Option::None`, then it leaves the `BitBoard` unchanged.
+    #[inline]
+    pub fn unset_maybe_square(&mut self, square: Option<Square>) -> &mut Self {
+        if let Some(sq) = square {
+            self.unset_square(sq);
+        }
         return self;
     }
 }
@@ -403,11 +414,11 @@ impl std::fmt::Display for BitBoard {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         const EMPTY_STRING: String = String::new();
 
-        let mut s = [EMPTY_STRING; NUM_RANKS]
+        let mut s = [EMPTY_STRING; Rank::SIZE]
             .iter_mut()
             .enumerate()
             .map(|(ri, row_str)| {
-                for fi in 0..NUM_FILES {
+                for fi in 0..File::SIZE {
                     let file = File::from_index(fi);
                     row_str.push_str(
                         if self.has_square(Square::make_square(file, Rank::from_index(ri))) {
@@ -417,7 +428,7 @@ impl std::fmt::Display for BitBoard {
                         },
                     );
 
-                    if fi != NUM_FILES - 1 {
+                    if fi != File::SIZE - 1 {
                         row_str.push_str(" ");
                     }
                 }

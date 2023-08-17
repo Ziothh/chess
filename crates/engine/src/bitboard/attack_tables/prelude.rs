@@ -1,7 +1,4 @@
-use crate::{
-    bitboard::BitBoard,
-    core::{board::Square, NUM_SQUARES},
-};
+use crate::core::board::Square;
 
 pub type SquareTranslation = fn(origin: Square) -> Option<Square>;
 /** Translations that move a square by 1.
