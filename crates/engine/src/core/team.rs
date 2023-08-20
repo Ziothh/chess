@@ -8,11 +8,12 @@ pub enum Team {
 }
 
 /// How many colors are there?
-pub const NUM_TEAMS: usize = 2;
 /// List all colors
-pub const ALL_TEAMS: [Team; NUM_TEAMS] = [Team::White, Team::Black];
 
 impl Team {
+    pub const SIZE: usize = 2;
+    pub const ALL: [Self; Self::SIZE] = [Self::White, Self::Black];
+
     /// Convert the `Team` to a `usize` for table lookups.
     #[inline]
     pub fn to_index(&self) -> usize {
@@ -48,10 +49,9 @@ impl std::ops::Not for Team {
     /// Get the other color.
     #[inline]
     fn not(self) -> Self {
-        if self == Team::White {
-            Team::Black
-        } else {
-            Team::White
+        match self {
+            Self::White => Self::Black,
+            Self::Black => Self::White,
         }
     }
 }
