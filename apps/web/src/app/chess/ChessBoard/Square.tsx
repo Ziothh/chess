@@ -1,9 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { chessBoard } from ".";
 import { useChess } from "../ChessContext";
 import { useDraggingPiece } from "../DraggingPieceContext";
 import clsx from "clsx";
-
 
 const Square: FC<{
   file: chessBoard.File,
@@ -18,7 +17,7 @@ const Square: FC<{
 
   const piece = chessBoard.getByIndex(chess.board.squares, index)
 
-  const moveToThisSquare = draggingPiece.moves?.find(m => m.destination === id) ?? null;
+  const moveToThisSquare = draggingPiece.value?.moves.find(m => m.destination === id) ?? null;
 
   return (
     <div
@@ -40,24 +39,23 @@ const Square: FC<{
 
         // If dragging piece
         /// Toggle dragging
-        if (draggingPiece.index === index) return draggingPiece.unset();
-        draggingPiece.squareId
+        if (draggingPiece.value.index === index) return draggingPiece.unset();
+        draggingPiece.value.squareId
 
-        const move = draggingPiece.moves.find(m => m.destination === chessBoard.SQUARES[index]);
+        const move = draggingPiece.value.moves.find(m => m.destination === chessBoard.SQUARES[index]);
 
         if (!move && !piece) return draggingPiece.unset();
 
         if (piece) {
-          // Can't take own team
-          if (piece.team === draggingPiece.team) return draggingPiece.setByIndex(index);
+          // Can't take own team so switch to clicked piece on this square
+          if (piece.team === draggingPiece.value.team) return draggingPiece.setByIndex(index);
 
           // Take this square
-          if (move?.takes) return chess.board.take(draggingPiece.squareId, id, draggingPiece.variant);
+          if (move?.takes) return chess.board.take(draggingPiece.value.squareId, id, draggingPiece.value.variant);
         } else {
           if (!move) return draggingPiece.unset();
 
-
-          return chess.board.move(draggingPiece.squareId!, id, draggingPiece.variant);
+          return chess.board.move(draggingPiece.value.squareId!, id, draggingPiece.value.variant);
         }
       }}
     >
@@ -65,16 +63,16 @@ const Square: FC<{
         <img
           className={clsx(
             'relative z-10 pointer-events-none',
-            draggingPiece.index === index && 'bg-red-700'
+            draggingPiece.value?.index === index && 'bg-red-700'
           )}
           src={`/${piece.team.at(0)?.toLowerCase()}${piece.variant === "Knight" ? "n" : piece.variant.at(0)?.toLowerCase()}.png`}
         />
       )}
 
-      {file === 'a' && (
+      {/* Rank indicators */ file === 'a' && (
         <span className="absolute left-0 top-0 leading-none block p-2 font-bold opacity-50 pointer-events-none">{rank}</span>
       )}
-      {rank === '1' && (
+      {/* File indicators */ rank === '1' && (
         <span className="absolute right-0 bottom-0 leading-none block p-2 font-bold opacity-50 pointer-events-none">{file}</span>
       )}
 

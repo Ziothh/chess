@@ -24,9 +24,9 @@ export const [useChess, ChessCtxProvider] = contextFactory(
     })
 
     if (data === undefined) { throw new Error("The chess.start data can not be undefined") }
-    const { moves, teamToMove } = data
+    const { moves, teamToMove } = data;
 
-    const board = useChessboard(data)
+    const board = useChessboard(data);
 
     return {
       moves,
