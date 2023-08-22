@@ -25,7 +25,7 @@ const Square: FC<{
       id={id}
       data-index={index}
       className={clsx(
-        file.charCodeAt(0) % 2 !== rank.charCodeAt(0) % 2 ? 'bg-slate-400' : 'bg-slate-800',
+        file.charCodeAt(0) % 2 !== rank.charCodeAt(0) % 2 ? 'bg-zinc-400' : 'bg-zinc-950',
         "relative aspect-square cursor-pointer user-select-none",
         className,
       )}
@@ -65,7 +65,7 @@ const Square: FC<{
         <img
           className={clsx(
             'relative z-10 pointer-events-none',
-            draggingPiece.index === index && 'bg-red-500'
+            draggingPiece.index === index && 'bg-red-700'
           )}
           src={`/${piece.team.at(0)?.toLowerCase()}${piece.variant === "Knight" ? "n" : piece.variant.at(0)?.toLowerCase()}.png`}
         />
@@ -87,8 +87,8 @@ const Square: FC<{
           <div className={clsx(
             "w-full h-full rounded-full",
             moveToThisSquare.takes
-              ? 'border-black/25 border-[.5rem]'
-              : 'bg-black/25'
+              ? 'border-zinc-600/30 border-[.5rem]'
+              : 'bg-zinc-600/30'
           )} />
         </div>
       )}

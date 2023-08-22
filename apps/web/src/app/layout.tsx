@@ -6,7 +6,7 @@ import "../styles/globals.css";
 const layout: FC<PropsWithChildren> = ({ children }) => (
   <html className='h-screen overflow-y-auto overflow-x-hidden'>
     <head></head>
-    <body className='bg-slate-950 text-white h-full'>
+    <body className='bg-black text-white h-full'>
       <GlobalContext>
         {children}
       </GlobalContext>

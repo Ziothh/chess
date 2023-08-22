@@ -10,14 +10,14 @@ export type Procedures = {
     subscriptions: never
 };
 
-export type MoveJSON = { origin: string; destination: string; takes: boolean; piece: ChessPieceVariant }
-
 export type Team = "Black" | "White"
-
-export type ChessBoard = (ChessPiece | null)[]
-
-export type ChessPieceVariant = "Pawn" | "Bishop" | "Knight" | "Rook" | "Queen" | "King"
 
 export type ChessPiece = { team: Team; variant: ChessPieceVariant }
 
+export type ChessPieceVariant = "Pawn" | "Bishop" | "Knight" | "Rook" | "Queen" | "King"
+
 export type ChessJSON = { teamToMove: Team; moves: MoveJSON[]; board: ChessBoard }
+
+export type MoveJSON = { origin: string; destination: string; takes: boolean; piece: ChessPieceVariant }
+
+export type ChessBoard = (ChessPiece | null)[]
