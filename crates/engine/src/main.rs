@@ -12,33 +12,33 @@ use engine::{
 };
 
 fn main() -> () {
-    let attack_table = engine::bitboard::attack_tables::generate_attack_map(
-        engine::bitboard::attack_tables::rook::mask_attacks,
-    );
-
-    for rank in Rank::ALL.iter() {
-        for file in File::ALL.iter() {
-            let square = Square::make_square(*file, *rank);
-
-            let bb = attack_table.get(square.to_index()).unwrap();
-
-            // print!(
-            //     "{}, ",
-            //     engine::bitboard::attack_tables::generate_attack_map(
-            //         engine::bitboard::attack_tables::rook::mask_attacks
-            //     )
-            //     .get(square.to_int() as usize)
-            //     .unwrap()
-            //     .count_bits()
-            // )
-
-            print!("{}", bb);
-
-            println!("");
-        }
+    // let attack_table = engine::bitboard::attack_tables::prelude::generate_attack_map(
+    //     engine::bitboard::attack_tables::rook::mask_attacks,
+    // );
+    //
+    // for rank in Rank::ALL.iter() {
+    //     for file in File::ALL.iter() {
+    //         let square = Square::make_square(*file, *rank);
+    //
+    //         let bb = attack_table.get(square.to_index()).unwrap();
+    //
+    //         // print!(
+    //         //     "{}, ",
+    //         //     engine::bitboard::attack_tables::generate_attack_map(
+    //         //         engine::bitboard::attack_tables::rook::mask_attacks
+    //         //     )
+    //         //     .get(square.to_int() as usize)
+    //         //     .unwrap()
+    //         //     .count_bits()
+    //         // )
+    //
+    //         print!("{}", bb);
+    //
+    //         println!("");
+    //     }
 
         // println!("")
-    }
+    // }
 
     // let bb = BitBoard::from_int(578712835584952320u64);
 

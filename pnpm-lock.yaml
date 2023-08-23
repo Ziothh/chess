@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -248,6 +252,9 @@ importers:
       eslint:
         specifier: ^8.38.0
         version: 8.38.0
+      hotscript:
+        specifier: ^1.0.13
+        version: 1.0.13
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
@@ -6170,6 +6177,10 @@ packages:
     dependencies:
       lru-cache: 6.0.0
     dev: false
+
+  /hotscript@1.0.13:
+    resolution: {integrity: sha512-C++tTF1GqkGYecL+2S1wJTfoH6APGAsbb7PAWQ3iVIwgG/EFseAfEVOKFgAFq4yK3+6j1EjUD4UQ9dRJHX/sSQ==}
+    dev: true
 
   /http-cache-semantics@4.1.1:
     resolution: {integrity: sha512-er295DKPVsV82j5kw1Gjt+ADA/XYHsajl82cGNQG2eyoPkvgUhX+nDIyelzhIWbbsXP39EHcI6l5tYs2FYqYXQ==}

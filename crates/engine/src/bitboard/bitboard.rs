@@ -2,23 +2,33 @@ use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, N
 
 use crate::core::board::{File, Rank, Square};
 
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq, Clone, Copy)]
 /// A wrapper around a `u64` to represent a bitboard.
 ///
 /// It is worth noting that white side has low values (bits `[0..32]`) and black high values (bits `[32..64]`)
 /// Most engines do it the other way around (whoops)
-pub struct BitBoard(u64);
+pub struct BitBoard(pub u64);
 
 impl BitBoard {
-    pub const EMPTY: BitBoard = BitBoard(0);
+    /// A `BitBoard` where every square bit is set to `0`
+    ///
+    /// The value of the `BitBoard` is equal to `0`
+    pub const EMPTY: BitBoard = BitBoard(u64::MIN);
+    /// A `BitBoard` where every square bit is set to `1`
+    ///
+    /// The value of the `BitBoard` is equal to `0xFFFFFFFFFFFFFFFF`
+    pub const FULL: BitBoard = BitBoard(u64::MAX);
 
     #[inline]
     /// Creates a bitboard with the given `squares` bites set to 1
-    pub fn new<const COUNT: usize>(squares: [Square; COUNT]) -> Self {
+    pub const fn new<const COUNT: usize>(squares: [Square; COUNT]) -> Self {
         let mut bb = BitBoard::EMPTY;
 
-        for sq in squares {
-            bb.set_square(sq);
+        let mut i = COUNT;
+
+        while i != 0 {
+            bb.0 |= 1u64 << squares[i - 1].to_int();
+            i-= 1 
         }
 
         return bb;
@@ -37,15 +47,7 @@ impl BitBoard {
     /// assert_eq!(BitBoard::new([Square::A1, Square::A2, Square::A3, Square::A4, Square::A5]).count_bits(), 5);
     /// ```
     pub fn count_bits(&self) -> u8 {
-        let mut amount = 0;
-        let mut bits = self.0;
-
-        while bits != 0 {
-            bits &= bits - 1;
-            amount += 1;
-        }
-
-        return amount;
+        return self.0.count_ones() as u8;
     }
 
     #[inline]
@@ -108,11 +110,11 @@ impl BitBoard {
     }
 
     #[inline]
-    pub fn to_int(&self) -> u64 {
+    pub const fn to_int(&self) -> u64 {
         return self.0;
     }
     #[inline]
-    pub fn from_int(bit_value: u64) -> Self {
+    pub const fn from_int(bit_value: u64) -> Self {
         return Self(bit_value);
     }
 
@@ -442,3 +444,4 @@ impl std::fmt::Display for BitBoard {
         write!(f, "{}", s.join("\n"))
     }
 }
+

@@ -1,5 +1,7 @@
-#![feature(let_chains)]
-
+#![feature(const_trait_impl)]
+#![feature(const_for)]
+#![feature(const_mut_refs)]
+#![feature(inline_const)]
 pub mod core;
 pub mod bitboard;
 pub mod notations;
