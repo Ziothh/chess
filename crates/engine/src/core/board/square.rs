@@ -40,8 +40,8 @@ impl Square {
     /// // assert_eq!(Square::default(), bad_sq);
     /// ```
     #[inline]
-    pub fn new(sq: u8) -> Square {
-        Square(sq & 63)
+    pub fn new(index: u8) -> Square {
+        Square(index & 63)
     }
 
     /// Make a square given a rank and a file
@@ -1059,8 +1059,10 @@ impl std::fmt::Display for Square {
         write!(
             f,
             "{}{}",
-            (('a' as u8) + ((self.0 & 7) as u8)) as char,
-            (('1' as u8) + ((self.0 >> 3) as u8)) as char
+            self.get_file(),
+            self.get_rank(),
+            // (('a' as u8) + ((self.0 & 7) as u8)) as char,
+            // (('1' as u8) + ((self.0 >> 3) as u8)) as char
         )
     }
 }

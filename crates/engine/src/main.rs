@@ -1,3 +1,4 @@
+use engine::bitboard::attack_tables::pawn;
 use engine::core::Rank;
 #[allow(unused_imports)]
 use engine::{core::game::Chess, notations::FEN};
@@ -12,6 +13,38 @@ use engine::{
 };
 
 fn main() -> () {
+    let sq = Square::C6;
+    let team = Team::White;
+
+    debug_square(sq);
+
+    let mut bb = BitBoard::from(sq);
+
+    bb.set_square(sq.uforward(team));
+    bb.set_square(sq.uforward(team).uleft());
+    bb.set_square(sq.uforward(team).uright());
+    // bb.set_square(sq.ubackward(team));
+    // bb.set_square(sq.ubackward(team).uleft());
+    // bb.set_square(sq.ubackward(team).uright());
+
+    println!("{sq}:\n{bb}");
+
+
+    let mut bb = BitBoard::from(sq);
+
+    bb.set_maybe_square(sq.forward(team));
+    bb.set_maybe_square(sq.forward(team).and_then(|sq| sq.left()));
+    bb.set_maybe_square(sq.forward(team).and_then(|sq| sq.right()));
+    // bb.set_maybe_square(sq.backward(team));
+    // bb.set_maybe_square(sq.backward(team).and_then(|sq| sq.left()));
+    // bb.set_maybe_square(sq.backward(team).and_then(|sq| sq.right()));
+
+    println!("{sq}:\n{bb}");
+
+    let attack = pawn::mask_attacks(sq, team);
+    println!("Attack:\n{attack}");
+
+
     // let attack_table = engine::bitboard::attack_tables::prelude::generate_attack_map(
     //     engine::bitboard::attack_tables::rook::mask_attacks,
     // );
@@ -37,7 +70,7 @@ fn main() -> () {
     //         println!("");
     //     }
 
-        // println!("")
+    // println!("")
     // }
 
     // let bb = BitBoard::from_int(578712835584952320u64);
@@ -74,6 +107,15 @@ fn main() -> () {
     //
     // bb.unset_square(Square::A1);
     // println!("{bb}\n");
+}
+
+fn debug_square(square: Square) {
+    println!(
+        "Square({square}): {{ file: {}, rank: {}, index: {} }}",
+        square.get_file(),
+        square.get_rank(),
+        square.to_index(),
+    );
 }
 
 #[allow(dead_code)]

@@ -1,0 +1,122 @@
+use crate::{
+    bitboard::BitBoard,
+    core::{ChessBoard, Square, Team},
+};
+
+use super::prelude::{AttackTable, NOT_A_FILE};
+
+static mut PAWN_ATTACKS: AttackTable = [[BitBoard::EMPTY; ChessBoard::SIZE]; Team::SIZE];
+
+/** Generates an attack bitboard with the diagonal pawn attacks for a given team and square.
+ * The team is needed because pawns can only away from their start position. */
+pub fn mask_attacks(square: Square, team: Team) -> BitBoard {
+    let mut attacks = BitBoard::EMPTY;
+
+    if let Some(forward) = square.forward(team) {
+        let left = forward.uleft();
+        let right = forward.uright();
+
+        if BitBoard::from(left) & BitBoard::NOT_A_FILE != 0 {
+            attacks.set_square(left);
+        }
+        if BitBoard::from(right) & BitBoard::NOT_H_FILE != 0 {
+            attacks.set_square(right);
+        }
+
+        // NOTE: Currently disabling the safe methods because the wiki prevents wrapping in
+        // another way. Maybe I'll optimise this later. I'll use `square.u${direction}` for now
+
+        // if let Some(sq) = forward.left() {
+        //     attacks.set_square(sq);
+        // }
+        // if let Some(sq) = forward.right() {
+        //     attacks.set_square(sq);
+        // }
+    }
+
+    return attacks;
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod test {
+    use super::mask_attacks;
+    use crate::{
+        bitboard::attack_tables::prelude::{generate_attack_map, AttackTable},
+        core::{board::Square, team::Team},
+    };
+
+    /// Takes in a test function and runs it for every `Team`
+    fn for_team(test_fn: fn(team: Team) -> ()) -> () {
+        Team::ALL.iter().for_each(|team| test_fn(*team));
+    }
+
+    // struct
+    //
+    // fn test_squares(square: Square, team: Team, test_fn: fn(team: Team) -> ())
+
+    #[test]
+    fn pawn_moves_E4_white() {
+        for_team(|team| {
+            let square = Square::E4;
+
+            let attacking_mask = mask_attacks(square, team);
+
+            // Should not contain the square itself
+            assert_eq!(attacking_mask.has_square(square), false);
+            // Should have these squares to attack
+            assert_eq!(
+                attacking_mask.has_square(square.uforward(team).uleft()),
+                true
+            );
+            assert_eq!(
+                attacking_mask.has_square(square.uforward(team).uright()),
+                true
+            );
+        })
+    }
+
+    #[test]
+    fn pawn_moves_B4_white() {
+        for_team(|team| {
+            let square = Square::B4;
+
+            let attacking_mask = mask_attacks(square, team);
+
+            // Should not contain the square itself
+            assert_eq!(attacking_mask.has_square(square), false);
+            // Should not have the A file square (because that's how magic bitboards work)
+            assert_eq!(
+                attacking_mask.has_square(square.uforward(team).uleft()),
+                false
+            );
+            // Should have these squares to attack
+            assert_eq!(
+                attacking_mask.has_square(square.uforward(team).uright()),
+                true
+            );
+        })
+    }
+
+    #[test]
+    fn pawn_moves_G4_white() {
+        for_team(|team| {
+            let square = Square::B4;
+
+            let attacking_mask = mask_attacks(square, team);
+
+            // Should not contain the square itself
+            assert_eq!(attacking_mask.has_square(square), false);
+            // Should have these squares to attack
+            assert_eq!(
+                attacking_mask.has_square(square.uforward(team).uleft()),
+                false
+            );
+            // Should not have the H file square (because that's how magic bitboards work)
+            assert_eq!(
+                attacking_mask.has_square(square.uforward(team).uright()),
+                true
+            );
+        })
+    }
+}

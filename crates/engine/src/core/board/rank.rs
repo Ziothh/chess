@@ -93,6 +93,17 @@ impl TryFrom<char> for Rank {
     }
 }
 
+
+impl std::fmt::Display for Rank {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            self.to_index() + 1
+        )
+    }
+}
+
 // impl FromStr for Rank {
 //     type Err = Error;
 //

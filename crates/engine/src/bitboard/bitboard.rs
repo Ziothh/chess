@@ -10,15 +10,6 @@ use crate::core::board::{File, Rank, Square};
 pub struct BitBoard(pub u64);
 
 impl BitBoard {
-    /// A `BitBoard` where every square bit is set to `0`
-    ///
-    /// The value of the `BitBoard` is equal to `0`
-    pub const EMPTY: BitBoard = BitBoard(u64::MIN);
-    /// A `BitBoard` where every square bit is set to `1`
-    ///
-    /// The value of the `BitBoard` is equal to `0xFFFFFFFFFFFFFFFF`
-    pub const FULL: BitBoard = BitBoard(u64::MAX);
-
     #[inline]
     /// Creates a bitboard with the given `squares` bites set to 1
     pub const fn new<const COUNT: usize>(squares: [Square; COUNT]) -> Self {
@@ -167,6 +158,73 @@ impl BitBoard {
         }
         return self;
     }
+
+
+    // [constants]
+
+    // [constants:base]
+    /// A `BitBoard` where every square bit is set to `0`
+    ///
+    /// The value of the `BitBoard` is equal to `0`
+    pub const EMPTY: BitBoard = BitBoard(u64::MIN);
+    /// A `BitBoard` where every square bit is set to `1`
+    ///
+    /// The value of the `BitBoard` is equal to `0xFFFFFFFFFFFFFFFF`
+    pub const FULL: BitBoard = BitBoard(u64::MAX);
+
+
+    // [constants:magic]
+    #[rustfmt::skip]
+    /// A `BitBoard` where all bits, except for the A file, are set to 1
+    pub const NOT_A_FILE: BitBoard = BitBoard(!BitBoard::new([
+        Square::A1,
+        Square::A2,
+        Square::A3,
+        Square::A4,
+        Square::A5,
+        Square::A6,
+        Square::A7,
+        Square::A8,
+    ]).0);
+
+    #[rustfmt::skip]
+    /// A `BitBoard` where all bits, except for the AB files, are set to 1
+    pub const NOT_AB_FILE: BitBoard = BitBoard(BitBoard::NOT_A_FILE.0 & !BitBoard::new([
+        Square::B1,
+        Square::B2,
+        Square::B3,
+        Square::B4,
+        Square::B5,
+        Square::B6,
+        Square::B7,
+        Square::B8,
+    ]).0);
+
+    #[rustfmt::skip]
+    /// A `BitBoard` where all bits, except for the H files, are set to 1
+    pub const NOT_H_FILE: BitBoard = BitBoard(!BitBoard::new([
+        Square::H1,
+        Square::H2,
+        Square::H3,
+        Square::H4,
+        Square::H5,
+        Square::H6,
+        Square::H7,
+        Square::H8,
+    ]).0);
+
+    #[rustfmt::skip]
+    /// A `BitBoard` where all bits, except for the GH files, are set to 1
+    pub const NOT_GH_FILE: BitBoard = BitBoard(BitBoard::NOT_H_FILE.0 & !BitBoard::new([
+        Square::G1,
+        Square::G2,
+        Square::G3,
+        Square::G4,
+        Square::G5,
+        Square::G6,
+        Square::G7,
+        Square::G8,
+    ]).0);
 }
 
 impl Default for BitBoard {
@@ -175,17 +233,21 @@ impl Default for BitBoard {
     }
 }
 
+// [From and Into]
 impl From<Square> for BitBoard {
+    #[inline]
     fn from(value: Square) -> Self {
         BitBoard(1u64 << value.to_int())
     }
 }
 impl From<&Square> for BitBoard {
+    #[inline]
     fn from(value: &Square) -> Self {
         BitBoard(1u64 << value.to_int())
     }
 }
 
+// [Bitwise operations]
 // Impl BitAnd
 impl BitAnd for BitBoard {
     type Output = BitBoard;
@@ -445,3 +507,81 @@ impl std::fmt::Display for BitBoard {
     }
 }
 
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn not_a_file() {
+        assert_eq!(
+            BitBoard::NOT_A_FILE.to_string(),
+            [
+                ". x x x x x x x",
+                ". x x x x x x x",
+                ". x x x x x x x",
+                ". x x x x x x x",
+                ". x x x x x x x",
+                ". x x x x x x x",
+                ". x x x x x x x",
+                ". x x x x x x x",
+            ]
+            .join("\n")
+        );
+    }
+
+    #[test]
+    fn not_ab_file() {
+        assert_eq!(
+            BitBoard::NOT_AB_FILE.to_string(),
+            [
+                ". . x x x x x x",
+                ". . x x x x x x",
+                ". . x x x x x x",
+                ". . x x x x x x",
+                ". . x x x x x x",
+                ". . x x x x x x",
+                ". . x x x x x x",
+                ". . x x x x x x",
+            ]
+            .join("\n")
+        );
+    }
+
+    #[test]
+    fn not_h_file() {
+        assert_eq!(
+            BitBoard::NOT_H_FILE.to_string(),
+            [
+                "x x x x x x x .",
+                "x x x x x x x .",
+                "x x x x x x x .",
+                "x x x x x x x .",
+                "x x x x x x x .",
+                "x x x x x x x .",
+                "x x x x x x x .",
+                "x x x x x x x .",
+            ]
+            .join("\n")
+        );
+    }
+
+    #[test]
+    fn not_gh_file() {
+        assert_eq!(
+            BitBoard::NOT_GH_FILE.to_string(),
+            [
+                "x x x x x x . .",
+                "x x x x x x . .",
+                "x x x x x x . .",
+                "x x x x x x . .",
+                "x x x x x x . .",
+                "x x x x x x . .",
+                "x x x x x x . .",
+                "x x x x x x . .",
+            ]
+            .join("\n")
+        );
+    }
+}

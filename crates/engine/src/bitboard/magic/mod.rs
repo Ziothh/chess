@@ -51,6 +51,6 @@ mod test {
 
         let occupancy = set_occupancy(2, attack_mask.count_bits(), attack_mask);
 
-        println!("{occupancy}");
+        // println!("{occupancy}");
     }
 }

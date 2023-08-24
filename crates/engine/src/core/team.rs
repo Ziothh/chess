@@ -3,8 +3,8 @@ use super::board::Rank;
 #[derive(PartialOrd, PartialEq, Eq, Copy, Clone, Debug, Hash)]
 #[derive(rspc::Type, serde::Serialize, serde::Deserialize)]
 pub enum Team {
-    Black,
     White,
+    Black,
 }
 
 /// How many colors are there?

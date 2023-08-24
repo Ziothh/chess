@@ -96,6 +96,16 @@ impl TryFrom<char> for File {
     }
 }
 
+impl std::fmt::Display for File {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            (('a' as u8) + ((self.to_index() & 7) as u8)) as char,
+        )
+    }
+}
+
 // impl FromStr for File {
 //     type Err = Error;
 //
