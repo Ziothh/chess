@@ -1,18 +1,32 @@
-use crate::{bitboard::BitBoard, core::Square};
+use crate::{
+    bitboard::BitBoard,
+    core::{File, Rank, Square},
+};
 
 use super::prelude::TRANSLATIONS;
 
+#[rustfmt::skip]
 pub fn mask_attacks(square: Square) -> BitBoard {
     let mut attacks = BitBoard::EMPTY;
 
-    for translation in TRANSLATIONS[..4].iter() {
-        let mut current_square = square;
+    let file = square.get_file();
+    let rank = square.get_rank();
+    let file_index = file.to_index();
+    let rank_index = rank.to_index();
 
-        while let Some(sq) = translation(current_square) {
-            attacks.set_square(sq);
-            current_square = sq;
-        }
-    }
+    for r in (rank_index + 1)..=6 { attacks.set_square(Square::make_square(file, Rank::from_index(r))); }
+    for r in 1..=(rank_index.checked_sub(1).unwrap_or(0)) { attacks.set_square(Square::make_square(file, Rank::from_index(r))); }
+    for f in (file_index + 1)..=6 { attacks.set_square(Square::make_square(File::from_index(f), rank)); }
+    for f in 1..=(file_index.checked_sub(1).unwrap_or(0)) { attacks.set_square(Square::make_square(File::from_index(f), rank)); }
+
+    // for translation in TRANSLATIONS[..4].iter() {
+    //     let mut current_square = square;
+    //
+    //     while let Some(sq) = translation(current_square) {
+    //         attacks.set_square(sq);
+    //         current_square = sq;
+    //     }
+    // }
 
     return attacks;
 }
@@ -48,14 +62,14 @@ mod test {
         assert_eq!(
             mask_attacks(Square::E4).to_string(),
             [
+                ". . . . . . . .",
                 ". . . . x . . .",
                 ". . . . x . . .",
                 ". . . . x . . .",
-                ". . . . x . . .",
-                "x x x x . x x x", // 4
-                ". . . . x . . .",
+                ". x x x . x x .", // 4
                 ". . . . x . . .",
                 ". . . . x . . .",
+                ". . . . . . . .",
                 //       e
             ]
             .join("\n")
@@ -66,31 +80,32 @@ mod test {
         assert_eq!(
             mask_attacks(Square::H1).to_string(),
             [
+                ". . . . . . . .",
                 ". . . . . . . x",
                 ". . . . . . . x",
                 ". . . . . . . x",
                 ". . . . . . . x",
                 ". . . . . . . x",
                 ". . . . . . . x",
-                ". . . . . . . x",
-                "x x x x x x x .",
+                ". x x x x x x .",
             ]
             .join("\n")
         );
     }
     #[test]
     fn attacks_A8() {
+        println!("{}", mask_attacks(Square::A8).to_string(),);
         assert_eq!(
             mask_attacks(Square::A8).to_string(),
             [
-                ". x x x x x x x",
-                "x . . . . . . .", // 7
+                ". x x x x x x .", // 8
+                "x . . . . . . .", 
                 "x . . . . . . .",
                 "x . . . . . . .",
                 "x . . . . . . .",
                 "x . . . . . . .",
                 "x . . . . . . .",
-                "x . . . . . . .",
+                ". . . . . . . .",
                 //a
             ]
             .join("\n")

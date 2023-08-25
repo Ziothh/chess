@@ -176,6 +176,25 @@ impl BitBoard {
     // [constants:magic]
     #[rustfmt::skip]
     /// A `BitBoard` where all bits, except for the A file, are set to 1
+    ///
+    /// ```
+    /// use engine::bitboard::BitBoard;
+    ///
+    /// assert_eq!(
+    ///     BitBoard::NOT_A_FILE.to_string(),
+    ///     [
+    ///         ". x x x x x x x",
+    ///         ". x x x x x x x",
+    ///         ". x x x x x x x",
+    ///         ". x x x x x x x",
+    ///         ". x x x x x x x",
+    ///         ". x x x x x x x",
+    ///         ". x x x x x x x",
+    ///         ". x x x x x x x",
+    ///     ]
+    ///     .join("\n")
+    /// );
+    /// ```
     pub const NOT_A_FILE: BitBoard = BitBoard(!BitBoard::new([
         Square::A1,
         Square::A2,
@@ -189,6 +208,25 @@ impl BitBoard {
 
     #[rustfmt::skip]
     /// A `BitBoard` where all bits, except for the AB files, are set to 1
+    ///
+    /// ```
+    /// use engine::bitboard::BitBoard;
+    ///
+    /// assert_eq!(
+    ///     BitBoard::NOT_AB_FILE.to_string(),
+    ///     [
+    ///         ". . x x x x x x",
+    ///         ". . x x x x x x",
+    ///         ". . x x x x x x",
+    ///         ". . x x x x x x",
+    ///         ". . x x x x x x",
+    ///         ". . x x x x x x",
+    ///         ". . x x x x x x",
+    ///         ". . x x x x x x",
+    ///     ]
+    ///     .join("\n")
+    /// );
+    /// ```
     pub const NOT_AB_FILE: BitBoard = BitBoard(BitBoard::NOT_A_FILE.0 & !BitBoard::new([
         Square::B1,
         Square::B2,
@@ -202,6 +240,25 @@ impl BitBoard {
 
     #[rustfmt::skip]
     /// A `BitBoard` where all bits, except for the H files, are set to 1
+    ///
+    /// ```
+    /// use engine::bitboard::BitBoard;
+    ///
+    /// assert_eq!(
+    ///     BitBoard::NOT_H_FILE.to_string(),
+    ///     [
+    ///         "x x x x x x x .",
+    ///         "x x x x x x x .",
+    ///         "x x x x x x x .",
+    ///         "x x x x x x x .",
+    ///         "x x x x x x x .",
+    ///         "x x x x x x x .",
+    ///         "x x x x x x x .",
+    ///         "x x x x x x x .",
+    ///     ]
+    ///     .join("\n")
+    /// );
+    /// ```
     pub const NOT_H_FILE: BitBoard = BitBoard(!BitBoard::new([
         Square::H1,
         Square::H2,
@@ -215,6 +272,25 @@ impl BitBoard {
 
     #[rustfmt::skip]
     /// A `BitBoard` where all bits, except for the GH files, are set to 1
+    /// 
+    /// ```
+    /// use engine::bitboard::BitBoard;
+    ///
+    /// assert_eq!(
+    ///     BitBoard::NOT_GH_FILE.to_string(),
+    ///     [
+    ///         "x x x x x x . .",
+    ///         "x x x x x x . .",
+    ///         "x x x x x x . .",
+    ///         "x x x x x x . .",
+    ///         "x x x x x x . .",
+    ///         "x x x x x x . .",
+    ///         "x x x x x x . .",
+    ///         "x x x x x x . .",
+    ///     ]
+    ///     .join("\n")
+    /// );
+    /// ```
     pub const NOT_GH_FILE: BitBoard = BitBoard(BitBoard::NOT_H_FILE.0 & !BitBoard::new([
         Square::G1,
         Square::G2,
@@ -225,6 +301,45 @@ impl BitBoard {
         Square::G7,
         Square::G8,
     ]).0);
+
+    /// ```
+    /// use engine::bitboard::BitBoard;
+    ///
+    /// assert_eq!(
+    ///     BitBoard::NOT_BORDERS.to_string(),
+    ///     [
+    ///         ". . . . . . . .",
+    ///         ". x x x x x x .",
+    ///         ". x x x x x x .",
+    ///         ". x x x x x x .",
+    ///         ". x x x x x x .",
+    ///         ". x x x x x x .",
+    ///         ". x x x x x x .",
+    ///         ". . . . . . . .",
+    ///     ]
+    ///     .join("\n")
+    /// );
+    /// ```
+    pub const NOT_BORDERS: BitBoard = BitBoard(
+        BitBoard::NOT_A_FILE.0
+        & BitBoard::NOT_H_FILE.0
+        & !BitBoard::new([
+            Square::B1,
+            Square::C1,
+            Square::D1,
+            Square::E1,
+            Square::F1,
+            Square::G1,
+
+
+            Square::B8,
+            Square::C8,
+            Square::D8,
+            Square::E8,
+            Square::F8,
+            Square::G8,
+        ]).0
+    );
 }
 
 impl Default for BitBoard {
@@ -509,79 +624,7 @@ impl std::fmt::Display for BitBoard {
 
 
 
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn not_a_file() {
-        assert_eq!(
-            BitBoard::NOT_A_FILE.to_string(),
-            [
-                ". x x x x x x x",
-                ". x x x x x x x",
-                ". x x x x x x x",
-                ". x x x x x x x",
-                ". x x x x x x x",
-                ". x x x x x x x",
-                ". x x x x x x x",
-                ". x x x x x x x",
-            ]
-            .join("\n")
-        );
-    }
-
-    #[test]
-    fn not_ab_file() {
-        assert_eq!(
-            BitBoard::NOT_AB_FILE.to_string(),
-            [
-                ". . x x x x x x",
-                ". . x x x x x x",
-                ". . x x x x x x",
-                ". . x x x x x x",
-                ". . x x x x x x",
-                ". . x x x x x x",
-                ". . x x x x x x",
-                ". . x x x x x x",
-            ]
-            .join("\n")
-        );
-    }
-
-    #[test]
-    fn not_h_file() {
-        assert_eq!(
-            BitBoard::NOT_H_FILE.to_string(),
-            [
-                "x x x x x x x .",
-                "x x x x x x x .",
-                "x x x x x x x .",
-                "x x x x x x x .",
-                "x x x x x x x .",
-                "x x x x x x x .",
-                "x x x x x x x .",
-                "x x x x x x x .",
-            ]
-            .join("\n")
-        );
-    }
-
-    #[test]
-    fn not_gh_file() {
-        assert_eq!(
-            BitBoard::NOT_GH_FILE.to_string(),
-            [
-                "x x x x x x . .",
-                "x x x x x x . .",
-                "x x x x x x . .",
-                "x x x x x x . .",
-                "x x x x x x . .",
-                "x x x x x x . .",
-                "x x x x x x . .",
-                "x x x x x x . .",
-            ]
-            .join("\n")
-        );
-    }
-}
+// #[cfg(test)]
+// mod test {
+//     use super::*;
+// }

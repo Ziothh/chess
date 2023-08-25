@@ -14,7 +14,7 @@ pub fn mask_attacks(square: Square) -> BitBoard {
         }
     }
 
-    return attacks;
+    return attacks & BitBoard::NOT_BORDERS;
 }
 
 /// Like `bishop::mask_attacks`, but the rays stop as soon as they encounter any bits set in `blockers`
@@ -35,7 +35,7 @@ pub fn mask_attacks_on_the_fly(square: Square, blockers: BitBoard) -> BitBoard {
         }
     }
 
-    return attacks;
+    return attacks & BitBoard::NOT_BORDERS;
 }
 
 #[cfg(test)]
@@ -49,14 +49,14 @@ mod test {
         assert_eq!(
             mask_attacks(Square::E4).to_string(),
             [
-                "x . . . . . . .",
-                ". x . . . . . x",
+                ". . . . . . . .",
+                ". x . . . . . .",
                 ". . x . . . x .",
                 ". . . x . x . .",
                 ". . . . . . . .", // 4
                 ". . . x . x . .",
                 ". . x . . . x .",
-                ". x . . . . . x",
+                ". . . . . . . .",
                 //       e
             ]
             .join("\n")
@@ -67,7 +67,7 @@ mod test {
         assert_eq!(
             mask_attacks(Square::H1).to_string(),
             [
-                "x . . . . . . .",
+                ". . . . . . . .",
                 ". x . . . . . .",
                 ". . x . . . . .",
                 ". . . x . . . .",
@@ -91,7 +91,7 @@ mod test {
                 ". . . . x . . .",
                 ". . . . . x . .",
                 ". . . . . . x .",
-                ". . . . . . . x",
+                ". . . . . . . .",
                 //a
             ]
             .join("\n")

@@ -98,7 +98,7 @@ impl ChessPiece {
     /// Returns the unicode character for a given `ChessPiece`
     ///
     /// NOTE: the white pieces are outlined (♙) and the black ones are filled (♟).
-    /// If you have a dark background and a light font, 
+    /// If you have a dark background and a light font,
     /// the characters look like they're on the wrong team.
     #[rustfmt::skip]
     pub fn to_unicode(&self) -> char {
@@ -178,6 +178,11 @@ mod test {
             });
     }
 }
+
+// enum PieceMovement {
+//     Leaping,
+//     Sliding
+// }
 
 // pub trait PieceType {
 //     const PIECE_VARIANT: ChessPieceVariant;
