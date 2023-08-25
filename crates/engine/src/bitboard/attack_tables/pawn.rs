@@ -3,10 +3,9 @@ use crate::{
     core::{ChessBoard, Square, Team},
 };
 
-use super::prelude::{generate_attack_map, AttackTable};
+use super::prelude::{generate_attack_map, AttackMap};
 
-static mut PAWN_ATTACKS: [AttackTable; Team::SIZE] =
-    [[BitBoard::EMPTY; ChessBoard::SIZE]; Team::SIZE];
+static mut PAWN_ATTACKS: [AttackMap; Team::SIZE] = [[BitBoard::EMPTY; ChessBoard::SIZE]; Team::SIZE];
 
 /** Generates an attack bitboard with the diagonal pawn attacks for a given team and square.
  * The team is needed because pawns can only away from their start position. */

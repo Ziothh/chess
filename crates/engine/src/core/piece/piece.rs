@@ -7,14 +7,24 @@ use crate::core::{
 #[derive(Debug, PartialEq, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
 pub enum ChessPieceVariant {
     Pawn,
-    Bishop,
     Knight,
+    Bishop,
     Rook,
     Queen,
     King,
 }
 
 impl ChessPieceVariant {
+    const SIZE: usize = 6;
+    const ALL: [ChessPieceVariant; ChessPieceVariant::SIZE] = [
+        ChessPieceVariant::Pawn,
+        ChessPieceVariant::Knight,
+        ChessPieceVariant::Bishop,
+        ChessPieceVariant::Rook,
+        ChessPieceVariant::Queen,
+        ChessPieceVariant::King,
+    ];
+
     pub fn is_sliding(&self) -> bool {
         use super::ChessPieceVariant::*;
 
@@ -22,6 +32,10 @@ impl ChessPieceVariant {
             Bishop | Queen | Rook => true,
             _ => false,
         }
+    }
+
+    pub fn to_index(&self) -> usize {
+        *self as usize
     }
 }
 
@@ -49,8 +63,8 @@ impl ToString for ChessPieceVariant {
 
         match self {
             Pawn => 'P',
-            Bishop => 'B',
             Knight => 'N',
+            Bishop => 'B',
             Rook => 'R',
             Queen => 'Q',
             King => 'K',
@@ -65,6 +79,13 @@ pub struct ChessPiece {
     pub variant: ChessPieceVariant,
 }
 
+/// The unice value of the first chess piece character, the white king
+///
+/// The chess piece characters range from `[0x2654, 0x265F]`.
+///
+/// Black starts at `0x265A`.
+const CHESS_PIECE_UNICODE_START: u32 = '♔' as u32;
+
 impl ChessPiece {
     pub fn pseudo_legal_moves(
         &self,
@@ -72,6 +93,24 @@ impl ChessPiece {
         board: &ChessBoard,
     ) -> (Vec<Vec<Square>>, Vec<Move>) {
         generate_move_data(self, position, board)
+    }
+
+    /// Returns the unicode character for a given `ChessPiece`
+    ///
+    /// NOTE: the white pieces are outlined (♙) and the black ones are filled (♟).
+    /// If you have a dark background and a light font, 
+    /// the characters look like they're on the wrong team.
+    #[rustfmt::skip]
+    pub fn to_unicode(&self) -> char {
+        char::from_u32(
+            CHESS_PIECE_UNICODE_START
+            + (((ChessPieceVariant::SIZE - 1) - self.variant.to_index())
+                + match self.team {
+                    Team::White => 0,
+                    Team::Black => ChessPieceVariant::SIZE,
+                }) as u32,
+        )
+        .expect("The given unicode value to be a valid")
     }
 
     // pub fn is_sliding(&self) -> bool {
@@ -106,6 +145,37 @@ impl TryFrom<char> for ChessPiece {
             team: Team::from(value),
             variant: ChessPieceVariant::try_from(value)?,
         })
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use itertools::Itertools;
+
+    use super::*;
+
+    #[test]
+    fn chess_piece_to_unicode() {
+        /// White king value
+        const WHITE_START: u32 = 0x2654;
+        /// Black king value
+        const BLACK_START: u32 = 0x265A;
+        /// Black pawn value
+        const END: u32 = 0x265F;
+
+        Team::ALL
+            .iter()
+            .zip([WHITE_START..=(BLACK_START - 1), BLACK_START..=END])
+            .cartesian_product(ChessPieceVariant::ALL)
+            .for_each(|((team, range), variant)| {
+                assert!(range.contains(
+                    &(ChessPiece {
+                        variant,
+                        team: *team
+                    }
+                    .to_unicode() as u32)
+                ))
+            });
     }
 }
 
