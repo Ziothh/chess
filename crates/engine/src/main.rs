@@ -1,5 +1,3 @@
-use engine::bitboard::attack_tables::pawn;
-use engine::core::Rank;
 #[allow(unused_imports)]
 use engine::{core::game::Chess, notations::FEN};
 
@@ -13,100 +11,24 @@ use engine::{
 };
 
 fn main() -> () {
-    let sq = Square::C6;
-    let team = Team::White;
-
-    debug_square(sq);
-
-    let mut bb = BitBoard::from(sq);
-
-    bb.set_square(sq.uforward(team));
-    bb.set_square(sq.uforward(team).uleft());
-    bb.set_square(sq.uforward(team).uright());
-    // bb.set_square(sq.ubackward(team));
-    // bb.set_square(sq.ubackward(team).uleft());
-    // bb.set_square(sq.ubackward(team).uright());
-
-    println!("{sq}:\n{bb}");
-
-
-    let mut bb = BitBoard::from(sq);
-
-    bb.set_maybe_square(sq.forward(team));
-    bb.set_maybe_square(sq.forward(team).and_then(|sq| sq.left()));
-    bb.set_maybe_square(sq.forward(team).and_then(|sq| sq.right()));
-    // bb.set_maybe_square(sq.backward(team));
-    // bb.set_maybe_square(sq.backward(team).and_then(|sq| sq.left()));
-    // bb.set_maybe_square(sq.backward(team).and_then(|sq| sq.right()));
-
-    println!("{sq}:\n{bb}");
-
-    let attack = pawn::mask_attacks(sq, team);
-    println!("Attack:\n{attack}");
-
-
-    // let attack_table = engine::bitboard::attack_tables::prelude::generate_attack_map(
-    //     engine::bitboard::attack_tables::rook::mask_attacks,
-    // );
-    //
     // for rank in Rank::ALL.iter() {
     //     for file in File::ALL.iter() {
     //         let square = Square::make_square(*file, *rank);
     //
-    //         let bb = attack_table.get(square.to_index()).unwrap();
+    //         let attacks = engine::bitboard::attack_tables::rook::mask_attacks(square);
+    //         print!("{}, ", attacks.count_bits());
     //
-    //         // print!(
-    //         //     "{}, ",
-    //         //     engine::bitboard::attack_tables::generate_attack_map(
-    //         //         engine::bitboard::attack_tables::rook::mask_attacks
-    //         //     )
-    //         //     .get(square.to_int() as usize)
-    //         //     .unwrap()
-    //         //     .count_bits()
-    //         // )
-    //
-    //         print!("{}", bb);
-    //
-    //         println!("");
     //     }
-
-    // println!("")
+    //
+    //     print!("\n")
     // }
-
-    // let bb = BitBoard::from_int(578712835584952320u64);
-
-    // let ls1b = bb.ls1b_square().unwrap();
+    // println!("{}", gen_random_u32_number());
+    // println!("{}", gen_random_u32_number() & 0xFFFF);
+    // println!("{}", gen_random_u64_number());
+    // for i in 0..3 {
+    //     println!("{}", gen_random_u64_numbers());
     //
-    //
-    //
-    // println!(
-    //     "{}",
-    //     BitBoard::new([ls1b])
-    //     // BitBoard::from_int(bb.to_int())
-    //     // (bb.clone() & !bb.clone()).to_string()
-    //     // BitBoard::new([
-    //     //     // Squares with pieces
-    //     //     Square::D7,
-    //     //     Square::D2,
-    //     //     Square::B4,
-    //     //     Square::G4,
-    //     // ])
-    //     // .to_string()
-    // );
-    //
-    // return;
-    //
-    // let mut bb = BitBoard::from(Square::E1);
-    // println!("{bb}\n");
-    //
-    // bb.set_square(Square::A1);
-    // println!("{bb}\n");
-    //
-    // bb.unset_square(Square::A1);
-    // println!("{bb}\n");
-    //
-    // bb.unset_square(Square::A1);
-    // println!("{bb}\n");
+    // }
 }
 
 fn debug_square(square: Square) {

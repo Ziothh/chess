@@ -1,6 +1,6 @@
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not};
 
-use crate::core::board::{File, Rank, Square};
+use crate::core::{board::{File, Rank, Square}, ChessBoard};
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy)]
 /// A wrapper around a `u64` to represent a bitboard.
@@ -37,8 +37,8 @@ impl BitBoard {
     /// assert_eq!(BitBoard::new([Square::A1, Square::A2, Square::A3]).count_bits(), 3);
     /// assert_eq!(BitBoard::new([Square::A1, Square::A2, Square::A3, Square::A4, Square::A5]).count_bits(), 5);
     /// ```
-    pub fn count_bits(&self) -> u8 {
-        return self.0.count_ones() as u8;
+    pub fn count_bits(&self) -> u32 {
+        return self.0.count_ones() as u32;
     }
 
     #[inline]
@@ -96,7 +96,7 @@ impl BitBoard {
                 - 1,
             )
             // We then count the amount of 1's to get the index
-            .count_bits()
+            .count_bits() as u8
         ));
     }
 
@@ -163,6 +163,9 @@ impl BitBoard {
     // [constants]
 
     // [constants:base]
+    /// The amount of bits a `BitBoard` constains
+    pub const SIZE: usize = ChessBoard::SIZE;
+
     /// A `BitBoard` where every square bit is set to `0`
     ///
     /// The value of the `BitBoard` is equal to `0`

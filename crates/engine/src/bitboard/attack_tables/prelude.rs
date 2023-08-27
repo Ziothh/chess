@@ -2,12 +2,12 @@ use std::fs::File;
 
 use crate::{
     bitboard::BitBoard,
-    core::{board::Square, ChessBoard},
+    core::{board::Square, ChessBoard, game::Chess},
 };
 
 pub type SquareTranslation = fn(origin: Square) -> Option<Square>;
 /** Translations that move a square by 1.
- * TRANSLATIONS[..4] are 1D
+ * TRANSLATIONS[..4] are 1D (horizontal & vertical)
  * TRANSLATIONS[4..] are 2D (diagonal) */
 pub const TRANSLATIONS: [SquareTranslation; 8] = [
     // Horizontal + vertical
@@ -41,6 +41,7 @@ pub fn generate_attack_map(bitboard_generator: impl Fn(Square) -> BitBoard) -> A
     return attack_map;
 }
 
+
 pub struct AttackTable {
     name: String,
     values: [BitBoard; ChessBoard::SIZE]
@@ -57,6 +58,10 @@ impl AttackTable {
             name: name.to_owned(),
             values: attacks,
         }
+    }
+
+    pub fn to_array(&self) -> [BitBoard; ChessBoard::SIZE] {
+        self.values
     }
 
     // #[allow(unused)]

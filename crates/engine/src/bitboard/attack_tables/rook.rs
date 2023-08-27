@@ -6,6 +6,19 @@ use crate::{
 use super::prelude::TRANSLATIONS;
 
 #[rustfmt::skip]
+/// The max amount of bits set to 1 in the attack mask (by mask_attack()) for every square
+const RELEVANT_BITS: [u32; BitBoard::SIZE] = [
+    12, 11, 11, 11, 11, 11, 11, 12,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    12, 11, 11, 11, 11, 11, 11, 12,
+];
+
+#[rustfmt::skip]
 pub fn mask_attacks(square: Square) -> BitBoard {
     let mut attacks = BitBoard::EMPTY;
 
@@ -34,8 +47,10 @@ pub fn mask_attacks(square: Square) -> BitBoard {
 pub fn mask_attacks_on_the_fly(square: Square, blockers: BitBoard) -> BitBoard {
     let mut attacks = BitBoard::EMPTY;
 
+    let mut current_square;
+
     for translation in TRANSLATIONS[..4].iter() {
-        let mut current_square = square;
+        current_square = square;
 
         while let Some(sq) = translation(current_square) {
             attacks.set_square(sq);
@@ -94,12 +109,12 @@ mod test {
     }
     #[test]
     fn attacks_A8() {
-        println!("{}", mask_attacks(Square::A8).to_string(),);
+        // println!("{}", mask_attacks(Square::A8).to_string(),);
         assert_eq!(
             mask_attacks(Square::A8).to_string(),
             [
                 ". x x x x x x .", // 8
-                "x . . . . . . .", 
+                "x . . . . . . .",
                 "x . . . . . . .",
                 "x . . . . . . .",
                 "x . . . . . . .",
