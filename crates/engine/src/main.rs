@@ -1,3 +1,4 @@
+use engine::bitboard::magic::find_magic_number;
 #[allow(unused_imports)]
 use engine::{core::game::Chess, notations::FEN};
 
@@ -11,6 +12,26 @@ use engine::{
 };
 
 fn main() -> () {
+    fn init_magic_numbers() {
+        use engine::bitboard::attack_tables;
+        use engine::core::piece::SlidingDirection;
+
+
+        Square::ALL.iter().for_each(|square| {
+            println!("{square}");
+            let attack_map = attack_tables::bishop::mask_attacks(*square);
+            let relevant_bits = attack_map.count_bits();
+            let magic_number = find_magic_number(*square, relevant_bits, SlidingDirection::Diagonal);
+
+            println!("{:X}", magic_number.0);
+
+
+        });
+    }
+
+    init_magic_numbers();
+
+
     // for rank in Rank::ALL.iter() {
     //     for file in File::ALL.iter() {
     //         let square = Square::make_square(*file, *rank);

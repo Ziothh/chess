@@ -1,6 +1,8 @@
 use rand::{rngs::SmallRng, SeedableRng, Rng};
 
-use crate::{bitboard::BitBoard, core::Square};
+use crate::{bitboard::BitBoard, core::{Square, piece::SlidingDirection}};
+
+use super::attack_tables;
 //
 // TODO: use rand to get random number
 
@@ -9,16 +11,66 @@ fn random_bitboard<R: Rng>(rng: &mut R) -> BitBoard{
     BitBoard(rng.gen::<u64>() & rng.gen::<u64>() & rng.gen::<u64>())
 }
 
-fn generate_magic() {
-    let mut rng: SmallRng = SmallRng::seed_from_u64(0xDEADBEEF12345678);
-}
+// fn generate_magic() {
+//     let mut rng: SmallRng = SmallRng::seed_from_u64(0xDEADBEEF12345678);
+// }
+//
 
 
-fn find_magic_number(square: Square, relevant_bits: u32, bishop: u32) {
-    let occupancies = [BitBoard::EMPTY; 4096];
+pub fn find_magic_number(square: Square, relevant_bits: u32, sliding_direction: SlidingDirection) -> BitBoard {
+    let mut rng = SmallRng::seed_from_u64(0xDEADBEEF12345678);
 
-    let attacks = [BitBoard::EMPTY; 4096];
-    let used_attacks = [BitBoard::EMPTY; 4096];
+    let mut occupancies = [BitBoard::EMPTY; 4096];
+
+    let mut attacks = [BitBoard::EMPTY; 4096];
+    let mut used_attacks = [BitBoard::EMPTY; 4096];
+
+    let attack_mask = match sliding_direction {
+        SlidingDirection::Diagonal => attack_tables::bishop::mask_attacks(square),
+        SlidingDirection::Orthogonal => attack_tables::rook::mask_attacks(square),
+    };
+
+    let occupancy_indicies: u32 = 1u32 << relevant_bits;
+
+    let mut uidx: usize;
+    for index in 0..occupancy_indicies {
+        uidx = index as usize;
+        occupancies[uidx] = set_occupancy(index, relevant_bits, attack_mask);
+
+        attacks[uidx] = match sliding_direction {
+            SlidingDirection::Diagonal => attack_tables::bishop::mask_attacks_on_the_fly(square, occupancies[uidx]),
+            SlidingDirection::Orthogonal => attack_tables::rook::mask_attacks_on_the_fly(square, occupancies[uidx]),
+        }
+    }
+
+    // Retry by brute force
+    loop {
+        // Generate magic number candidate
+        let magic_number = random_bitboard(&mut rng);
+
+        // Skip inappropriate magic numbers
+        if ((attack_mask.0.wrapping_mul(magic_number.0)) & 0xFF00_0000_0000_0000).count_ones() < 6 { continue; }
+        
+        // Wether this randomly generated magic number works
+        let mut fail = false;
+        for index in 0..(occupancy_indicies as usize) {
+            // println!("Index: {index}");
+            let magic_index = ((occupancies[index].0.wrapping_mul(magic_number.0)) >> (64 - relevant_bits)) as u32 as usize;
+            // println!("Magic: {magic_index}");
+
+            // on empty index available
+            if used_attacks[magic_index] == BitBoard::EMPTY {
+                used_attacks[magic_index] = attacks[index];
+            } else if used_attacks[magic_index] != attacks[index] {
+                // Magic index doesn't work
+                fail = true;
+                // break;
+            }
+
+        }
+
+        if !fail { return magic_number }
+    }
 }
 
 

@@ -73,6 +73,16 @@ impl ToString for ChessPieceVariant {
     }
 }
 
+/// Represent the variants of sliding directions for sliding pieces
+pub enum SlidingDirection {
+    /// For diagonally sliding pieces.
+    Diagonal,
+    /// For horizontally and vertically sliding pieces.
+    /// Means "intersecting or lying at right angles".
+    Orthogonal,
+}
+
+
 #[derive(Debug, PartialEq, rspc::Type, serde::Serialize, serde::Deserialize)]
 pub struct ChessPiece {
     pub team: Team,

@@ -16,6 +16,7 @@
     "@acme/server": "workspace:*",
     "@acme/tailwind-config": "workspace*",
     "@acme/ui": "workspace:*",
+    "@acme/utils": "workspace:*",
     "class-variance-authority": "^0.5.2",
     "dotenv": "^16.0.3",
     "next": "^13.3.1",

@@ -6,7 +6,8 @@ import type { Procedures } from "./bindings"; // These were the bindings exporte
 import type { FC, PropsWithChildren, ReactElement } from "react";
  
 // You must provide the generated types as a generic and create a transport (in this example we are using HTTP Fetch) so that the client knows how to communicate with your API.
-const client = createClient<Procedures>({
+/** The vanilla `rspc` client */
+export const rspcClient = createClient<Procedures>({
   // Refer to the integration your using for the correct transport.
   transport: new FetchTransport("http://localhost:8080/rspc"),
 });
@@ -14,9 +15,10 @@ const client = createClient<Procedures>({
 const queryClient = new QueryClient();
  
 export const RSPCProvider: FC<PropsWithChildren> = ({ children }) => (
-    <rspc.Provider client={client} queryClient={queryClient}>
+    <rspc.Provider client={rspcClient} queryClient={queryClient}>
       {children as ReactElement}
     </rspc.Provider>
 )
 
+/** The react-query wrapper for the `rspc` client */
 export const rspc = createReactQueryHooks<Procedures>();

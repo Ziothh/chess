@@ -203,6 +203,9 @@ importers:
       '@acme/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@acme/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       class-variance-authority:
         specifier: ^0.5.2
         version: 0.5.2(typescript@5.0.4)
@@ -313,6 +316,22 @@ importers:
       superjson:
         specifier: 1.9.1
         version: 1.9.1
+      zod:
+        specifier: ^3.21.4
+        version: 3.21.4
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: ^0.1.0
+        version: link:../config/eslint
+      eslint:
+        specifier: ^8.38.0
+        version: 8.38.0
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
+  packages/utils:
+    dependencies:
       zod:
         specifier: ^3.21.4
         version: 3.21.4
