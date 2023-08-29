@@ -25,7 +25,15 @@ const Square: FC<{
       data-index={index}
       className={clsx(
         file.charCodeAt(0) % 2 !== rank.charCodeAt(0) % 2 ? 'bg-zinc-400' : 'bg-zinc-950',
-        "relative aspect-square cursor-pointer user-select-none",
+        !draggingPiece.isSet
+          ? piece?.team === chess.teamToMove && 'cursor-grab'
+          : (
+            (moveToThisSquare && 'cursor-move')
+            || (draggingPiece.value.index === index && 'cursor-not-allowed')
+            || (piece && 'cursor-no-drop')
+            || 'cursor-grabbing'
+          ),
+        "relative aspect-square user-select-none",
         className,
       )}
       onClick={() => {

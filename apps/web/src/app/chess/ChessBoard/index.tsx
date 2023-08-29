@@ -10,7 +10,7 @@ export { chessBoard };
 
 const ChessBoard: FC = ({ }) => {
   return (
-    <div className="grid grid-cols-8 w-full max-w-4xl">
+    <div className="grid grid-cols-8 w-full max-w-[52rem]">
       {[...chessBoard.RANKS].reverse().map((rank) => chessBoard.FILES.map((file) => (
         <Square
           key={chessBoard.Square.coords.toId(file, rank)}

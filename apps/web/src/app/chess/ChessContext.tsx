@@ -8,9 +8,10 @@ import { useChessboard } from "./ChessBoard";
 
 export const [useChess, ChessCtxProvider] = contextFactory(
   () => {
-    const { data, error } = rspc.useQuery(['chess.start'], {
+    const { data, error, isLoading } = rspc.useQuery(['chess.start'], {
       suspense: true,
       staleTime: Infinity,
+      enabled: true,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -22,6 +23,8 @@ export const [useChess, ChessCtxProvider] = contextFactory(
         halfmove_clock: 0,
       },
     })
+
+    console.log(isLoading, data)
 
     if (error !== null) { throw error }
     if (data === undefined) { throw new Error("The chess.start data can not be undefined") }
