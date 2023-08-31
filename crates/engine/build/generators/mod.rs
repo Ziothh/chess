@@ -1,4 +1,4 @@
-mod prelude;
+pub mod prelude;
 
 mod lines;
 pub use lines::*;
@@ -15,4 +15,5 @@ pub use knight::*;
 mod king;
 pub use king::*;
 
-pub use prelude::ArrayGenerator;
+mod pawn;
+pub use pawn::*;

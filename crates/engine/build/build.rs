@@ -10,7 +10,7 @@ mod bitboard;
 mod primitives;
 
 mod generators;
-use generators::ArrayGenerator;
+use generators::prelude::{ArrayGenerator, ValueGenerator};
 
 fn main() {
     let now = std::time::SystemTime::now();
@@ -40,6 +40,10 @@ fn main() {
     generators::RaysGenerator::write_generated_array(&mut file).unwrap();
     generators::KnightAttacksGenerator::write_generated_array(&mut file).unwrap();
     generators::KingAttacksGenerator::write_generated_array(&mut file).unwrap();
+    generators::PawnMovesGenerator::write_generated_array(&mut file).unwrap();
+    generators::PawnAttacksGenerator::write_generated_array(&mut file).unwrap();
+    generators::PawnDoubleMoveOriginsGenerator::write_generated_value(&mut file).unwrap();
+    generators::PawnDoubleMoveDestinationsGenerator::write_generated_value(&mut file).unwrap();
 
     // println!("BUILD SCRIPT RUNNING");
 }

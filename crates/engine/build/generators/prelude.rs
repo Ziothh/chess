@@ -19,8 +19,8 @@ pub const TRANSLATIONS: [SquareTranslation; 8] = [
     |origin| origin.down().and_then(|sq| sq.left()), // SW
 ];
 
-/// T: The type of the generated array content
-/// N: The size of the generated array
+/// `T`: The type of the generated array content
+/// `N`: The size of the generated array
 pub trait ArrayGenerator<T: Debug + Sized, const N: usize = 64>
 where
     [T; N]: Sized,
@@ -59,6 +59,28 @@ where
             write!(file, "    {:?},\n", array[i])?;
         }
         write!(file, "];\n").unwrap();
+
+        return Ok(());
+    }
+}
+
+
+/// `T`: The type of the generated value
+pub trait ValueGenerator<T: Debug + Sized> {
+    /// The name of the `const` array that's generated in the `write_generated_array` function.
+    const NAME: &'static str;
+
+    fn generate_value() -> T;
+
+
+    fn write_generated_value(file: &mut File) -> std::io::Result<()> {
+        let value = Self::generate_value();
+
+        #[rustfmt::skip]
+        let type_name = std::any::type_name::<T>()
+            .replace("build_script_build::bitboard::bitboard::", "");
+
+        write!(file, "const {}: {} = {:?};\n", Self::NAME, type_name, value)?;
 
         return Ok(());
     }

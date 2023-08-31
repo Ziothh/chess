@@ -25,7 +25,7 @@ impl Default for Square {
 }
 
 impl Square {
-    const AMOUNT: usize = 64;
+    pub const AMOUNT: usize = 64;
 
     /// Create a new square, given an index.
     ///

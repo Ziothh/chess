@@ -20,6 +20,14 @@ impl Team {
         *self as usize
     }
 
+    pub fn try_from_index(index: usize) -> Option<Self> {
+        match index {
+            0 => Some(Self::White),
+            1 => Some(Self::Black),
+            _ => None,
+        }
+    }
+
     /// Gets the nth rank, relative to the team starting position.
     ///
     /// NOTE: `nth` = 1..=8 // ! The rank wraps around if nth > 8

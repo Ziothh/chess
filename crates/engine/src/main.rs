@@ -11,12 +11,12 @@
 //     },
 // };
 
-use engine::{bitboard::BitBoard, primitives::Square};
+use engine::{bitboard::BitBoard, primitives::{Square, Team}};
 
 include!("../data/magic_gen.rs");
 
 fn main() -> () {
-    for (origin, bb) in KING_MOVES
+    for (origin, bb) in PAWN_ATTACKS[Team::White.to_index()]
         .iter()
         .enumerate()
         .map(|(i, bb)| (Square::new(i as u8), bb))
