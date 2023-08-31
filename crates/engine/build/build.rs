@@ -38,6 +38,7 @@ fn main() {
     generators::LinesGenerator::write_generated_array(&mut file).unwrap();
     generators::BetweenGenerator::write_generated_array(&mut file).unwrap();
     generators::RaysGenerator::write_generated_array(&mut file).unwrap();
+    generators::KnightAttacksGenerator::write_generated_array(&mut file).unwrap();
 
     // println!("BUILD SCRIPT RUNNING");
 }

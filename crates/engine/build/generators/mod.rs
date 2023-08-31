@@ -9,4 +9,7 @@ pub use between::*;
 mod rays;
 pub use rays::*;
 
+mod knight;
+pub use knight::*;
+
 pub use prelude::ArrayGenerator;
