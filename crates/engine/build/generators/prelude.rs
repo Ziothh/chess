@@ -1,14 +1,7 @@
-// struct Generator<T> {
-//     name: String,
-//     size: u32,
-//     generator: fn() -> T,
-//
-//
-// }
-
 use std::{fmt::Debug, fs::File, io::Write};
 
-///
+use crate::primitives::Square;
+
 /// T: The type of the generated array content
 /// N: The size of the generated array
 pub trait ArrayGenerator<T: Debug + Sized, const N: usize = 64>
@@ -52,4 +45,9 @@ where
 
         return Ok(());
     }
+}
+
+/// Returns (square: &Square, file: i8, rank: i8)
+pub fn square_with_i8_coords(square: &Square) -> (&Square, i8, i8) {
+    return (square, square.get_file() as i8, square.get_rank() as i8);
 }

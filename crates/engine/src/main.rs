@@ -16,7 +16,7 @@ use engine::{bitboard::BitBoard, primitives::Square};
 include!("../data/magic_gen.rs");
 
 fn main() -> () {
-    for (origin, array) in LINES.iter().enumerate().map(|(i, bb_array)| {
+    for (origin, array) in BETWEEN.iter().enumerate().map(|(i, bb_array)| {
         (
             Square::new(i as u8),
             bb_array

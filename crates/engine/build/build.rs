@@ -3,20 +3,19 @@
 
 use std::{fs::File, io::Write, path::Path};
 
+
 #[path = "../src/bitboard/mod.rs"]
 mod bitboard;
 #[path = "../src/primitives/mod.rs"]
 mod primitives;
 
-mod core;
-use crate::core::ArrayGenerator;
-
 mod generators;
+use generators::ArrayGenerator;
 
 fn main() {
     let now = std::time::SystemTime::now();
     let time = {
-        let mut tmp = format!("{:?}.txt", now).replace("SystemTime { tv_sec: ", "");
+        let tmp = format!("{:?}.txt", now).replace("SystemTime { tv_sec: ", "");
         tmp.split_at(tmp.find(',').unwrap()).0.to_owned()
     };
 
@@ -36,7 +35,8 @@ fn main() {
     let magic_path = Path::new(&out_dir).join("magic_gen.rs");
     let mut file = File::create(&magic_path).unwrap();
 
-    generators::LinesGenerator::write_generated_array(&mut file);
+    generators::LinesGenerator::write_generated_array(&mut file).unwrap();
+    generators::BetweenGenerator::write_generated_array(&mut file).unwrap();
 
     // println!("BUILD SCRIPT RUNNING");
 }
