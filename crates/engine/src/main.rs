@@ -16,7 +16,7 @@ use engine::{bitboard::BitBoard, primitives::Square};
 include!("../data/magic_gen.rs");
 
 fn main() -> () {
-    for (origin, bb) in KNIGHT_MOVES
+    for (origin, bb) in KING_MOVES
         .iter()
         .enumerate()
         .map(|(i, bb)| (Square::new(i as u8), bb))

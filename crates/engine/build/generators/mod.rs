@@ -12,4 +12,7 @@ pub use rays::*;
 mod knight;
 pub use knight::*;
 
+mod king;
+pub use king::*;
+
 pub use prelude::ArrayGenerator;
