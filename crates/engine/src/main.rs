@@ -13,18 +13,20 @@
 
 use engine::{bitboard::BitBoard, primitives::{Square, Team}};
 
-include!("../data/magic_gen.rs");
+// include!("../data/magic_gen.rs");
 
 fn main() -> () {
-    for (origin, bb) in PAWN_ATTACKS[Team::White.to_index()]
-        .iter()
-        .enumerate()
-        .map(|(i, bb)| (Square::new(i as u8), bb))
-    {
-        println!("\nOrigin: {origin}\n{bb}");
 
-        term::pause();
-    }
+
+    // for (origin, bb) in PAWN_ATTACKS[Team::White.to_index()]
+    //     .iter()
+    //     .enumerate()
+    //     .map(|(i, bb)| (Square::new(i as u8), bb))
+    // {
+    //     println!("\nOrigin: {origin}\n{bb}");
+    //
+    //     term::pause();
+    // }
 
     // for (origin, array) in BETWEEN.iter().enumerate().map(|(i, bb_array)| {
     //     (
