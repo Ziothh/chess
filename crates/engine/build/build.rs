@@ -23,7 +23,7 @@ fn main() {
         File::create(
             Path::new("/home/zioth/projects/apps/chess/crates/engine/data/built_at")
                 .join(format!("{:?}.txt", time).replace("\"", ""))
-        )
+/*   */       )
         .unwrap(),
         "{:?}",
         now,
@@ -37,6 +37,7 @@ fn main() {
 
     generators::LinesGenerator::write_generated_array(&mut file).unwrap();
     generators::BetweenGenerator::write_generated_array(&mut file).unwrap();
+    generators::RaysGenerator::write_generated_array(&mut file).unwrap();
 
     // println!("BUILD SCRIPT RUNNING");
 }

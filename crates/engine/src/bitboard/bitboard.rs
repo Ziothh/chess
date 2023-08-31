@@ -30,7 +30,7 @@ impl BitBoard {
     /// Value: `[0..64]`
     ///
     /// ```
-    /// use engine::{bitboard::BitBoard, core::Square};
+    /// use engine::{bitboard::BitBoard, primitives::Square};
     ///
     /// assert_eq!(BitBoard::EMPTY.count_bits(), 0);
     /// assert_eq!(BitBoard::new([Square::A1, Square::A2]).count_bits(), 2);
@@ -63,7 +63,7 @@ impl BitBoard {
     /// ranks like most chess engines.
     /// 
     /// ```
-    /// use engine::{bitboard::BitBoard, core::Square};
+    /// use engine::{bitboard::BitBoard, primitives::Square};
     ///
     /// assert_eq!(BitBoard::from_int(578712835584952320u64).ls1b_square(), Some(Square::new(11)));
     /// assert_eq!(BitBoard::from_int(1).ls1b_square(), Some(Square::A1));

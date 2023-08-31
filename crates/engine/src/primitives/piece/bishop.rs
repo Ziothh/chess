@@ -1,4 +1,4 @@
-use crate::core::{
+use crate::primitives::{
     board::Square,
     moves::Move,
     piece::{ChessPieceVariant, PieceType},
@@ -29,6 +29,4 @@ impl PieceMovement for BishopType {
         Self::SE,
         Self::SW,
     ];
-
-
 }

@@ -12,6 +12,7 @@ fn is_between(a: i8, x: i8, b: i8) -> bool {
 }
 
 
+/// A `ArrayGenerator` that generates the lines between 2 squares
 pub struct BetweenGenerator;
 
 impl ArrayGenerator<[BitBoard; 64]> for BetweenGenerator {

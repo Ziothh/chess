@@ -37,7 +37,7 @@ where
         let type_name = std::any::type_name::<T>()
             .replace("build_script_build::bitboard::bitboard::", "");
 
-        write!(file, "const {}: [{}; 64] = [\n", Self::NAME, type_name)?;
+        write!(file, "const {}: [{}; {}] = [\n", Self::NAME, type_name, N)?;
         for i in 0..N {
             write!(file, "    {:?},\n", array[i])?;
         }

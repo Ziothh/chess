@@ -107,7 +107,7 @@ pub fn set_occupancy(index: u32, bits_in_mask: u32, mut attack_mask: BitBoard) -
 
 #[cfg(test)]
 mod test {
-    // use crate::core::{board::Square, team::Team};
+    // use crate::primitives::{board::Square, team::Team};
     // use super::generate_attack_map;
 
     use std::io::{Write, Read};

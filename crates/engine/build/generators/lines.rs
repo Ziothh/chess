@@ -3,6 +3,8 @@ use super::prelude::{ArrayGenerator, square_with_i8_coords};
 
 pub struct LinesGenerator;
 
+/// A `ArrayGenerator` that generates the rays between 2 squares. 
+/// The ray does not get blocked by the destination square and stretches to the edge of the board
 impl ArrayGenerator<[BitBoard; 64]> for LinesGenerator {
     const NAME: &'static str = "LINES";
 

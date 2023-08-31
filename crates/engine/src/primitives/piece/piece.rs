@@ -73,13 +73,25 @@ impl ToString for ChessPieceVariant {
     }
 }
 
+#[derive(Clone, Copy)]
 /// Represent the variants of sliding directions for sliding pieces
 pub enum SlidingDirection {
-    /// For diagonally sliding pieces.
-    Diagonal,
     /// For horizontally and vertically sliding pieces.
     /// Means "intersecting or lying at right angles".
+    /// 
+    /// Example piece: `ChessPieceVariant::Rook`
     Orthogonal,
+    /// For diagonally sliding pieces.
+    /// 
+    /// Example piece: `ChessPieceVariant::Bishop`
+    Diagonal,
+}
+impl SlidingDirection {
+    pub const SIZE: usize = 2;
+
+    pub fn to_index(&self) -> usize {
+        return *self as usize;
+    }
 }
 
 

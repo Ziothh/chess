@@ -1,4 +1,9 @@
-use crate::core::{board::Square, team::Team, moves::Move, piece::{PieceType, ChessPieceVariant}};
+use crate::primitives::{
+    board::Square,
+    moves::Move,
+    piece::{ChessPieceVariant, PieceType},
+    team::Team,
+};
 
 pub struct PawnType;
 

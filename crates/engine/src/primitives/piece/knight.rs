@@ -1,4 +1,4 @@
-use crate::core::{
+use crate::primitives::{
     board::Square,
     moves::Move,
     piece::{ChessPieceVariant, PieceType},
@@ -7,7 +7,6 @@ use crate::core::{
 
 // const DIRECTIONS_LONG: [isize; 2] = [2, -2];
 // const DIRECTIONS_SHORT: [isize; 2] = [1, -1];
-
 
 pub struct KnightType;
 
@@ -37,11 +36,11 @@ impl PieceType for KnightType {
         return DIRECTIONS
             .iter()
             .filter_map(|(x, y)| {
-              if let Some(destination) = position.translate(*x, *y) {
-                Some(Move::new(Self::PIECE_VARIANT, position, destination))
-              } else {
-                None
-              }
+                if let Some(destination) = position.translate(*x, *y) {
+                    Some(Move::new(Self::PIECE_VARIANT, position, destination))
+                } else {
+                    None
+                }
             })
             .collect();
     }

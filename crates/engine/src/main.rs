@@ -16,21 +16,31 @@ use engine::{bitboard::BitBoard, primitives::Square};
 include!("../data/magic_gen.rs");
 
 fn main() -> () {
-    for (origin, array) in BETWEEN.iter().enumerate().map(|(i, bb_array)| {
-        (
-            Square::new(i as u8),
-            bb_array
-                .iter()
-                .enumerate()
-                .map(|(i, bb)| (Square::new(i as u8), bb)),
-        )
-    }) {
-        for (dest, bb) in array {
-            println!("\nOrigin: {origin}, Destination: {dest}\n{bb}");
+    for (origin, bb) in RAYS[1]
+        .iter()
+        .enumerate()
+        .map(|(i, bb)| (Square::new(i as u8), bb))
+    {
+        println!("\nOrigin: {origin}\n{bb}");
 
-            term::pause();
-        }
+        term::pause();
     }
+
+    // for (origin, array) in BETWEEN.iter().enumerate().map(|(i, bb_array)| {
+    //     (
+    //         Square::new(i as u8),
+    //         bb_array
+    //             .iter()
+    //             .enumerate()
+    //             .map(|(i, bb)| (Square::new(i as u8), bb)),
+    //     )
+    // }) {
+    //     for (dest, bb) in array {
+    //         println!("\nOrigin: {origin}, Destination: {dest}\n{bb}");
+    //
+    //         term::pause();
+    //     }
+    // }
 
     // fn init_magic_numbers() {
     //     use engine::bitboard::attack_tables;
@@ -124,10 +134,9 @@ fn debug_square(square: Square) {
 //     ascii.print(&game.board);
 // }
 
-
 #[allow(dead_code)]
 mod term {
-    use std::io::{stdout, stdin, Read, Write};
+    use std::io::{stdin, stdout, Read, Write};
 
     pub fn pause() {
         let mut stdout = stdout();

@@ -1,4 +1,4 @@
-use crate::core::{
+use crate::primitives::{
     board::Square,
     moves::Move,
     piece::{ChessPieceVariant, PieceType, SlidingPiece},
