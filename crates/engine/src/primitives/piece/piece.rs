@@ -88,6 +88,10 @@ pub enum SlidingDirection {
 }
 impl SlidingDirection {
     pub const SIZE: usize = 2;
+    pub const ALL: [Self; Self::SIZE] = [
+        Self::Orthogonal,
+        Self::Diagonal,
+    ];
 
     pub fn to_index(&self) -> usize {
         return *self as usize;

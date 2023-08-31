@@ -1,4 +1,4 @@
-use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not};
+use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Mul};
 
 use crate::primitives::{board::{File, Rank, Square}, ChessBoard};
 
@@ -157,6 +157,37 @@ impl BitBoard {
             self.unset_square(sq);
         }
         return self;
+    }
+
+
+    /// Construct a new `BitBoard` with a particular `Square` set
+    #[inline]
+    pub fn from_square(square: Square) -> BitBoard {
+        BitBoard(1u64 << square.to_int())
+    }
+
+    /// Convert an `Option<Square>` to an `Option<BitBoard>`
+    #[inline]
+    pub fn from_maybe_square(square: Option<Square>) -> Option<BitBoard> {
+        square.map(|s| BitBoard::from_square(s))
+    }
+
+    /// Convert a `BitBoard` to a `Square`.  This grabs the least-significant `Square`
+    #[inline]
+    pub fn to_square(&self) -> Square {
+        Square::new(self.0.trailing_zeros() as u8)
+    }
+
+    /// Reverse this `BitBoard`.  Look at it from the opponents perspective.
+    #[inline]
+    pub fn reverse_colors(&self) -> BitBoard {
+        BitBoard(self.0.swap_bytes())
+    }
+
+    /// Convert this `BitBoard` to a `usize` (for table lookups)
+    #[inline]
+    pub fn to_size(&self, rightshift: u8) -> usize {
+        (self.0 >> rightshift) as usize
     }
 
 
@@ -343,6 +374,41 @@ impl BitBoard {
             Square::G8,
         ]).0
     );
+
+
+    // Given a file, what squares are on that file?
+    pub const FILES: [BitBoard; 8] = [
+        BitBoard(72340172838076673),
+        BitBoard(144680345676153346),
+        BitBoard(289360691352306692),
+        BitBoard(578721382704613384),
+        BitBoard(1157442765409226768),
+        BitBoard(2314885530818453536),
+        BitBoard(4629771061636907072),
+        BitBoard(9259542123273814144),
+    ];
+    // Given a file, what squares are adjacent to that file?  Useful for detecting passed pawns.
+    pub const ADJACENT_FILES: [BitBoard; 8] = [
+        BitBoard(144680345676153346),
+        BitBoard(361700864190383365),
+        BitBoard(723401728380766730),
+        BitBoard(1446803456761533460),
+        BitBoard(2893606913523066920),
+        BitBoard(5787213827046133840),
+        BitBoard(11574427654092267680),
+        BitBoard(4629771061636907072),
+    ];
+    /// Given a rank, what squares are on that rank?
+    pub const RANKS: [BitBoard; 8] = [
+        BitBoard(255),
+        BitBoard(65280),
+        BitBoard(16711680),
+        BitBoard(4278190080),
+        BitBoard(1095216660480),
+        BitBoard(280375465082880),
+        BitBoard(71776119061217280),
+        BitBoard(18374686479671623680),
+    ];
 }
 
 impl Default for BitBoard {
@@ -355,13 +421,13 @@ impl Default for BitBoard {
 impl From<Square> for BitBoard {
     #[inline]
     fn from(value: Square) -> Self {
-        BitBoard(1u64 << value.to_int())
+        Self::from_square(value)
     }
 }
 impl From<&Square> for BitBoard {
     #[inline]
     fn from(value: &Square) -> Self {
-        BitBoard(1u64 << value.to_int())
+        Self::from_square(*value)
     }
 }
 
@@ -524,42 +590,39 @@ impl BitXorAssign<&BitBoard> for BitBoard {
     }
 }
 
-// // Impl Mul
-// impl Mul for BitBoard {
-//     type Output = BitBoard;
-//
-//     #[inline]
-//     fn mul(self, other: BitBoard) -> BitBoard {
-//         BitBoard(self.0.wrapping_mul(other.0))
-//     }
-// }
-//
-// impl Mul for &BitBoard {
-//     type Output = BitBoard;
-//
-//     #[inline]
-//     fn mul(self, other: &BitBoard) -> BitBoard {
-//         BitBoard(self.0.wrapping_mul(other.0))
-//     }
-// }
-//
-// impl Mul<&BitBoard> for BitBoard {
-//     type Output = BitBoard;
-//
-//     #[inline]
-//     fn mul(self, other: &BitBoard) -> BitBoard {
-//         BitBoard(self.0.wrapping_mul(other.0))
-//     }
-// }
-//
-// impl Mul<BitBoard> for &BitBoard {
-//     type Output = BitBoard;
-//
-//     #[inline]
-//     fn mul(self, other: BitBoard) -> BitBoard {
-//         BitBoard(self.0.wrapping_mul(other.0))
-//     }
-// }
+// Impl Mul
+impl Mul for BitBoard {
+    type Output = BitBoard;
+
+    #[inline]
+    fn mul(self, other: BitBoard) -> BitBoard {
+        BitBoard(self.0.wrapping_mul(other.0))
+    }
+}
+impl Mul for &BitBoard {
+    type Output = BitBoard;
+
+    #[inline]
+    fn mul(self, other: &BitBoard) -> BitBoard {
+        BitBoard(self.0.wrapping_mul(other.0))
+    }
+}
+impl Mul<&BitBoard> for BitBoard {
+    type Output = BitBoard;
+
+    #[inline]
+    fn mul(self, other: &BitBoard) -> BitBoard {
+        BitBoard(self.0.wrapping_mul(other.0))
+    }
+}
+impl Mul<BitBoard> for &BitBoard {
+    type Output = BitBoard;
+
+    #[inline]
+    fn mul(self, other: BitBoard) -> BitBoard {
+        BitBoard(self.0.wrapping_mul(other.0))
+    }
+}
 
 // Impl Not
 impl Not for BitBoard {
@@ -625,7 +688,21 @@ impl std::fmt::Display for BitBoard {
     }
 }
 
+/// For the `BitBoard`, iterate over every `Square` set.
+impl Iterator for BitBoard {
+    type Item = Square;
 
+    #[inline]
+    fn next(&mut self) -> Option<Square> {
+        if self.0 == 0 {
+            None
+        } else {
+            let result = self.to_square();
+            *self ^= BitBoard::from_square(result);
+            Some(result)
+        }
+    }
+}
 
 // #[cfg(test)]
 // mod test {
