@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use engine::core::{
+use engine::primitives::{
     board::{ChessBoard, Square},
     game::Chess,
     // moves::Move,

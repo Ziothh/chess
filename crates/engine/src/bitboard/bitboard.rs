@@ -1,6 +1,6 @@
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not};
 
-use crate::core::{board::{File, Rank, Square}, ChessBoard};
+use crate::primitives::{board::{File, Rank, Square}, ChessBoard};
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy)]
 /// A wrapper around a `u64` to represent a bitboard.

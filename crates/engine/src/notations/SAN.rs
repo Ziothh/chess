@@ -1,5 +1,5 @@
 use crate::{
-    core::{
+    primitives::{
         board::{File, Rank, Square},
         instructions::{CastlingMove, CheckKind, EndOfGameState, Instruction},
         moves::Move,

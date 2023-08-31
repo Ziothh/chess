@@ -1,12 +1,13 @@
 /// The starting FEN string.
 pub const START: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-
-use crate::core::{
-    board::{ChessBoard, File, Rank, Square},
+use crate::{
     game::Chess,
-    piece::ChessPiece,
-    team::Team,
+    primitives::{
+        board::{ChessBoard, File, Rank, Square},
+        piece::ChessPiece,
+        team::Team,
+    },
 };
 
 /// This function parses a FEN string and returns the chess game state represented by it.
