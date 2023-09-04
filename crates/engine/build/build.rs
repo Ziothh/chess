@@ -34,9 +34,9 @@ fn main() {
     // let out_dir = env::var("OUT_DIR").unwrap();
     let out_dir = "/home/zioth/projects/apps/chess/crates/engine/data";
     let magic_path = Path::new(&out_dir).join("magic_gen.rs");
-    // if magic_path.metadata().is_ok_and(|f| f.is_file()) { 
-    //     return; // Don't regenerate everything if the file already exists
-    // }
+    if magic_path.metadata().is_ok_and(|f| f.is_file()) { 
+        return; // Don't regenerate everything if the file already exists
+    }
     let mut file = File::create(&magic_path).unwrap();
 
 
@@ -47,9 +47,6 @@ fn main() {
     generators::KnightAttacksGenerator::write_generated_array(&mut file).unwrap();
     
     generators::KingAttacksGenerator::write_generated_array(&mut file).unwrap();
-    generators::KingsideCastleSquaresGenerator::write_generated_array(&mut file).unwrap();
-    generators::QueensideCastleSquaresGenerator::write_generated_array(&mut file).unwrap();
-    generators::CastleMovesGenerator::write_generated_value(&mut file).unwrap();
 
     generators::PawnMovesGenerator::write_generated_array(&mut file).unwrap();
     generators::PawnAttacksGenerator::write_generated_array(&mut file).unwrap();

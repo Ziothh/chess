@@ -31,7 +31,7 @@ impl Rank {
     /// Convert a `usize` into a `Rank` (the inverse of to_index).  If the number is > 7, wrap
     /// around.
     #[inline]
-    pub fn from_index(i: usize) -> Rank {
+    pub const fn from_index(i: usize) -> Rank {
         // match is optimized to no-op with opt-level=1 with rustc 1.53.0
         match i & 7 {
             0 => Rank::First,
@@ -60,7 +60,7 @@ impl Rank {
 
     /// Convert this `Rank` into a `usize` between 0 and 7 (inclusive).
     #[inline]
-    pub fn to_index(&self) -> usize {
+    pub const fn to_index(&self) -> usize {
         *self as usize
     }
 }

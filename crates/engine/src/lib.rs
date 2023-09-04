@@ -8,4 +8,7 @@ pub mod bitboard;
 pub mod notations;
 pub mod utils;
 
+mod generated;
+pub use generated::*;
+
 pub mod game;

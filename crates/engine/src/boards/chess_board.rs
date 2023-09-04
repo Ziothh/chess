@@ -1,6 +1,6 @@
-use crate::primitives::{board::Square, moves::Move, piece::ChessPiece, team::Team};
+use crate::primitives::{board::Square, piece::ChessPiece, team::Team};
 
-use super::{File, Rank};
+use crate::primitives::{File, Rank};
 
 use serde_big_array::BigArray;
 
@@ -8,27 +8,29 @@ pub type ChessBoardCellValue = Option<ChessPiece>;
 pub type ChessBoardCells = [ChessBoardCellValue; ChessBoard::SIZE];
 pub type CellIndex = usize;
 
-#[derive(Debug, rspc::Type, serde::Serialize, serde::Deserialize)]
-pub struct ChessBoard(#[serde(with = "BigArray")] [Option<ChessPiece>; ChessBoard::SIZE]);
+#[derive(Debug, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
+pub struct ChessBoard(#[serde(with = "BigArray")] pub [Option<ChessPiece>; ChessBoard::SIZE]);
 
 impl ChessBoard {
     pub const SIZE: usize = File::SIZE * Rank::SIZE;
     pub const EMPTY_CELL: ChessBoardCellValue = None;
 
+    // [Constructor functions]
+    /// Creates a `ChessBoard` with the given `cells`
     pub fn new(cells: ChessBoardCells) -> Self {
         Self(cells)
     }
-
-    /** Instanciates a `ChessBoard` with empty cells */
+    /// Creates a `ChessBoard` with all squares being empty
     pub fn empty() -> Self {
         ChessBoard::new([ChessBoard::EMPTY_CELL; ChessBoard::SIZE])
     }
 
-    // Instance methods ---------------
+    // [Instance methods]
+    // [[Square methods]]
     pub fn get(&self, square: Square) -> &ChessBoardCellValue {
         self.0
             .get(square.to_index())
-            .expect("index to be in range 0..64")
+            .expect("square.to_index() to be in range 0..64")
     }
     pub fn set(&mut self, square: Square, piece: ChessPiece) -> &mut Self {
         self.0[square.to_index()] = Some(piece);
@@ -49,6 +51,7 @@ impl ChessBoard {
         return self;
     }
 
+
     pub fn iter(&self) -> impl Iterator<Item = &ChessBoardCellValue> {
         self.0.iter()
     }
@@ -62,24 +65,5 @@ impl ChessBoard {
 
             Some((Square::new(i as u8), piece))
         })
-    }
-
-    pub fn generate_legal_moves(&self, team_to_move: Team) -> Vec<Move> {
-        self.iter_team(team_to_move)
-            .map(|(square, piece)| {
-                let (_rays, mut moves) = piece.pseudo_legal_moves(square, self);
-
-                moves.iter_mut().for_each(|m| {
-                    if self.get(m.destination).is_some() {
-                        m.takes = true;
-                    }
-                });
-
-                // TODO: remove moves of pieces that block a check
-
-                moves
-            })
-            .flatten()
-            .collect()
     }
 }

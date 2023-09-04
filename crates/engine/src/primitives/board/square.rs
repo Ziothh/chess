@@ -5,7 +5,7 @@ use crate::primitives::team::Team;
 use super::{File, Rank};
 
 /// Represents a square on the chess board
-#[derive(PartialEq, Ord, Eq, PartialOrd, Copy, Clone, Debug, Hash)]
+#[derive(PartialEq, rspc::Type, serde::Serialize, Ord, Eq, PartialOrd, Copy, Clone, Debug, Hash)]
 pub struct Square(u8);
 
 impl Default for Square {
@@ -40,7 +40,7 @@ impl Square {
     /// // assert_eq!(Square::default(), bad_sq);
     /// ```
     #[inline]
-    pub fn new(index: u8) -> Square {
+    pub const fn new(index: u8) -> Square {
         Square(index & 63)
     }
 
@@ -64,7 +64,7 @@ impl Square {
     /// // }
     /// ```
     #[inline]
-    pub fn make_square(file: File, rank: Rank) -> Square {
+    pub const fn make_square(file: File, rank: Rank) -> Square {
         Square((rank.to_index() as u8) << 3 ^ (file.to_index() as u8))
     }
 

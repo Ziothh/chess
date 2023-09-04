@@ -1,6 +1,6 @@
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Mul};
 
-use crate::primitives::{board::{File, Rank, Square}, ChessBoard};
+use crate::primitives::{File, Rank, Square};
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy)]
 /// A wrapper around a `u64` to represent a bitboard.
@@ -23,6 +23,11 @@ impl BitBoard {
         }
 
         return bb;
+    }
+    /// Construct a new `BitBoard` with a particular `Square` set
+    #[inline]
+    pub fn set(file: File, rank: Rank) -> BitBoard {
+        BitBoard::from_square(Square::make_square(file, rank))
     }
 
     #[inline]
@@ -195,7 +200,7 @@ impl BitBoard {
 
     // [constants:base]
     /// The amount of bits a `BitBoard` constains
-    pub const SIZE: usize = ChessBoard::SIZE;
+    pub const SIZE: usize = Square::AMOUNT;
 
     /// A `BitBoard` where every square bit is set to `0`
     ///

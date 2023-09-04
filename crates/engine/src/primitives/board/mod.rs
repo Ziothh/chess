@@ -7,5 +7,5 @@ pub use rank::*;
 mod square;
 pub use square::*; 
 
-mod board;
-pub use board::*; 
+mod castling;
+pub use castling::*; 

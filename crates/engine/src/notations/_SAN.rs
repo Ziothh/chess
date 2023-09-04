@@ -1,24 +1,23 @@
 use crate::{
     primitives::{
         board::{File, Rank, Square},
-        instructions::{CastlingMove, CheckKind, EndOfGameState, Instruction},
-        moves::Move,
-        piece::ChessPieceVariant,
+        piece::Piece,
         team::Team,
     },
+    game::{actions::{CastlingMove, CheckKind, EndOfGameState, Action}, moves::Move},
     utils::enums::StrEnum,
 };
 
 /// Parses a Standard Algebraic Notation (SAN) string into a `Move`.
 ///
-/// SAN is used to represent chess moves with as litle characters as needed. 
+/// SAN is used to represent chess moves with as litle characters as needed.
 /// It relies heavilly on the context of the game state.
-/// 
+///
 /// @TODO: take the legal moves into a count.
 ///
 /// @see https://www.chessprogramming.org/Algebraic_Chess_Notation#SAN
 /// @see https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
-pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Result<Instruction> {
+pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Result<Action> {
     // Parse the move
     return match san_move {
         "1-0" => {
@@ -59,10 +58,10 @@ pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Re
                 if first_char.is_ascii_uppercase() {
                     // Starts with piece type
                     chars.remove(0);
-                    ChessPieceVariant::try_from(first_char).unwrap()
+                    Piece::try_from(first_char).unwrap()
                 } else {
                     // Starts with a positional description
-                    ChessPieceVariant::Pawn
+                    Piece::Pawn
                 }
             };
 
@@ -83,12 +82,11 @@ pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Re
 
             // String should have a minimal length of 2 right now
 
-            let promotion: Option<ChessPieceVariant> = {
+            let promotion: Option<Piece> = {
                 if (*chars.get(chars.len() - 1).unwrap()) != '=' {
                     None
                 } else {
-                    let promoting_piece =
-                        Some(ChessPieceVariant::try_from(chars.pop().unwrap()).unwrap());
+                    let promoting_piece = Some(Piece::try_from(chars.pop().unwrap()).unwrap());
 
                     chars.pop();
 
@@ -161,10 +159,10 @@ pub fn parse_instruction(san_move: &str, legal_moves: &Vec<&Move>) -> anyhow::Re
 }
 
 // Implementing str enums
-impl StrEnum for ChessPieceVariant {
+impl StrEnum for Piece {
     type Error = String;
     fn to_str(&self) -> &str {
-        use ChessPieceVariant::*;
+        use Piece::*;
         match self {
             Pawn => "",
             Bishop => "B",
@@ -175,7 +173,7 @@ impl StrEnum for ChessPieceVariant {
         }
     }
     fn from_str(value: &str) -> Result<Self, Self::Error> {
-        use ChessPieceVariant::*;
+        use Piece::*;
         match value {
             "" => Ok(Pawn),
             "B" => Ok(Bishop),

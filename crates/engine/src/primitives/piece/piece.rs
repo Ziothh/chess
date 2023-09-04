@@ -1,11 +1,7 @@
-use crate::primitives::{
-    board::{ChessBoard, Square},
-    moves::{generate::generate_move_data, Move},
-    team::Team,
-};
+use crate::primitives::team::Team;
 
 #[derive(Debug, PartialEq, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
-pub enum ChessPieceVariant {
+pub enum Piece {
     Pawn,
     Knight,
     Bishop,
@@ -14,19 +10,19 @@ pub enum ChessPieceVariant {
     King,
 }
 
-impl ChessPieceVariant {
-    const SIZE: usize = 6;
-    const ALL: [ChessPieceVariant; ChessPieceVariant::SIZE] = [
-        ChessPieceVariant::Pawn,
-        ChessPieceVariant::Knight,
-        ChessPieceVariant::Bishop,
-        ChessPieceVariant::Rook,
-        ChessPieceVariant::Queen,
-        ChessPieceVariant::King,
+impl Piece {
+    pub const SIZE: usize = 6;
+    pub const ALL: [Piece; Piece::SIZE] = [
+        Piece::Pawn,
+        Piece::Knight,
+        Piece::Bishop,
+        Piece::Rook,
+        Piece::Queen,
+        Piece::King,
     ];
 
     pub fn is_sliding(&self) -> bool {
-        use super::ChessPieceVariant::*;
+        use super::Piece::*;
 
         match *self {
             Bishop | Queen | Rook => true,
@@ -39,11 +35,11 @@ impl ChessPieceVariant {
     }
 }
 
-impl TryFrom<char> for ChessPieceVariant {
+impl TryFrom<char> for Piece {
     type Error = String;
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
-        use self::ChessPieceVariant::*;
+        use self::Piece::*;
 
         match value.to_ascii_uppercase() {
             'P' => Ok(Pawn),
@@ -57,9 +53,9 @@ impl TryFrom<char> for ChessPieceVariant {
     }
 }
 
-impl ToString for ChessPieceVariant {
+impl ToString for Piece {
     fn to_string(&self) -> String {
-        use ChessPieceVariant::*;
+        use Piece::*;
 
         match self {
             Pawn => 'P',
@@ -78,31 +74,27 @@ impl ToString for ChessPieceVariant {
 pub enum SlidingDirection {
     /// For horizontally and vertically sliding pieces.
     /// Means "intersecting or lying at right angles".
-    /// 
-    /// Example piece: `ChessPieceVariant::Rook`
+    ///
+    /// Example piece: `Piece::Rook`
     Orthogonal,
     /// For diagonally sliding pieces.
-    /// 
-    /// Example piece: `ChessPieceVariant::Bishop`
+    ///
+    /// Example piece: `Piece::Bishop`
     Diagonal,
 }
 impl SlidingDirection {
     pub const SIZE: usize = 2;
-    pub const ALL: [Self; Self::SIZE] = [
-        Self::Orthogonal,
-        Self::Diagonal,
-    ];
+    pub const ALL: [Self; Self::SIZE] = [Self::Orthogonal, Self::Diagonal];
 
     pub fn to_index(&self) -> usize {
         return *self as usize;
     }
 }
 
-
-#[derive(Debug, PartialEq, rspc::Type, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, PartialEq, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
 pub struct ChessPiece {
     pub team: Team,
-    pub variant: ChessPieceVariant,
+    pub variant: Piece,
 }
 
 /// The unice value of the first chess piece character, the white king
@@ -113,14 +105,6 @@ pub struct ChessPiece {
 const CHESS_PIECE_UNICODE_START: u32 = '♔' as u32;
 
 impl ChessPiece {
-    pub fn pseudo_legal_moves(
-        &self,
-        position: Square,
-        board: &ChessBoard,
-    ) -> (Vec<Vec<Square>>, Vec<Move>) {
-        generate_move_data(self, position, board)
-    }
-
     /// Returns the unicode character for a given `ChessPiece`
     ///
     /// NOTE: the white pieces are outlined (♙) and the black ones are filled (♟).
@@ -130,17 +114,17 @@ impl ChessPiece {
     pub fn to_unicode(&self) -> char {
         char::from_u32(
             CHESS_PIECE_UNICODE_START
-            + (((ChessPieceVariant::SIZE - 1) - self.variant.to_index())
+            + (((Piece::SIZE - 1) - self.variant.to_index())
                 + match self.team {
                     Team::White => 0,
-                    Team::Black => ChessPieceVariant::SIZE,
+                    Team::Black => Piece::SIZE,
                 }) as u32,
         )
         .expect("The given unicode value to be a valid")
     }
 
     // pub fn is_sliding(&self) -> bool {
-    //   use self::ChessPieceVariant::*;
+    //   use self::Piece::*;
     //
     //   match self.variant {
     //     Bishop => true,
@@ -169,7 +153,7 @@ impl TryFrom<char> for ChessPiece {
     fn try_from(value: char) -> Result<Self, Self::Error> {
         Ok(Self {
             team: Team::from(value),
-            variant: ChessPieceVariant::try_from(value)?,
+            variant: Piece::try_from(value)?,
         })
     }
 }
@@ -192,7 +176,7 @@ mod test {
         Team::ALL
             .iter()
             .zip([WHITE_START..=(BLACK_START - 1), BLACK_START..=END])
-            .cartesian_product(ChessPieceVariant::ALL)
+            .cartesian_product(Piece::ALL)
             .for_each(|((team, range), variant)| {
                 assert!(range.contains(
                     &(ChessPiece {
@@ -211,7 +195,7 @@ mod test {
 // }
 
 // pub trait PieceType {
-//     const PIECE_VARIANT: ChessPieceVariant;
+//     const PIECE_VARIANT: Piece;
 //     //     fn is(piece: Piece) -> bool;
 //     //     fn into_piece() -> Piece;
 //     //     #[inline(always)]

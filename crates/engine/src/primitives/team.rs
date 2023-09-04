@@ -32,11 +32,25 @@ impl Team {
     ///
     /// NOTE: `nth` = 1..=8 // ! The rank wraps around if nth > 8
     #[inline]
-    pub fn get_nth_rank(&self, nth: usize) -> Rank {
+    pub const fn get_nth_rank(&self, nth: usize) -> Rank {
         Rank::from_index(match *self {
             Self::White => nth - 1,
             Self::Black => (Rank::SIZE) - nth,
         })
+    }
+
+    /// Convert a `Team` to its backrank, which represents the starting rank for its pieces
+    ///
+    /// ```
+    /// let team = Team::White;
+    /// assert_eq!(team.get_backrank(), team.get_nth_rank(0));
+    /// ```
+    #[inline]
+    pub fn get_backrank(&self) -> Rank {
+        match *self {
+            Team::White => Rank::First,
+            Team::Black => Rank::Eighth,
+        }
     }
 }
 

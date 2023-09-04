@@ -2,13 +2,41 @@
 pub const START: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 use crate::{
+    boards::ChessBoard,
     game::Chess,
     primitives::{
-        board::{ChessBoard, File, Rank, Square},
+        board::{File, Rank, Square},
         piece::ChessPiece,
         team::Team,
     },
 };
+
+pub fn board_from_fen(board_str: &str) -> ChessBoard {
+    let mut board = ChessBoard::empty();
+
+    let mut offset;
+    for (rank, row) in board_str.split("/").enumerate() {
+        // Keeps track of the amount of empty squares of the current, indicated by a number in the FEN string
+        offset = 0;
+
+        for (file, char) in row.chars().enumerate() {
+            if char.is_numeric() {
+                offset += char.to_digit(10).unwrap() as usize - 1;
+                continue;
+            }
+
+            board.set(
+                Square::make_square(
+                    File::from_index(file + offset),
+                    Rank::from_index(Rank::SIZE - 1 - rank),
+                ),
+                ChessPiece::try_from(char).unwrap(),
+            );
+        }
+    }
+
+    return board;
+}
 
 /// This function parses a FEN string and returns the chess game state represented by it.
 ///
@@ -38,33 +66,13 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
     // TODO
     let _en_passant = parts[3];
 
-    let mut board = ChessBoard::empty();
-
-    let mut offset;
-    for (rank, row) in board_str.split("/").enumerate() {
-        // Keeps track of the amount of empty squares of the current, indicated by a number in the FEN string
-        offset = 0;
-
-        for (file, char) in row.chars().enumerate() {
-            if char.is_numeric() {
-                offset += char.to_digit(10).unwrap() as usize - 1;
-                continue;
-            }
-
-            board.set(
-                Square::make_square(
-                    File::from_index(file + offset),
-                    Rank::from_index(Rank::SIZE - 1 - rank),
-                ),
-                ChessPiece::try_from(char).unwrap(),
-            );
-        }
-    }
+    let board = board_from_fen(board_str);
 
     Ok(Chess {
-        board,
+        board: todo!(),
         team_to_move,
         halfmove_clock: parts[4].parse()?,
         fullmove_clock: parts[5].parse()?,
+        en_passant: todo!(),
     })
 }

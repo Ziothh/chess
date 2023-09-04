@@ -1,14 +1,14 @@
 use crate::primitives::{
     board::Square,
     moves::Move,
-    piece::{ChessPieceVariant, PieceType, SlidingPiece},
+    piece::{Piece, PieceType, SlidingPiece},
     team::Team,
 };
 
 pub struct RookType;
 
 impl PieceType for RookType {
-    const PIECE_VARIANT: ChessPieceVariant = ChessPieceVariant::Rook;
+    const PIECE_VARIANT: Piece = Piece::Rook;
 
     fn pseudo_legal_moves(position: Square, _team: Team) -> Vec<Move> {
         return Self::generate_sliding_destionations(position)

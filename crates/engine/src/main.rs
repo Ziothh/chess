@@ -11,12 +11,77 @@
 //     },
 // };
 
-use engine::{bitboard::BitBoard, primitives::{Square, Team}};
+use engine::{
+    bitboard::BitBoard,
+    boards::Board,
+    notations::FEN::board_from_fen,
+    primitives::{Piece, Square, Team}, game::moves::Move,
+};
 
 // include!("../data/magic_gen.rs");
 
 fn main() -> () {
+    let mut board = Board::new(board_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR").0);
 
+    // board.set(Piece::Pawn, Square::A2, Team::White);
+    // board.set(Piece::Pawn, Square::G7, Team::Black);
+
+    board.make_move(Move {
+        origin: Square::B2,
+        destination: Square::B4,
+        promotion: None,
+    });
+
+    board.make_move(Move {
+        origin: Square::H8,
+        destination: Square::H7,
+        promotion: None,
+    });
+
+    board.make_move(Move {
+        origin: Square::B4,
+        destination: Square::B5,
+        promotion: None,
+    });
+
+    board.make_move(Move {
+        origin: Square::H7,
+        destination: Square::H6,
+        promotion: None,
+    });
+
+    board.make_move(Move {
+        origin: Square::B5,
+        destination: Square::B6,
+        promotion: None,
+    });
+
+    board.make_move(Move {
+        origin: Square::H6,
+        destination: Square::H5,
+        promotion: None,
+    });
+    board.make_move(Move {
+        origin: Square::B6,
+        destination: Square::C7,
+        promotion: None,
+    });
+    board.make_move(Move {
+        origin: Square::G7,
+        destination: Square::G6,
+        promotion: None,
+    });
+    board.make_move(Move {
+        origin: Square::C7,
+        destination: Square::B8,
+        promotion: Some(Piece::Knight),
+    });
+    // println!("{}\n", board.combined_mask);
+    // println!("{}\n", board.piece_mask(Piece::Knight));
+    // println!("{}\n", board.team_mask(Team::Black));
+    
+
+    println!("{board}");
 
     // for (origin, bb) in PAWN_ATTACKS[Team::White.to_index()]
     //     .iter()

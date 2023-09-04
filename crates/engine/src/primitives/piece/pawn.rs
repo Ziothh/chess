@@ -1,14 +1,14 @@
 use crate::primitives::{
     board::Square,
     moves::Move,
-    piece::{ChessPieceVariant, PieceType},
+    piece::{Piece, PieceType},
     team::Team,
 };
 
 pub struct PawnType;
 
 impl PieceType for PawnType {
-    const PIECE_VARIANT: ChessPieceVariant = ChessPieceVariant::Pawn;
+    const PIECE_VARIANT: Piece = Piece::Pawn;
 
     fn pseudo_legal_moves(position: Square, team: Team) -> Vec<Move> {
         // ! Promotitions are not handled atm

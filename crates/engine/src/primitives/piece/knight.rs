@@ -1,7 +1,7 @@
 use crate::primitives::{
     board::Square,
     moves::Move,
-    piece::{ChessPieceVariant, PieceType},
+    piece::{Piece, PieceType},
     team::Team,
 };
 
@@ -11,7 +11,7 @@ use crate::primitives::{
 pub struct KnightType;
 
 impl PieceType for KnightType {
-    const PIECE_VARIANT: ChessPieceVariant = ChessPieceVariant::Knight;
+    const PIECE_VARIANT: Piece = Piece::Knight;
 
     fn pseudo_legal_moves(position: Square, _team: Team) -> Vec<Move> {
         // let moves: Vec<_> = Vec::new();
