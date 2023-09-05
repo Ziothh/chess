@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use crate::bitboard::BitBoard;
-use crate::game::moves::Move;
+use crate::game::moves::{Move, MoveGen};
 use crate::magic;
 use crate::primitives::{CastleRights, ChessPiece, File, Piece, Rank, Square, Team};
 
@@ -26,6 +26,14 @@ pub struct Board {
     pub checkers: BitBoard,
     hash: u64,
     pub en_passant: Option<Square>,
+}
+
+/// What is the status of this game?
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug)]
+pub enum BoardStatus {
+    Ongoing,
+    Stalemate,
+    Checkmate,
 }
 
 impl Board {
@@ -197,6 +205,21 @@ impl Board {
         }
     }
 
+    /// Give me the `Square` the `color` king is on.
+    ///
+    /// ```
+    /// use chess::{Board, Square, Team};
+    ///
+    /// let board = Board::default();
+    ///
+    /// assert_eq!(board.king_square(Team::White), Square::E1);
+    /// assert_eq!(board.king_square(Team::Black), Square::E8);
+    /// ```
+    #[inline]
+    pub fn king_square(&self, team: Team) -> Square {
+        (self.piece_mask(Piece::King) & self.team_mask(team)).to_square()
+    }
+
     pub fn castle_rights(&self, team: Team) -> CastleRights {
         self.castle_rights[team.to_index()]
     }
@@ -354,6 +377,71 @@ impl Board {
     #[inline]
     fn remove_castle_rights(&mut self, team: Team, rights: CastleRights) {
         self.castle_rights[team.to_index()] = self.castle_rights(team).remove(rights);
+    }
+
+    #[inline]
+    pub fn iter_moves(&self) -> MoveGen {
+        MoveGen::new_legal(self)
+    }
+
+    // Returns a `Vec<Move>` of all legal moves
+    pub fn gen_moves(&self) -> Vec<Move> {
+        MoveGen::new_legal(self).collect()
+    }
+
+
+    /// Is this game Ongoing, is it Stalemate, or is it Checkmate?
+    ///
+    /// ```
+    /// use chess::{Board, BoardStatus, Square, ChessMove};
+    ///
+    /// let mut board = Board::default();
+    ///
+    /// assert_eq!(board.status(), BoardStatus::Ongoing);
+    ///
+    /// board = board.make_move_new(ChessMove::new(Square::E2,
+    ///                                            Square::E4,
+    ///                                            None));
+    ///
+    /// assert_eq!(board.status(), BoardStatus::Ongoing);
+    ///
+    /// board = board.make_move_new(ChessMove::new(Square::F7,
+    ///                                            Square::F6,
+    ///                                            None));
+    ///
+    /// assert_eq!(board.status(), BoardStatus::Ongoing);
+    ///
+    /// board = board.make_move_new(ChessMove::new(Square::D2,
+    ///                                            Square::D4,
+    ///                                            None));
+    ///
+    /// assert_eq!(board.status(), BoardStatus::Ongoing);
+    ///
+    /// board = board.make_move_new(ChessMove::new(Square::G7,
+    ///                                            Square::G5,
+    ///                                            None));
+    ///
+    /// assert_eq!(board.status(), BoardStatus::Ongoing);
+    ///
+    /// board = board.make_move_new(ChessMove::new(Square::D1,
+    ///                                            Square::H5,
+    ///                                            None));
+    ///
+    /// assert_eq!(board.status(), BoardStatus::Checkmate);
+    /// ```
+    #[inline]
+    pub fn status(&self) -> BoardStatus {
+        let moves = self.iter_moves().len();
+        match moves {
+            0 => {
+                if self.checkers.is_empty() {
+                    BoardStatus::Stalemate
+                } else {
+                    BoardStatus::Checkmate
+                }
+            }
+            _ => BoardStatus::Ongoing,
+        }
     }
 }
 

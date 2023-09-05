@@ -1,5 +1,11 @@
 use crate::primitives::{board::Square, piece::Piece};
 
+mod piece_moves;
+mod movegen;
+
+pub use movegen::MoveGen;
+
+
 /// Data structure representing a single move.
 #[derive(Debug, rspc::Type, serde::Serialize, PartialEq)]
 pub struct Move {
@@ -25,7 +31,7 @@ pub struct Move {
 //     /// The moving piece
 //     pub piece: Piece,
 // }
-//
+
 // impl Move {
 //     pub fn new(piece: Piece, origin: Square, destination: Square) -> Self {
 //       Self::new_with_promotion(piece, origin, destination, None)
@@ -41,3 +47,17 @@ pub struct Move {
 //         }
 //     }
 // }
+
+
+impl Move {
+    pub fn new(origin: Square, destination: Square) -> Self {
+      Self::new_with_promotion(origin, destination, None)
+    }
+    pub fn new_with_promotion(origin: Square, destination: Square, promotion: Option<Piece>) -> Self {
+        Self {
+            origin,
+            destination,
+            promotion,
+        }
+    }
+}

@@ -21,6 +21,8 @@ impl Piece {
         Piece::King,
     ];
 
+    pub const PROMOTION_TARGETS: [Self; 4] = [Self::Queen, Self::Knight, Self::Rook, Self::Bishop];
+
     pub fn is_sliding(&self) -> bool {
         use super::Piece::*;
 

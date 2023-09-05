@@ -13,9 +13,10 @@
 
 use engine::{
     bitboard::BitBoard,
-    boards::Board,
+    boards::{ASCIIBoard, Board},
+    game::moves::Move,
     notations::FEN::board_from_fen,
-    primitives::{Piece, Square, Team}, game::moves::Move,
+    primitives::{Piece, Square, Team},
 };
 
 // include!("../data/magic_gen.rs");
@@ -26,62 +27,78 @@ fn main() -> () {
     // board.set(Piece::Pawn, Square::A2, Team::White);
     // board.set(Piece::Pawn, Square::G7, Team::Black);
 
-    board.make_move(Move {
-        origin: Square::B2,
-        destination: Square::B4,
-        promotion: None,
-    });
-
-    board.make_move(Move {
-        origin: Square::H8,
-        destination: Square::H7,
-        promotion: None,
-    });
-
-    board.make_move(Move {
-        origin: Square::B4,
-        destination: Square::B5,
-        promotion: None,
-    });
-
-    board.make_move(Move {
-        origin: Square::H7,
-        destination: Square::H6,
-        promotion: None,
-    });
-
-    board.make_move(Move {
-        origin: Square::B5,
-        destination: Square::B6,
-        promotion: None,
-    });
-
-    board.make_move(Move {
-        origin: Square::H6,
-        destination: Square::H5,
-        promotion: None,
-    });
-    board.make_move(Move {
-        origin: Square::B6,
-        destination: Square::C7,
-        promotion: None,
-    });
-    board.make_move(Move {
-        origin: Square::G7,
-        destination: Square::G6,
-        promotion: None,
-    });
-    board.make_move(Move {
-        origin: Square::C7,
-        destination: Square::B8,
-        promotion: Some(Piece::Knight),
-    });
+    // board.make_move(Move {
+    //     origin: Square::B2,
+    //     destination: Square::B4,
+    //     promotion: None,
+    // });
+    //
+    // board.make_move(Move {
+    //     origin: Square::H8,
+    //     destination: Square::H7,
+    //     promotion: None,
+    // });
+    //
+    // board.make_move(Move {
+    //     origin: Square::B4,
+    //     destination: Square::B5,
+    //     promotion: None,
+    // });
+    //
+    // board.make_move(Move {
+    //     origin: Square::H7,
+    //     destination: Square::H6,
+    //     promotion: None,
+    // });
+    //
+    // board.make_move(Move {
+    //     origin: Square::B5,
+    //     destination: Square::B6,
+    //     promotion: None,
+    // });
+    //
+    // board.make_move(Move {
+    //     origin: Square::H6,
+    //     destination: Square::H5,
+    //     promotion: None,
+    // });
+    // board.make_move(Move {
+    //     origin: Square::B6,
+    //     destination: Square::C7,
+    //     promotion: None,
+    // });
+    // board.make_move(Move {
+    //     origin: Square::G7,
+    //     destination: Square::G6,
+    //     promotion: None,
+    // });
+    // board.make_move(Move {
+    //     origin: Square::C7,
+    //     destination: Square::B8,
+    //     promotion: Some(Piece::Knight),
+    // });
     // println!("{}\n", board.combined_mask);
     // println!("{}\n", board.piece_mask(Piece::Knight));
     // println!("{}\n", board.team_mask(Team::Black));
-    
 
-    println!("{board}");
+    board.iter_moves().for_each(|chess_move| {
+        let mut ascii = ASCIIBoard::default();
+
+        ascii.title(format!(
+            "{:?} {} to {}\n    Promotion: {:?}",
+            board.piece_on(chess_move.origin).unwrap(),
+            chess_move.origin,
+            chess_move.destination,
+            chess_move.promotion
+        ));
+
+        ascii.set('A', chess_move.origin);
+        ascii.set('B', chess_move.destination);
+
+        println!("{ascii}")
+    });
+
+    // println!("{board}");
 
     // for (origin, bb) in PAWN_ATTACKS[Team::White.to_index()]
     //     .iter()

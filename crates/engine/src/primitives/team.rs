@@ -30,7 +30,7 @@ impl Team {
 
     /// Gets the nth rank, relative to the team starting position.
     ///
-    /// NOTE: `nth` = 1..=8 // ! The rank wraps around if nth > 8
+    /// NOTE: `nth` in range [1, 8] // ! The rank wraps around if nth > 8
     #[inline]
     pub const fn get_nth_rank(&self, nth: usize) -> Rank {
         Rank::from_index(match *self {

@@ -2,7 +2,7 @@ use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, N
 
 use crate::primitives::{File, Rank, Square};
 
-#[derive(Debug, Eq, PartialEq, Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Clone, Copy, PartialOrd)]
 /// A wrapper around a `u64` to represent a bitboard.
 ///
 /// It is worth noting that white side has low values (bits `[0..32]`) and black high values (bits `[32..64]`)
@@ -193,6 +193,18 @@ impl BitBoard {
     #[inline]
     pub fn to_size(&self, rightshift: u8) -> usize {
         (self.0 >> rightshift) as usize
+    }
+
+    /// Returns a `BitBoard` that masks all `File` bits of a given `rank`.
+    #[inline]
+    pub fn mask_rank(rank: Rank) -> Self {
+        Self::RANKS[rank.to_index()]
+    }
+
+    /// Returns a `BitBoard` that masks all adjecent `File` bits of a given `file`.
+    #[inline]
+    pub fn mask_adjacent_files(file: File) -> Self {
+        Self::ADJACENT_FILES[file.to_index()]
     }
 
 
