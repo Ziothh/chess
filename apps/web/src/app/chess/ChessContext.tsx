@@ -24,7 +24,8 @@ export const [useChess, ChessCtxProvider] = contextFactory(
       },
     })
 
-    console.log(isLoading, data)
+    // console.log(`Loading: ${isLoading}, Error: ${error}\nData: `, data);
+    // console.table(data?.board)
 
     if (error !== null) { throw error }
     if (data === undefined) { throw new Error("The chess.start data can not be undefined") }

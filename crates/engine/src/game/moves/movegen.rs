@@ -1,4 +1,4 @@
-use crate::{boards::Board, bitboard::BitBoard, primitives::Piece, magic};
+use crate::{bitboard::BitBoard, primitives::Piece, magic, game::Board};
 
 use super::{piece_moves::{BBMove, PawnType, KnightType, BishopType, RookType, QueenType, KingType, PieceMovegen}, Move};
 

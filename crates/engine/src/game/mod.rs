@@ -1,13 +1,14 @@
 use std::fmt::Display;
 
-use crate::boards::Board;
 use crate::notations::FEN;
-use crate::primitives::{Team, Square};
 
 use self::actions::Action;
 
 pub mod actions;
 pub mod moves;
+pub use moves::Move;
+mod board;
+pub use board::*; 
 
 // #[derive(Debug, rspc::Type, serde::Serialize)]
 pub struct Chess {
@@ -20,21 +21,21 @@ pub struct Chess {
     /// The array of chessboard cells.
     pub board: Board,
 
-    /// The team to move
-    pub team_to_move: Team,
-    
-    /// Halfmove clock: The number of halfmoves since the last capture or pawn advance, used for the fifty-move rule.
-    pub halfmove_clock: u8,
-    // Fullmove number: The number of the full moves. It starts at 1 and is incremented after Black's move.
-    pub fullmove_clock: u8,
+    // /// The team to move
+    // pub team_to_move: Team,
+    // 
+    // /// Halfmove clock: The number of halfmoves since the last capture or pawn advance, used for the fifty-move rule.
+    // pub halfmove_clock: u8,
+    // // Fullmove number: The number of the full moves. It starts at 1 and is incremented after Black's move.
+    // pub fullmove_clock: u8,
 
-    pub en_passant: Option<Square>,
+    // pub en_passant: Option<Square>,
 }
 
 impl Chess {
-    pub fn new() -> Self {
-        todo!()
-    }
+    // pub fn new(board_pieces: []) -> Self {
+    //     todo!()
+    // }
 
     pub fn new_from_history<const N: usize>(history: [Action; N]) -> Self {
         let mut starting_position = Self::default();
@@ -53,6 +54,9 @@ impl Chess {
 
         return starting_position;
     }
+
+    // [Getter methods]
+    // pub fn team_to_move(&self)
 
 
     // /// Returns the side to move, based on `self.halfmove_clock`

@@ -3,6 +3,7 @@ import { chessBoard } from ".";
 import { useChess } from "../ChessContext";
 import { useDraggingPiece } from "../DraggingPieceContext";
 import clsx from "clsx";
+import { PieceIcon } from "./Piece";
 
 const Square: FC<{
   file: chessBoard.File,
@@ -15,15 +16,17 @@ const Square: FC<{
   const chess = useChess();
   const draggingPiece = useDraggingPiece()
 
+  /** Piece on this square */
   const piece = chessBoard.getByIndex(chess.board.squares, index)
 
   const moveToThisSquare = draggingPiece.value?.moves.find(m => m.destination === id) ?? null;
 
   return (
     <div
-      id={id}
+      id={chessBoard.DOM.ID.square(id)}
       data-index={index}
       className={clsx(
+        "relative flex justify-center items-center aspect-square user-select-none",
         file.charCodeAt(0) % 2 !== rank.charCodeAt(0) % 2 ? 'bg-zinc-400' : 'bg-zinc-950',
         !draggingPiece.isSet
           ? piece?.team === chess.teamToMove && 'cursor-grab'
@@ -33,10 +36,11 @@ const Square: FC<{
             || (piece && 'cursor-no-drop')
             || 'cursor-grabbing'
           ),
-        "relative aspect-square user-select-none",
         className,
       )}
       onClick={() => {
+        /// [Drag & Move logic]
+        
         // If NO dragging piece
         if (draggingPiece.isSet === false) {
           /// Drag the clicked piece
@@ -50,31 +54,23 @@ const Square: FC<{
         if (draggingPiece.value.index === index) return draggingPiece.unset();
         draggingPiece.value.squareId
 
-        const move = draggingPiece.value.moves.find(m => m.destination === chessBoard.SQUARES[index]);
+        const moves = draggingPiece.value.moves.filter(m => m.destination === chessBoard.SQUARES[index]);
 
-        if (!move && !piece) return draggingPiece.unset();
+        // Switch piece
+        if (piece?.team === draggingPiece.value.team) return draggingPiece.setByIndex(index);
 
-        if (piece) {
-          // Can't take own team so switch to clicked piece on this square
-          if (piece.team === draggingPiece.value.team) return draggingPiece.setByIndex(index);
+        // Void click
+        if (moves.length === 0) return draggingPiece.unset();
 
-          // Take this square
-          if (move?.takes) return chess.board.take(draggingPiece.value.squareId, id, draggingPiece.value.variant);
-        } else {
-          if (!move) return draggingPiece.unset();
-
-          return chess.board.move(draggingPiece.value.squareId!, id, draggingPiece.value.variant);
-        }
+        // Make the move
+        return chess.board.move(draggingPiece.value.squareId!, id, draggingPiece.value.variant);
       }}
     >
       {piece && (
-        <img
-          className={clsx(
-            'relative z-10 pointer-events-none',
-            draggingPiece.value?.index === index && 'bg-red-700'
-          )}
-          src={`/${piece.team.at(0)?.toLowerCase()}${piece.variant === "Knight" ? "n" : piece.variant.at(0)?.toLowerCase()}.png`}
-        />
+        <PieceIcon piece={piece} className={clsx(
+          'relative z-10 pointer-events-none',
+          draggingPiece.value?.index === index && 'bg-red-700'
+        )} />
       )}
 
       {/* Rank indicators */ file === 'a' && (

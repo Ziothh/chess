@@ -1,10 +1,12 @@
+#![feature(let_chains)]
+
 use std::net::SocketAddr;
 
 use axum::routing::{get, post};
 use tower_http::cors::CorsLayer;
 
-mod rspc_router;
-use crate::rspc_router::{router, MyCtx};
+mod router;
+use crate::router::MyCtx;
 
 const PORT: u16 = 8080;
 
@@ -16,7 +18,7 @@ async fn main() -> () {
         .route("/health", get(|| async { "OK" }))
         .nest(
             "/rspc",
-            router()
+            router::create()
                 .endpoint(|| MyCtx {})
                 .axum()
                 .layer(CorsLayer::permissive()),

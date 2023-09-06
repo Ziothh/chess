@@ -17,7 +17,7 @@ impl ChessBoard {
 
     // [Constructor functions]
     /// Creates a `ChessBoard` with the given `cells`
-    pub fn new(cells: ChessBoardCells) -> Self {
+    pub fn new(cells: [Option<ChessPiece>; ChessBoard::SIZE]) -> Self {
         Self(cells)
     }
     /// Creates a `ChessBoard` with all squares being empty

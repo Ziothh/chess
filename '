@@ -1,38 +1,12 @@
-use std::str::FromStr;
-
-use engine::primitives::{
-    board::{ChessBoard, Square},
-    game::Chess,
-    // moves::Move,
-    piece::ChessPieceVariant,
-    team::Team,
+use engine::{
+    game::Board,
+    primitives::{ChessPiece, Square},
 };
-use rspc::{Config, Router, RouterBuilder};
-// use serde::Serialize; // This requires the 'derive' feature to be enabled.
 
-pub struct MyCtx {}
-
-pub fn router() -> std::sync::Arc<Router<MyCtx>> {
-    Router::<MyCtx>::new()
-        .config(
-            Config::new()
-                .set_ts_bindings_header("/* eslint-disable */")
-                // Doing this will automatically export the bindings when the `build` function is called.
-                .export_ts_bindings(
-                    std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("./ts/bindings.ts"),
-                ),
-        )
-        // Define a query taking a string and returning it
-        .query("echo", |t| t(|_ctx, input: String| input))
-        .merge("chess.", chess_router())
-        .build()
-        .arced()
-}
-
-fn chess_router() -> RouterBuilder<MyCtx> {
+pub fn router() -> RouterBuilder<MyCtx> {
     Router::<MyCtx>::new()
         .query("start", |t| {
-            t(|_ctx, _args: ()| ChessJSON::from(Chess::default()))
+            t(|_ctx, _args: ()| ChessJSON::from(Board::default()))
         })
         .mutation("move", |t| {
             t(|_ctx, args: (MoveJSON, ChessJSON)| {
@@ -52,7 +26,6 @@ fn chess_router() -> RouterBuilder<MyCtx> {
                 return ChessJSON::from(chess);
             })
         })
-
         // TODO: fen router
         .merge("fen.", Router::<MyCtx>::new())
 }
@@ -73,6 +46,30 @@ struct ChessJSON {
     board: ChessBoard,
 }
 
+impl From<Board> for ChessJSON {
+    fn from(board: Board) -> Self {
+        Self {
+            moves: board.gen_moves(),
+            team_to_move: board.team_to_move,
+            board: (0..Board::SIZE as u8).map(|index| Square::new(index)).map(|square| if let Some(piece) = board.piece_on(square) && let Some(team) = board.team_on(square) {
+                Some( ChessPiece {
+                    team,
+                    variant: piece,
+                })
+            } else {
+                None
+            })
+        }
+    }
+}
+
+impl Into<Board> for ChessJSON {
+    fn into(self) -> Board {
+        
+    }
+}
+
+#[deprecated]
 impl From<Chess> for ChessJSON {
     fn from(value: Chess) -> Self {
         Self {

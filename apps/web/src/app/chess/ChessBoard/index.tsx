@@ -2,15 +2,16 @@
 
 import type { FC } from "react";
 import { rspc } from "@acme/server";
-import type { ChessJSON, ChessPieceVariant } from "@acme/server/ts/types";
+import type { ChessJSON, Piece } from "@acme/server/ts/types";
 import Square from "./Square";
 import * as chessBoard from './utils';
+import { getPromotion } from "./pawnPromotion";
 
 export { chessBoard };
 
 const ChessBoard: FC = ({ }) => {
   return (
-    <div className="grid grid-cols-8 w-full max-w-[52rem]">
+    <div id={chessBoard.DOM.ID.board} className="grid grid-cols-8 w-full max-w-[52rem]">
       {[...chessBoard.RANKS].reverse().map((rank) => chessBoard.FILES.map((file) => (
         <Square
           key={chessBoard.Square.coords.toId(file, rank)}
@@ -38,24 +39,26 @@ export const useChessboard = (gameData: ChessJSON) => {
 
   return {
     squares: gameData.board,
-    move: (origin: chessBoard.Square.Id, destination: chessBoard.Square.Id, piece: ChessPieceVariant) => moveMutation.mutateAsync([
-      {
-        origin,
-        destination,
-        takes: false,
-        piece,
-      },
-      gameData
-    ]),
-    take: (origin: chessBoard.Square.Id, destination: chessBoard.Square.Id, piece: ChessPieceVariant) => moveMutation.mutateAsync([
-      {
-        origin,
-        destination,
-        takes: true,
-        piece,
-      },
-      gameData
-    ]),
+    move: async (origin: chessBoard.Square.Id, destination: chessBoard.Square.Id, piece: Piece) => {
+      const promotion = (piece === 'Pawn' && !!gameData.moves.find(
+        move => (move.promotion !== null) && move.origin === origin && move.destination === destination
+      ))
+        ? await getPromotion(destination, gameData.teamToMove).catch(() => 'canceled' as 'canceled')
+        : null
+
+      if (promotion === 'canceled') return promotion;
+
+      return moveMutation.mutateAsync([
+        {
+          origin,
+          destination,
+          takes: gameData.moves.find(move => move.origin === origin && move.destination === move.destination)?.takes ?? false,
+          piece,
+          promotion,
+        },
+        gameData
+      ])
+    },
   } as const;
 }
 

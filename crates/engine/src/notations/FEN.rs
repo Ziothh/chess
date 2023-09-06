@@ -70,9 +70,9 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
 
     Ok(Chess {
         board: todo!(),
-        team_to_move,
-        halfmove_clock: parts[4].parse()?,
-        fullmove_clock: parts[5].parse()?,
-        en_passant: todo!(),
+        // team_to_move,
+        // halfmove_clock: parts[4].parse()?,
+        // fullmove_clock: parts[5].parse()?,
+        // en_passant: todo!(),
     })
 }

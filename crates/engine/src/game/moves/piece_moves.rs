@@ -1,8 +1,7 @@
 use crate::{
     bitboard::BitBoard,
-    boards::Board,
     magic,
-    primitives::{Piece, Square, Team},
+    primitives::{Piece, Square, Team}, game::Board,
 };
 
 

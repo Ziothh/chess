@@ -13,8 +13,8 @@
 
 use engine::{
     bitboard::BitBoard,
-    boards::{ASCIIBoard, Board},
-    game::moves::Move,
+    boards::ASCIIBoard,
+    game::{Move, Board},
     notations::FEN::board_from_fen,
     primitives::{Piece, Square, Team},
 };
@@ -22,7 +22,7 @@ use engine::{
 // include!("../data/magic_gen.rs");
 
 fn main() -> () {
-    let mut board = Board::new(board_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR").0);
+    let mut board = Board::default();
 
     // board.set(Piece::Pawn, Square::A2, Team::White);
     // board.set(Piece::Pawn, Square::G7, Team::Black);

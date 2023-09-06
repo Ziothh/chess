@@ -31,6 +31,19 @@ export namespace Square {
 }
 
 
+export namespace DOM {
+  export const ID = {
+    board: 'chessboard',
+    square: (square: Square.Id) => `square-${square}`,
+  } as const;
+
+  export const querySelections = {
+    board: () => document.querySelector<HTMLDivElement>(`#${DOM.ID.board}`),
+    square: (square: Square.Id) => document.querySelector<HTMLDivElement>(`#${DOM.ID.square(square)}`)!,
+  } as const;
+}
+
+
 
 // Utils
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N

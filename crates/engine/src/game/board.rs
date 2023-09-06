@@ -3,6 +3,7 @@ use std::fmt::Display;
 use crate::bitboard::BitBoard;
 use crate::game::moves::{Move, MoveGen};
 use crate::magic;
+use crate::notations::FEN;
 use crate::primitives::{CastleRights, ChessPiece, File, Piece, Rank, Square, Team};
 
 use itertools::Itertools;
@@ -29,7 +30,7 @@ pub struct Board {
 }
 
 /// What is the status of this game?
-#[derive(Copy, Clone, PartialEq, PartialOrd, Debug)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug, serde::Serialize, serde::Deserialize, rspc::Type)]
 pub enum BoardStatus {
     Ongoing,
     Stalemate,
@@ -389,7 +390,6 @@ impl Board {
         MoveGen::new_legal(self).collect()
     }
 
-
     /// Is this game Ongoing, is it Stalemate, or is it Checkmate?
     ///
     /// ```
@@ -442,6 +442,12 @@ impl Board {
             }
             _ => BoardStatus::Ongoing,
         }
+    }
+}
+
+impl Default for Board {
+    fn default() -> Self {
+        Self::new(FEN::board_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR").0)
     }
 }
 
