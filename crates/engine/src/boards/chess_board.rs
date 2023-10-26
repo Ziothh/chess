@@ -8,7 +8,7 @@ pub type ChessBoardCellValue = Option<ChessPiece>;
 pub type ChessBoardCells = [ChessBoardCellValue; ChessBoard::SIZE];
 pub type CellIndex = usize;
 
-#[derive(Debug, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Copy, specta::Type, serde::Serialize, serde::Deserialize)]
 pub struct ChessBoard(#[serde(with = "BigArray")] pub [Option<ChessPiece>; ChessBoard::SIZE]);
 
 impl ChessBoard {

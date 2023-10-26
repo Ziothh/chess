@@ -15,22 +15,11 @@ members = [
 
 [workspace.dependencies]
 anyhow = "1.0.70"
-prisma-client-rust =  { git = "https://github.com/Brendonovich/prisma-client-rust", branch = "spacedrive", features = [
-  "rspc",
-  "sqlite-create-many",
-  "migrations",
-  "sqlite",
-], default-features = false }
-prisma-client-rust-cli = { git = "https://github.com/Brendonovich/prisma-client-rust", branch = "spacedrive", features = [
-  "rspc",
-  "sqlite-create-many",
-  "migrations",
-  "sqlite",
-], default-features = false }
 serde = { version = "1.0.160", features = ["std", "derive"] }
 
-rspc = { version = "0.1.3" }
-# specta = { version = "0.0.6" }
+# rspc = { version = "0.1.3" }
+# rspc = { version = "=1.0.0-rc.5" }
+# specta = { version = "=2.0.0-rc.6" }
 # httpz = { version = "0.0.3" }
 
 # swift-rs = { version = "1.0.1" }
@@ -39,3 +28,38 @@ tokio = { version = "1.25.0", features = ["sync", "rt-multi-thread", "signal"] }
 
 # [patch.crates-io]
 # specta = { git = "https://github.com/oscartbeaumont/specta" }
+
+
+[workspace.dependencies.rspc]
+path = "../../../external/crates/rspc"
+# version = "=1.0.0-rc.5"
+# version = "=1.0.0-rc.4"
+# git = "https://github.com/oscartbeaumont/rspc.git"
+# branch = "main"
+
+[workspace.dependencies.specta]
+version = "2.0.0-rc.6"
+
+[workspace.dependencies.prisma-client-rust]
+path = "../../../external/crates/prisma-client-rust/crates/lib"
+# git = "https://github.com/Brendonovich/prisma-client-rust"
+# branch = "main"
+features = [
+  "rspc",
+  "sqlite-create-many",
+  "migrations",
+  "sqlite",
+]
+default-features = false
+
+[workspace.dependencies.prisma-client-rust-cli]
+path = "../../../external/crates/prisma-client-rust/crates/cli"
+# git = "https://github.com/Brendonovich/prisma-client-rust"
+# branch = "main"
+features = [
+  "rspc",
+  "sqlite-create-many",
+  "migrations",
+  "sqlite",
+]
+default-features = false

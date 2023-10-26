@@ -9,9 +9,9 @@
     "db:studio": "cargo prisma studio"
   },
   "devDependencies": {
-    "prisma": "^4.8.0"
+    "prisma": "^5.0.0"
   },
   "dependencies": {
-    "@prisma/client": "^4.8.0"
+    "@prisma/client": "^5.0.0"
   }
 }

@@ -7,7 +7,7 @@ pub use movegen::MoveGen;
 
 
 /// Data structure representing a single move.
-#[derive(Debug, rspc::Type, serde::Serialize, PartialEq)]
+#[derive(Debug, specta::Type, serde::Serialize, PartialEq)]
 pub struct Move {
     /// The original board square index
     pub origin: Square,

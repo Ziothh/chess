@@ -30,7 +30,7 @@ pub struct Board {
 }
 
 /// What is the status of this game?
-#[derive(Copy, Clone, PartialEq, PartialOrd, Debug, serde::Serialize, serde::Deserialize, rspc::Type)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug, serde::Serialize, serde::Deserialize, specta::Type)]
 pub enum BoardStatus {
     Ongoing,
     Stalemate,

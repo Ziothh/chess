@@ -7,11 +7,13 @@ build = "build/build.rs"
 [dependencies]
 anyhow.workspace = true
 serde.workspace = true
+specta.workspace = true
 rspc = { workspace = true, features = [] }
 serde-big-array = "0.5.1"
 itertools = "0.11.0"
 
 [build-dependencies]
+specta.workspace = true
 rand = { version = "0.8.5", features = ["small_rng"] }
 rspc = { workspace = true, features = [] }
 serde-big-array = "0.5.1"

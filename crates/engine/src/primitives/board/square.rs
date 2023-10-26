@@ -5,7 +5,7 @@ use crate::primitives::team::Team;
 use super::{File, Rank};
 
 /// Represents a square on the chess board
-#[derive(PartialEq, rspc::Type, serde::Serialize, Ord, Eq, PartialOrd, Copy, Clone, Debug, Hash)]
+#[derive(PartialEq, specta::Type, serde::Serialize, Ord, Eq, PartialOrd, Copy, Clone, Debug, Hash)]
 pub struct Square(u8);
 
 impl Default for Square {

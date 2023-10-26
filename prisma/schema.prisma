@@ -2,33 +2,67 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  // url      = env("DATABASE_URL")
+  url      = "file:./db.sqlite"
 }
 
 generator clientRs {
-    provider = "cargo prisma"
-    output   = "./src/prisma.rs"
+  provider = "cargo prisma"
+  output   = "./src/prisma.rs"
 }
+
 generator clientTs {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
+
+// model Template {
+//     id    Int    @id @default(autoincrement())
+//
+//     updatedAt DateTime @updatedAt
+//     createdAt DateTime @default(now())
+// }
 
 model User {
-    id    Int    @id @default(autoincrement())
-    name  String
-    email String @unique
+  id Int @id @default(autoincrement())
 
-    updatedAt DateTime @updatedAt
-    createdAt DateTime @default(now())
+  username String
+  email    String @unique
+  password String
+
+  whiteGames   Game[]        @relation("playerWhite")
+  blackGames   Game[]        @relation("playerBlack")
+  gameMessages GameMessage[]
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 }
 
-model Todo {
-    id    Int    @id @default(autoincrement())
-    name  String
-    isCompleted Boolean @default(false) 
-    isFavorited Boolean @default(false)
+model Game {
+  id Int @id @default(autoincrement())
 
-    updatedAt DateTime @updatedAt
-    createdAt DateTime @default(now())
+  playerWhiteId Int?
+  playerWhite   User? @relation(name: "playerWhite", fields: [playerWhiteId], references: [id])
+  playerBlackId Int?
+  playerBlack   User? @relation(name: "playerBlack", fields: [playerBlackId], references: [id])
+
+  messages GameMessage[]
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model GameMessage {
+  id Int @id @default(autoincrement())
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  game   Game @relation(fields: [gameId], references: [id])
+  gameId Int
+
+  message String
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 }

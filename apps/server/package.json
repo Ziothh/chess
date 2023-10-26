@@ -9,6 +9,7 @@
   "type": "module",
   "types": "./index.ts",
   "scripts": {
+    "start": "cargo run -p server",
     "dev": "cargo watch -w './src' -x 'run --bin server'"
   },
   "keywords": [],

@@ -30,7 +30,7 @@ pub enum CheckKind {
 }
 
 /// Contains all actions supported within the game
-#[derive(Debug, rspc::Type, serde::Serialize, PartialEq)]
+#[derive(Debug, specta::Type, serde::Serialize, PartialEq)]
 pub enum Action {
     Move(Move),
     OfferDraw(Team),

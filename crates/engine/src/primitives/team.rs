@@ -1,7 +1,7 @@
 use super::board::Rank;
 
 #[derive(PartialOrd, PartialEq, Eq, Copy, Clone, Debug, Hash)]
-#[derive(rspc::Type, serde::Serialize, serde::Deserialize)]
+#[derive(specta::Type, serde::Serialize, serde::Deserialize)]
 pub enum Team {
     White,
     Black,

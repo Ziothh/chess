@@ -1,6 +1,6 @@
 use crate::primitives::team::Team;
 
-#[derive(Debug, PartialEq, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, PartialEq, Clone, Copy, specta::Type, serde::Serialize, serde::Deserialize)]
 pub enum Piece {
     Pawn,
     Knight,
@@ -93,7 +93,7 @@ impl SlidingDirection {
     }
 }
 
-#[derive(Debug, PartialEq, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, PartialEq, Clone, Copy, specta::Type, serde::Serialize, serde::Deserialize)]
 pub struct ChessPiece {
     pub team: Team,
     pub variant: Piece,
