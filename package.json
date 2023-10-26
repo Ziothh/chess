@@ -12,7 +12,7 @@
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "db:generate": "turbo db:generate",
-    "db:push": "turbo db:push db:generate",
+    "db:push": "echo $DATABASE_URL && turbo db:push db:generate",
     "dev": "turbo dev --parallel",
     "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
     "lint": "turbo lint && manypkg check",
@@ -23,6 +23,7 @@
     "@acme/eslint-config": "^0.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
     "@manypkg/cli": "^0.20.0",
+    "@prisma/client": "5.0.0",
     "@types/prettier": "^2.7.2",
     "dotenv": "^16.0.3",
     "eslint": "^8.38.0",
@@ -30,5 +31,8 @@
     "prettier-plugin-tailwindcss": "^0.2.7",
     "turbo": "^1.8.8",
     "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.1.0"
   }
 }

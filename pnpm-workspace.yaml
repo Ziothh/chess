@@ -1,6 +1,6 @@
 packages:
-  - apps/desktop
-  - apps/expo
+  # - apps/desktop
+  # - apps/expo
   - apps/web
   - apps/server
   - packages/*

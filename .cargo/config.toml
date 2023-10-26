@@ -1,5 +1,6 @@
 [alias]
-prisma = "run --bin prisma --"
+# prisma = "run --bin prisma --"
+prisma = "run -p prisma --"
 
 # [alias]
 # prisma = "run -p prisma-cli --bin prisma --"
