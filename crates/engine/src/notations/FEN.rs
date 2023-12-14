@@ -53,10 +53,10 @@ pub fn gamestate_from_fen(fen_string: &str) -> anyhow::Result<Chess> {
     let board_str = parts[0];
     //  "w" means that White is to move; "b" means that Black is to move.
     let team_to_move = match parts[1] {
-        "w" => Team::White,
-        "b" => Team::Black,
-        token => unreachable!(r#"Token "{token}" is not a valid team identifier"#),
-    };
+        "w" => Ok(Team::White),
+        "b" => Ok(Team::Black),
+        token => Err(format!(r#"Token "{token}" is not a valid team identifier"#)),
+    }.unwrap();
 
     // Castling availability: If neither side has the ability to castle, this field uses the character "-". Otherwise, this field contains one or more letters: "K" if White can castle kingside, "Q" if White can castle queenside, "k" if Black can castle kingside, and "q" if Black can castle queenside. A situation that temporarily prevents castling does not prevent the use of this notation.
     // TODO
