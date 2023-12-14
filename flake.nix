@@ -56,7 +56,7 @@
         ];
 
         # Inputs needed at compile-time
-        nativeBuildInputs = with pkgs; [ rustToolchain ];
+        nativeBuildInputs = with pkgs; [ /* rustToolchain */ ];
         # Inputs needed at runtime
         buildInputs = with pkgs; [ ] ++ packages ++ libraries;
       in

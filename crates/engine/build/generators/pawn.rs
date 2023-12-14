@@ -1,6 +1,7 @@
 use crate::{
     bitboard::BitBoard,
     primitives::{Square, Team, Rank, File},
+    utils::enums::ArrayEnum,
 };
 
 use super::prelude::{ArrayGenerator, ValueGenerator};

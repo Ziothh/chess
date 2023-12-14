@@ -1,3 +1,5 @@
+use crate::utils::enums::ArrayEnum;
+
 use super::board::Rank;
 
 #[derive(PartialOrd, PartialEq, Eq, Copy, Clone, Debug, Hash)]
@@ -7,19 +9,17 @@ pub enum Team {
     Black,
 }
 
-/// How many colors are there?
-/// List all colors
+impl ArrayEnum<2> for Team {
+    const ALL: [Self; Self::SIZE] = [Self::White, Self::Black];
 
-impl Team {
-    pub const SIZE: usize = 2;
-    pub const ALL: [Self; Self::SIZE] = [Self::White, Self::Black];
-
-    /// Convert the `Team` to a `usize` for table lookups.
     #[inline]
-    pub fn to_index(&self) -> usize {
+    fn to_index(&self) -> usize {
         *self as usize
     }
 
+}
+
+impl Team {
     pub fn try_from_index(index: usize) -> Option<Self> {
         match index {
             0 => Some(Self::White),
@@ -42,8 +42,13 @@ impl Team {
     /// Convert a `Team` to its backrank, which represents the starting rank for its pieces
     ///
     /// ```
+    /// use engine::primitives::Team;
+    ///
     /// let team = Team::White;
-    /// assert_eq!(team.get_backrank(), team.get_nth_rank(0));
+    /// assert_eq!(team.get_backrank(), team.get_nth_rank(1));
+    ///
+    /// let team = Team::Black;
+    /// assert_eq!(team.get_backrank(), team.get_nth_rank(1));
     /// ```
     #[inline]
     pub fn get_backrank(&self) -> Rank {

@@ -4,6 +4,14 @@ version = "0.0.0"
 edition = "2021"
 build = "build/build.rs"
 
+[lib]
+name = "engine"
+path = "src/lib.rs"
+
+[[bin]]
+name = "engine-bin"
+path = "src/main.rs"
+
 [dependencies]
 anyhow.workspace = true
 serde.workspace = true

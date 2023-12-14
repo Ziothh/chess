@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use crate::primitives::team::Team;
+use crate::{primitives::team::Team, utils::enums::ArrayEnum};
 
 use super::{File, Rank};
 
@@ -65,7 +65,7 @@ impl Square {
     /// ```
     #[inline]
     pub const fn make_square(file: File, rank: Rank) -> Square {
-        Square((rank.to_index() as u8) << 3 ^ (file.to_index() as u8))
+        Square((rank as u8) << 3 ^ (file.to_index() as u8))
     }
 
     pub fn translate(&self, delta_file: isize, delta_rank: isize) -> Option<Square> {

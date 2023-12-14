@@ -4,6 +4,8 @@
 
 use std::{fs::File, io::Write, path::Path};
 
+#[path = "../src/utils/mod.rs"]
+mod utils;
 #[path = "../src/bitboard/mod.rs"]
 mod bitboard;
 #[path = "../src/primitives/mod.rs"]
@@ -13,6 +15,7 @@ mod generators;
 use generators::prelude::{ArrayGenerator, ValueGenerator};
 
 fn main() {
+    println!("cargo:rerun-if-changed=build");
     // let now = std::time::SystemTime::now();
     // let time = {
     //     let tmp = format!("{:?}.txt", now).replace("SystemTime { tv_sec: ", "");

@@ -1,4 +1,8 @@
-use crate::{bitboard::BitBoard, primitives::{File, Square, Team}};
+use crate::{
+    bitboard::BitBoard,
+    primitives::{File, Square, Team},
+    utils::enums::ArrayEnum,
+};
 
 /// What castle rights does a particular player have?
 #[repr(u8)]
@@ -173,7 +177,6 @@ impl CastleRights {
         match team {
             Team::White => result.to_uppercase(),
             Team::Black => result.to_string(),
-            
         }
     }
 

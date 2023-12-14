@@ -1,3 +1,5 @@
+use crate::utils::enums::ArrayEnum;
+
 /// Describe a file (column) on a chess board
 #[repr(u8)]
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Debug, Hash)]
@@ -13,12 +15,8 @@ pub enum File {
 }
 
 
-impl File {
-    /// The amount of `File` enum values
-    pub const SIZE: usize = 8;
-     
-    /// A sorted array of al the `Files` in order
-    pub const ALL: [File; File::SIZE] = [
+impl ArrayEnum<8> for File {
+    const ALL: [File; File::SIZE] = [
         File::A,
         File::B,
         File::C,
@@ -29,6 +27,15 @@ impl File {
         File::H,
     ];
 
+
+    /// Convert this `File` into a `usize` from 0 to 7 inclusive.
+    #[inline]
+    fn to_index(&self) -> usize {
+        *self as usize
+    }
+}
+
+impl File {
     /// Convert a `usize` into a `File` (the inverse of to_index).  If i > 7, wrap around.
     #[inline]
     pub fn from_index(i: usize) -> File {

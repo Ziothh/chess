@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::primitives::{File, Rank, Square};
+use crate::{primitives::{File, Rank, Square}, utils::enums::ArrayEnum};
 
 use super::ChessBoard;
 

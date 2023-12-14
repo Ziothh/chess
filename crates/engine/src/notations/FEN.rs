@@ -8,7 +8,7 @@ use crate::{
         board::{File, Rank, Square},
         piece::ChessPiece,
         team::Team,
-    },
+    }, utils::enums::ArrayEnum,
 };
 
 pub fn board_from_fen(board_str: &str) -> ChessBoard {

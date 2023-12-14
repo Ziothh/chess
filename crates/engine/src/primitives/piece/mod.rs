@@ -1,4 +1,5 @@
 use crate::primitives::team::Team;
+use crate::utils::enums::ArrayEnum;
 
 #[derive(Debug, PartialEq, Clone, Copy, rspc::Type, serde::Serialize, serde::Deserialize)]
 pub enum Piece {
@@ -10,20 +11,8 @@ pub enum Piece {
     King,
 }
 
-impl Piece {
-    /// The number of variants of the enum.
-    ///
-    /// It is equal to `Self::ALL.len()`.
-    pub const SIZE: usize = 6;
-    /// An array containing all the variants of the enum
-    /// ```rust
-    /// // Example
-    /// use engine::primitives::Piece;
-    ///
-    /// let piece = Piece::Pawn;
-    /// assert_eq!(piece, Piece::ALL[piece.to_index()]);
-    /// ```
-    pub const ALL: [Piece; Piece::SIZE] = [
+impl ArrayEnum<6> for Piece {
+    const ALL: [Self; 6] = [
         Piece::Pawn,
         Piece::Knight,
         Piece::Bishop,
@@ -31,18 +20,6 @@ impl Piece {
         Piece::Queen,
         Piece::King,
     ];
-
-    /// Possible `Piece` variants a pawn can promote to
-    pub const PROMOTION_TARGETS: [Self; 4] = [Self::Queen, Self::Knight, Self::Rook, Self::Bishop];
-
-    pub fn is_sliding(&self) -> bool {
-        use super::Piece::*;
-
-        match *self {
-            Bishop | Queen | Rook => true,
-            _ => false,
-        }
-    }
 
     /// Gets the variant index in the enum (= nth variant)
     /// ```
@@ -56,8 +33,22 @@ impl Piece {
     /// assert_eq!(Piece::Queen.to_index(), 4);
     /// assert_eq!(Piece::King.to_index(), 5);
     /// ```
-    pub fn to_index(&self) -> usize {
+    fn to_index(&self) -> usize {
         *self as usize
+    }
+}
+
+impl Piece {
+    /// Possible `Piece` variants a pawn can promote to
+    pub const PROMOTION_TARGETS: [Self; 4] = [Self::Queen, Self::Knight, Self::Rook, Self::Bishop];
+
+    pub fn is_sliding(&self) -> bool {
+        use super::Piece::*;
+
+        match *self {
+            Bishop | Queen | Rook => true,
+            _ => false,
+        }
     }
 }
 

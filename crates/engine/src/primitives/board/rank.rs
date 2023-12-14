@@ -1,3 +1,5 @@
+use crate::utils::enums::ArrayEnum;
+
 /// Describe a rank (row) on a chess board
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Debug, Hash)]
 #[repr(u8)]
@@ -12,12 +14,9 @@ pub enum Rank {
     Eighth = 7,
 }
 
-impl Rank {
-    /// The amount of `Rank` enum values
-    pub const SIZE: usize = 8;
-
+impl ArrayEnum<8> for Rank {
     /// A sorted array of all of the `Ranks`
-    pub const ALL: [Rank; Rank::SIZE] = [
+    const ALL: [Rank; Rank::SIZE] = [
         Rank::First,
         Rank::Second,
         Rank::Third,
@@ -27,7 +26,15 @@ impl Rank {
         Rank::Seventh,
         Rank::Eighth,
     ];
+    
+    /// Convert this `Rank` into a `usize` between 0 and 7 (inclusive).
+    #[inline]
+    fn to_index(&self) -> usize {
+        *self as usize
+    }
+}
 
+impl Rank {
     /// Convert a `usize` into a `Rank` (the inverse of to_index).  If the number is > 7, wrap
     /// around.
     #[inline]
@@ -56,12 +63,6 @@ impl Rank {
     #[inline]
     pub fn up(&self) -> Rank {
         Rank::from_index(self.to_index() + 1)
-    }
-
-    /// Convert this `Rank` into a `usize` between 0 and 7 (inclusive).
-    #[inline]
-    pub const fn to_index(&self) -> usize {
-        *self as usize
     }
 }
 

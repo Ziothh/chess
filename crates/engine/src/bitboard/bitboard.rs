@@ -1,6 +1,6 @@
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Mul};
 
-use crate::primitives::{File, Rank, Square};
+use crate::{primitives::{File, Rank, Square}, utils::enums::ArrayEnum};
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy, PartialOrd)]
 /// A wrapper around a `u64` to represent a bitboard.

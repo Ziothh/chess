@@ -1,6 +1,7 @@
 use crate::primitives::{board::Square, piece::ChessPiece, team::Team};
 
 use crate::primitives::{File, Rank};
+use crate::utils::enums::ArrayEnum;
 
 use serde_big_array::BigArray;
 

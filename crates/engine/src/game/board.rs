@@ -5,6 +5,7 @@ use crate::game::moves::{Move, MoveGen};
 use crate::magic;
 use crate::notations::FEN;
 use crate::primitives::{CastleRights, ChessPiece, File, Piece, Rank, Square, Team};
+use crate::utils::enums::ArrayEnum;
 
 use itertools::Itertools;
 // use serde_big_array::BigArray;

@@ -3,6 +3,7 @@
 use crate::{
     bitboard::BitBoard,
     primitives::{File, Rank},
+    utils::enums::ArrayEnum,
 };
 
 include!("/home/zioth/projects/apps/chess/crates/engine/data/magic_gen.rs");
