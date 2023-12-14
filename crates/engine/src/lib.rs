@@ -3,6 +3,7 @@
 #![feature(const_mut_refs)]
 #![feature(inline_const)]
 pub mod primitives;
+pub use primitives::*;
 pub mod boards;
 pub mod bitboard;
 pub mod notations;
@@ -12,3 +13,4 @@ mod generated;
 pub use generated::*;
 
 pub mod game;
+pub use game::*;

@@ -25,6 +25,7 @@ impl ArrayEnum<6> for Piece {
     /// ```
     /// // Example
     /// use engine::primitives::Piece;
+    /// use engine::utils::enums::ArrayEnum;
     ///
     /// assert_eq!(Piece::Pawn.to_index(), 0);
     /// assert_eq!(Piece::Knight.to_index(), 1);
