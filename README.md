@@ -9,8 +9,8 @@ NOTE: Project is currently on hold because I'm waiting on a next release of `pri
 
 ## Long term todos
 ### Chess engine library
- - Location: `/crates/engine`
  - Written in Rust
+ - Location: `/crates/engine`
  - [x] Use bitmaps to represent board states
  - [x] Magic move generation
  - [x] Playable
