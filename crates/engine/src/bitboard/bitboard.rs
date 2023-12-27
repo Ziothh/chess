@@ -11,7 +11,7 @@ pub struct BitBoard(pub u64);
 
 impl BitBoard {
     #[inline]
-    /// Creates a bitboard with the given `squares` bites set to 1
+    /// Creates a bitboard with the given `squares` bytes set to 1
     pub const fn new<const COUNT: usize>(squares: [Square; COUNT]) -> Self {
         let mut bb = BitBoard::EMPTY;
 
@@ -216,11 +216,11 @@ impl BitBoard {
 
     /// A `BitBoard` where every square bit is set to `0`
     ///
-    /// The value of the `BitBoard` is equal to `0`
+    /// The value of the `BitBoard` is equal to `0x0`
     pub const EMPTY: BitBoard = BitBoard(u64::MIN);
     /// A `BitBoard` where every square bit is set to `1`
     ///
-    /// The value of the `BitBoard` is equal to `0xFFFFFFFFFFFFFFFF`
+    /// The value of the `BitBoard` is equal to `0xFFFF_FFFF_FFFF_FFFF`
     pub const FULL: BitBoard = BitBoard(u64::MAX);
 
 
@@ -393,7 +393,7 @@ impl BitBoard {
     );
 
 
-    // Given a file, what squares are on that file?
+    /// Given a file, what squares are on that file?
     pub const FILES: [BitBoard; 8] = [
         BitBoard(72340172838076673),
         BitBoard(144680345676153346),
@@ -404,7 +404,7 @@ impl BitBoard {
         BitBoard(4629771061636907072),
         BitBoard(9259542123273814144),
     ];
-    // Given a file, what squares are adjacent to that file?  Useful for detecting passed pawns.
+    /// Given a file, what squares are adjacent to that file?  Useful for detecting passed pawns.
     pub const ADJACENT_FILES: [BitBoard; 8] = [
         BitBoard(144680345676153346),
         BitBoard(361700864190383365),
