@@ -1,6 +1,7 @@
 # Chess
 This project is still a WIP.
-It is a playground for me to better develop my Rust and large repository management skills.
+
+It is a playground for me to play with some fun libraries and better develop my Rust / large repository management skills.
 
 ## Current status
 The chess engine is implemented and is exposed via the server to communicate with the web app.
