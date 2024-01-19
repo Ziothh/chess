@@ -15,28 +15,9 @@ mod generators;
 use generators::prelude::{ArrayGenerator, ValueGenerator};
 
 fn main() {
-    println!("cargo:rerun-if-changed=build");
-    // let now = std::time::SystemTime::now();
-    // let time = {
-    //     let tmp = format!("{:?}.txt", now).replace("SystemTime { tv_sec: ", "");
-    //     tmp.split_at(tmp.find(',').unwrap()).0.to_owned()
-    // };
-    //
-    // write!(
-    //     File::create(
-    //         Path::new("/home/zioth/projects/apps/chess/crates/engine/data/built_at")
-    //             .join(format!("{:?}.txt", time).replace("\"", ""))
-    //     )
-    //     .unwrap(),
-    //     "{:?}",
-    //     now,
-    // )
-    // .unwrap();
+    println!("cargo:rerun-if-changed=build"); // Only rerun if build script has changed
 
-    // TODO: move this to OUT_DIR
-    // let out_dir = env::var("OUT_DIR").unwrap();
-    let out_dir = "/home/zioth/projects/apps/chess/crates/engine/data";
-    let magic_path = Path::new(&out_dir).join("magic_gen.rs");
+    let magic_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("data/magic_gen.rs");
     if magic_path.metadata().is_ok_and(|f| f.is_file()) { 
         return; // Don't regenerate everything if the file already exists
     }
@@ -57,6 +38,4 @@ fn main() {
     generators::PawnDoubleMoveDestinationsGenerator::write_generated_value(&mut file).unwrap();
 
     generators::MagicGenerator::write_generated_array(&mut file).unwrap();
-
-    // println!("BUILD SCRIPT RUNNING");
 }
