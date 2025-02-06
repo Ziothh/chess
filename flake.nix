@@ -25,38 +25,43 @@
 
         # Libraries that are mostly needed for tauri to work
         libraries = with pkgs; [
-          webkitgtk
-          gtk3
-          cairo
-          gdk-pixbuf
-          glib
-          dbus
-          openssl_3
-          librsvg
-        ];
-
-        packages = with pkgs; [
-          curl
-          wget
-          pkg-config
           # webkitgtk
           # gtk3
+          # cairo
+          # gdk-pixbuf
           # glib
           # dbus
           # openssl_3
           # librsvg
-          libsoup
-          sqlite
-          nodejs_20
+        ] ++ pkgs.lib.lists.optionals stdenv.isDarwin [
+          # https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/darwin/apple-sdk/frameworks.nix
+          # darwin.apple_sdk.frameworks.Cocoa
+          # darwin.apple_sdk.frameworks.Kernel
+        ];
 
-          nodePackages.pnpm
+        packages = with pkgs; [
+          # curl
+          # wget
+          # pkg-config
+          # # webkitgtk
+          # # gtk3
+          # # glib
+          # # dbus
+          # # openssl_3
+          # # librsvg
+          # libsoup
+          # sqlite
+
+          # nodePackages.pnpm
 
           # prisma-engines
           # nodePackages.prisma
+        ] ++ pkgs.lib.lists.optionals stdenv.isLinux [
+          nodejs_20
         ];
 
         # Inputs needed at compile-time
-        nativeBuildInputs = with pkgs; [ /* rustToolchain */ ];
+        nativeBuildInputs = with pkgs; [ rustToolchain ];
         # Inputs needed at runtime
         buildInputs = with pkgs; [ ] ++ packages ++ libraries;
       in
@@ -69,18 +74,21 @@
         #   src = ./.;
         # };
 
-        devShells.default = pkgs.mkShell {
-          inherit buildInputs nativeBuildInputs;
-          # buildInputs = packages;
+        devShells.default = if  pkgs.stdenv.isLinux then
+             pkgs.mkShell {
+                  inherit buildInputs nativeBuildInputs;
+                  # buildInputs = packages;
 
-          shellHook = ''
-          	  PATH="$PWD/node_modules/.bin:$PATH"
-              export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
-          '';
-          PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
-          PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
-          PRISMA_QUERY_ENGINE_LIBRARY = "${pkgs.prisma-engines}/lib/libquery_engine.node";
-          PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
-        };
+                  shellHook = ''
+                      PATH="$PWD/node_modules/.bin:$PATH"
+                      export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
+                  '';
+                  PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
+                  PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
+                  PRISMA_QUERY_ENGINE_LIBRARY = "${pkgs.prisma-engines}/lib/libquery_engine.node";
+                  PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
+            }
+        else
+            pkgs.mkShell { inherit buildInputs nativeBuildInputs; };
       });
 }

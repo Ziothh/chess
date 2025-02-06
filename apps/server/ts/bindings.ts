@@ -11,19 +11,19 @@ export type Procedures = {
     subscriptions: never
 };
 
-export type Piece = "Pawn" | "Knight" | "Bishop" | "Rook" | "Queen" | "King"
+export type Team = "White" | "Black"
 
 export type ChessJSON = { teamToMove: Team; moves: MoveJSON[]; board: ChessBoard; status: BoardStatus }
 
 export type MoveJSON = { origin: string; destination: string; takes: boolean; piece: Piece; promotion: Piece | null }
+
+export type ChessBoard = (ChessPiece | null)[]
+
+export type ChessPiece = { team: Team; variant: Piece }
 
 /**
  * What is the status of this game?
  */
 export type BoardStatus = "Ongoing" | "Stalemate" | "Checkmate"
 
-export type ChessBoard = (ChessPiece | null)[]
-
-export type ChessPiece = { team: Team; variant: Piece }
-
-export type Team = "White" | "Black"
+export type Piece = "Pawn" | "Knight" | "Bishop" | "Rook" | "Queen" | "King"
