@@ -6,7 +6,7 @@ use crate::{
     utils::enums::ArrayEnum,
 };
 
-include!("/home/zioth/projects/apps/chess/crates/engine/data/magic_gen.rs");
+include!("../../data/magic_gen.rs");
 
 pub mod rook {
     use super::*;
